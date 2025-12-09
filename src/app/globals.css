@@ -32,9 +32,9 @@ body {
     --radius: 0.5rem;
 
     --chart-1: 35 92% 60%; /* orange */
-    --chart-2: 35 92% 60%; /* orange */
-    --chart-3: 151 83% 40%; /* green */
-    --chart-4: 175 75% 40%; /* teal */
+    --chart-2: 118 89% 85%; /* #b7fdb4 */
+    --chart-3: 122 71% 54%; /* #38de3e */
+    --chart-4: 182 93% 34%; /* #07a6aa */
     --chart-5: 217 91% 60%;
 
     --sidebar-background: 0 0% 100%;
