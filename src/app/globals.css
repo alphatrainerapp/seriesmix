@@ -8,9 +8,9 @@ body {
 
 @layer base {
   :root {
-    --background: 0 0% 95%;
+    --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
+    --card: 0 0% 95%;
     --card-foreground: 240 10% 3.9%;
     --workout-card: 0 0% 95%;
     --exercise-card: 0 0% 74%;
