@@ -12,7 +12,7 @@ body {
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
-    --workout-card: 240 4.8% 95.9%;
+    --workout-card: 0 0% 95%;
     --exercise-card: 0 0% 74%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
@@ -31,10 +31,10 @@ body {
     --ring: 180 96% 34%;
     --radius: 0.5rem;
 
-    --chart-1: 35 97% 58%; /* #fca726 - Laranja para Série */
-    --chart-2: 118 89% 85%; /* #b7fdb4 - Verde claro para Repetições */
-    --chart-3: 122 71% 54%; /* #38de3e - Verde vivo para Intervalo */
-    --chart-4: 182 93% 34%; /* #07a6aa - Ciano para Cadência */
+    --chart-1: 35 97% 58%; /* #fca726 - Laranja para Repetições */
+    --chart-2: 118 89% 85%; /* #b7fdb4 - Verde claro para Intervalo */
+    --chart-3: 122 71% 54%; /* #38de3e - Verde vivo para Cadência */
+    --chart-4: 182 93% 34%;
     --chart-5: 217 91% 60%;
 
     --sidebar-background: 0 0% 100%;
