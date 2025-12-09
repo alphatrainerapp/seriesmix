@@ -4,7 +4,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '../ui/button';
-import { GripVertical, PlaySquare, MessageSquare, Trash2, Palette, Flame, Wrench, Check, Pencil, AppWindow } from 'lucide-react';
+import { GripVertical, PlaySquare, MessageSquare, Trash2, AppWindow, Flame, Wrench, Check, Pencil } from 'lucide-react';
 import type { Exercise, Set } from '@/lib/types';
 import {
   Select,
@@ -45,7 +45,7 @@ export function ExerciseCard({ exercise }: { exercise: Exercise }) {
             <GripVertical className="text-muted-foreground" />
           </Button>
         </TableCell>
-        <TableCell className="font-medium p-2 min-w-[250px]">
+        <TableCell className="font-medium p-2 min-w-[300px]">
           <Input 
             className='bg-exercise-card border-border shadow-sm w-full rounded-full'
             defaultValue={exercise.name}
@@ -73,17 +73,17 @@ export function ExerciseCard({ exercise }: { exercise: Exercise }) {
             <MessageSquare className="text-primary" />
           </Button>
         </TableCell>
-        <TableCell className="w-[50px] p-2 pt-3 text-center">
+        <TableCell className="w-[70px] p-2 pt-3 text-center">
             <div className="flex items-center justify-center gap-1">
-              <Input className="w-12 text-center bg-[hsl(var(--chart-1))] text-black placeholder:text-black/80" defaultValue="3" />
+              <Input className="w-10 text-center bg-[hsl(var(--chart-1))] text-black placeholder:text-black/80" defaultValue="3" />
               <Button variant="ghost" size="icon" className="h-8 w-8 text-primary">
                 <Pencil className="h-4 w-4" />
               </Button>
             </div>
         </TableCell>
-        <TableCell className="w-[80px] p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-2))] text-black hover:bg-[hsl(var(--chart-2))]">{exercise.repsRange}</Badge></TableCell>
-        <TableCell className="w-[80px] p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-3))] text-black hover:bg-[hsl(var(--chart-3))]">30</Badge></TableCell>
-        <TableCell className="w-[80px] p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-4))] text-primary-foreground hover:bg-[hsl(var(--chart-4))]">2.2</Badge></TableCell>
+        <TableCell className="w-[70px] px-1 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-2))] text-black hover:bg-[hsl(var(--chart-2))]">{exercise.repsRange}</Badge></TableCell>
+        <TableCell className="w-[70px] px-1 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-3))] text-black hover:bg-[hsl(var(--chart-3))]">30</Badge></TableCell>
+        <TableCell className="w-[70px] px-1 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-4))] text-primary-foreground hover:bg-[hsl(var(--chart-4))]">2.2</Badge></TableCell>
         <TableCell className="w-[40px] p-2 pt-3">
           <Button variant="ghost" size="icon">
              <AppWindow className="text-muted-foreground" />

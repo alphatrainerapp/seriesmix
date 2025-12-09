@@ -74,15 +74,15 @@ export default function Home() {
                   <TableHeader>
                     <TableRow className="hover:bg-transparent border-b-border">
                       <TableHead className="w-[40px] px-2"></TableHead>
-                      <TableHead className="min-w-[250px]">Exercício</TableHead>
+                      <TableHead className="min-w-[300px]">Exercício</TableHead>
                       <TableHead>Método</TableHead>
                       <TableHead className="w-[100px] text-center">
                         Observação
                       </TableHead>
-                      <TableHead className="w-[50px] text-center">Série</TableHead>
-                      <TableHead className="w-[80px] text-center">Repetições</TableHead>
-                      <TableHead className="w-[80px] text-center">Intervalo</TableHead>
-                      <TableHead className="w-[80px] text-center">Cadência</TableHead>
+                      <TableHead className="w-[70px] text-center">Série</TableHead>
+                      <TableHead className="w-[70px] text-center">Repetições</TableHead>
+                      <TableHead className="w-[70px] text-center">Intervalo</TableHead>
+                      <TableHead className="w-[70px] text-center">Cadência</TableHead>
                       <TableHead className="w-[40px]">Cor</TableHead>
                       <TableHead className="w-[40px]"></TableHead>
                     </TableRow>
