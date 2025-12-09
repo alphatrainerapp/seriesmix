@@ -96,10 +96,10 @@ export default function Home() {
               </div>
 
               <div className="mt-6 flex gap-2">
-                  <Button variant="outline">Protocolo aeróbico</Button>
-                  <Button variant="outline">Hiit</Button>
-                  <Button variant="outline">Exercício</Button>
-                  <Button variant="outline">Aquecimento</Button>
+                  <Button>Protocolo aeróbico</Button>
+                  <Button>Hiit</Button>
+                  <Button>Exercício</Button>
+                  <Button>Aquecimento</Button>
               </div>
 
               <div className="mt-6">

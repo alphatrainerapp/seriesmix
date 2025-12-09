@@ -40,7 +40,7 @@ export function ExerciseCard({ exercise }: { exercise: Exercise }) {
   return (
     <>
       <TableRow className="align-top hover:bg-muted/50 border-b-0">
-        <TableCell className="w-12 pt-4 px-2">
+        <TableCell className="w-[40px] pt-4 px-2">
           <Button variant="ghost" size="icon">
             <GripVertical className="text-muted-foreground" />
           </Button>
@@ -68,28 +68,28 @@ export function ExerciseCard({ exercise }: { exercise: Exercise }) {
             </Select>
           </div>
         </TableCell>
-        <TableCell className="text-center p-2 pt-3">
+        <TableCell className="w-[100px] text-center p-2 pt-3">
           <Button variant="ghost" size="icon">
             <MessageSquare className="text-primary" />
           </Button>
         </TableCell>
-        <TableCell className="p-2 pt-3 text-center">
+        <TableCell className="w-[50px] p-2 pt-3 text-center">
             <div className="flex items-center justify-center gap-1">
               <Input className="w-12 text-center" defaultValue="3" />
-              <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Button variant="ghost" size="icon" className="h-8 w-8 text-primary">
                 <Pencil className="h-4 w-4" />
               </Button>
             </div>
         </TableCell>
-        <TableCell className="p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-2))] text-black hover:bg-[hsl(var(--chart-2))]">12-14</Badge></TableCell>
-        <TableCell className="p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-3))] text-white hover:bg-[hsl(var(--chart-3))]">30</Badge></TableCell>
-        <TableCell className="p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-4))] text-white hover:bg-[hsl(var(--chart-4))]">2.2</Badge></TableCell>
-        <TableCell className="p-2 pt-3">
+        <TableCell className="w-[80px] p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-2))] text-black hover:bg-[hsl(var(--chart-2))]">12-14</Badge></TableCell>
+        <TableCell className="w-[80px] p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-3))] text-white hover:bg-[hsl(var(--chart-3))]">30</Badge></TableCell>
+        <TableCell className="w-[80px] p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-4))] text-white hover:bg-[hsl(var(--chart-4))]">2.2</Badge></TableCell>
+        <TableCell className="w-[40px] p-2 pt-3">
           <Button variant="ghost" size="icon">
              <Palette className="text-muted-foreground" />
           </Button>
         </TableCell>
-        <TableCell className="w-12 p-2 pt-3">
+        <TableCell className="w-[40px] p-2 pt-3">
           <Button variant="ghost" size="icon" className="text-destructive/70 hover:text-destructive hover:bg-destructive/10">
             <Trash2 />
           </Button>

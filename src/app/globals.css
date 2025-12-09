@@ -10,13 +10,13 @@ body {
   :root {
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
-    --card: 0 0% 98%;
+    --card: 0 0% 95%;
     --card-foreground: 240 10% 3.9%;
-    --workout-card: 0 0% 98%;
-    --exercise-card: 0 0% 95%;
+    --workout-card: 0 0% 95%;
+    --exercise-card: 0 0% 74%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    --primary: 175 75% 40%;
+    --primary: 180 96% 34%;
     --primary-foreground: 0 0% 100%;
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
@@ -28,7 +28,7 @@ body {
     --destructive-foreground: 0 0% 98%;
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
-    --ring: 175 75% 40%;
+    --ring: 180 96% 34%;
     --radius: 0.5rem;
 
     --chart-1: 35 92% 60%; /* orange */
@@ -56,7 +56,7 @@ body {
     --exercise-card: 0 0% 74%;
     --popover: 20 10% 10%;
     --popover-foreground: 20 5% 98%;
-    --primary: 175 75% 40%;
+    --primary: 180 96% 34%;
     --primary-foreground: 0 0% 100%;
     --secondary: 20 10% 15%;
     --secondary-foreground: 20 5% 98%;
@@ -68,7 +68,7 @@ body {
     --destructive-foreground: 0 0% 98%;
     --border: 20 10% 20%;
     --input: 20 10% 20%;
-    --ring: 175 75% 40%;
+    --ring: 180 96% 34%;
 
     --chart-1: 10 100% 60%;
     --chart-2: 217 91% 60%;
