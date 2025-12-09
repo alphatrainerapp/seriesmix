@@ -6,13 +6,41 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Button } from '../ui/button';
-import { Check, MessageSquare, Pencil, PlaySquare, Trash2, X } from 'lucide-react';
+import { Check, MessageSquare, Pencil, PlaySquare, Trash2, X, Flame, SlidersHorizontal } from 'lucide-react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import type { Exercise } from '@/lib/types';
+import type { Exercise, SetType } from '@/lib/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { EditSetsDialog } from './edit-sets-dialog';
 import { EditObservationDialog } from './edit-observation-dialog';
+import { Badge } from '../ui/badge';
+import { cn } from '@/lib/utils';
+
+
+const setTypeConfig: {
+  [key in SetType]: {
+    icon: React.ElementType;
+    className: string;
+    label: string;
+  };
+} = {
+  aquecimento: {
+    icon: Flame,
+    className: 'bg-[#dd694d] hover:bg-[#dd694d]/90 text-white border-transparent',
+    label: 'Aquec'
+  },
+  preparatoria: {
+    icon: SlidersHorizontal,
+    className: 'bg-[#4a80e3] hover:bg-[#4a80e3]/90 text-white border-transparent',
+    label: 'Prep'
+  },
+  trabalho: {
+    icon: Check,
+    className: 'bg-[#56ac73] hover:bg-[#56ac73]/90 text-white border-transparent',
+    label: 'Válidas'
+  },
+};
+
 
 export function MobileExerciseCard({
   exercise,
@@ -24,6 +52,15 @@ export function MobileExerciseCard({
   const videoThumbnail = PlaceHolderImages.find(
     (img) => img.id === 'exercise-video-thumbnail'
   );
+
+  const setCounts = exercise.sets.reduce((acc, set) => {
+    acc[set.type] = (acc[set.type] || 0) + 1;
+    return acc;
+  }, {} as Record<SetType, number>);
+
+  const setTypesInOrder: SetType[] = ['aquecimento', 'preparatoria', 'trabalho'];
+
+
   return (
     <AccordionItem value={`item-${exercise.id}`} className="border-none">
       <div className="bg-card rounded-lg shadow-sm">
@@ -54,6 +91,24 @@ export function MobileExerciseCard({
                 </div>
               </div>
             )}
+            <div className="flex items-center gap-2 -mt-2 mb-4">
+              {setTypesInOrder.map((setType) => {
+                  const count = setCounts[setType];
+                  if (!count) return null;
+
+                  const config = setTypeConfig[setType];
+                  const Icon = config.icon;
+                  return (
+                    <Badge
+                      key={setType}
+                      className={cn("text-xs font-semibold gap-1.5", config.className)}
+                    >
+                      <Icon className="h-3 w-3" />
+                      {config.label} ({count})
+                    </Badge>
+                  );
+                })}
+            </div>
             <div className="grid grid-cols-3 gap-2 text-center">
               <EditSetsDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
                 <div className="space-y-1 cursor-pointer">
@@ -73,7 +128,7 @@ export function MobileExerciseCard({
                 <div className="bg-[hsl(var(--chart-3))] text-black font-bold rounded-md py-2 text-sm">30</div>
               </div>
                <div className="space-y-1">
-                <p className-="text-xs font-medium text-muted-foreground">Cadência</p>
+                <p className="text-xs font-medium text-muted-foreground">Cadência</p>
                 <div className="bg-[hsl(var(--chart-4))] text-black font-bold rounded-md py-2 text-sm">2.2</div>
               </div>
                <EditObservationDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
