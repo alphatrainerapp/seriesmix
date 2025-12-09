@@ -11,6 +11,12 @@
       "description": "Client avatar",
       "imageUrl": "https://images.unsplash.com/photo-1574680096145-f844349f4b6f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3b21hbiUyMGZpdG5lc3N8ZW58MHx8fHwxNzA3NDI4Mjk2fDA&ixlib=rb-4.0.3&q=80&w=1080",
       "imageHint": "woman fitness"
+    },
+    {
+      "id": "exercise-video-thumbnail",
+      "description": "Thumbnail of a woman doing lunges at the gym",
+      "imageUrl": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=400&fit=crop",
+      "imageHint": "woman gym"
     }
   ]
 }

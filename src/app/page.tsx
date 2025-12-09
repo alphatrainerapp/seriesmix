@@ -18,6 +18,8 @@ import { TrainingSplit } from '@/components/plan/training-split';
 import { PageSidebar } from '@/components/sidebar/page-sidebar';
 import { useState } from 'react';
 import type { Exercise, Set } from '@/lib/types';
+import { MobileExerciseCard } from '@/components/workouts/mobile-exercise-card';
+import { Accordion } from '@/components/ui/accordion';
 
 export default function Home() {
   const [workoutData, setWorkoutData] = useState<Exercise[]>(initialWorkoutData);
@@ -81,14 +83,15 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <div className="border rounded-lg bg-card shadow-sm">
+              {/* Desktop View */}
+              <div className="border rounded-lg bg-card shadow-sm hidden md:block">
                 <Table>
                   <TableHeader>
                     <TableRow className="hover:bg-transparent border-b-border">
                       <TableHead className="w-[40px] px-2"></TableHead>
                       <TableHead className="min-w-[400px]">Exercício</TableHead>
                       <TableHead>Método</TableHead>
-                      <TableHead className="w-[100px] text-center">
+                      <TableHead className="w-[100px] text-center px-1">
                         Observação
                       </TableHead>
                       <TableHead className="w-[80px] text-center px-1">Série</TableHead>
@@ -110,6 +113,20 @@ export default function Home() {
                   </TableBody>
                 </Table>
               </div>
+
+              {/* Mobile View */}
+              <div className="block md:hidden">
+                <Accordion type="single" collapsible className="w-full space-y-4">
+                  {workoutData.map((exercise) => (
+                    <MobileExerciseCard
+                      key={exercise.id}
+                      exercise={exercise}
+                      onUpdateExercise={handleUpdateExercise}
+                    />
+                  ))}
+                </Accordion>
+              </div>
+
 
               <div className="mt-6 flex gap-2">
                 <Button>Protocolo aeróbico</Button>
