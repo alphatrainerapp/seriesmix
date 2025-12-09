@@ -1,9 +1,15 @@
+export type SetType = 'aquecimento' | 'preparatoria' | 'trabalho';
+
 export type Set = {
-  type: 'Aquec' | 'Prep' | 'Válidas';
-  label: string;
+  id: number;
+  type: SetType;
+  reps: string;
+  interval: string;
+  rir: string;
 };
 
 export type Exercise = {
+  id: number;
   name: string;
   preExhaustion: boolean;
   sets: Set[];

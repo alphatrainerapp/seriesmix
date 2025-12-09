@@ -29,8 +29,15 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Separator } from '../ui/separator';
+import type { Exercise, Set, SetType } from '@/lib/types';
+import { useState } from 'react';
 
-const setTypes = [
+const setTypeOptions: {
+  value: SetType;
+  label: string;
+  icon: React.ElementType;
+  color: string;
+}[] = [
   {
     value: 'aquecimento',
     label: 'Aquecimento',
@@ -44,30 +51,6 @@ const setTypes = [
     color: 'text-blue-500',
   },
   { value: 'trabalho', label: 'Trabalho', icon: Dumbbell, color: 'text-green-500' },
-];
-
-const mockSets = [
-  {
-    id: 1,
-    type: 'aquecimento',
-    reps: '20s',
-    interval: '60',
-    rir: '',
-  },
-  {
-    id: 2,
-    type: 'preparatoria',
-    reps: '8-12',
-    interval: '60',
-    rir: '',
-  },
-  {
-    id: 3,
-    type: 'trabalho',
-    reps: '8-12',
-    interval: '60',
-    rir: '',
-  },
 ];
 
 const SetTypeSelectItem = ({
@@ -89,9 +72,52 @@ const SetTypeSelectItem = ({
   </SelectItem>
 );
 
-export function EditSetsDialog({ children }: { children: React.ReactNode }) {
+export function EditSetsDialog({
+  children,
+  exercise,
+  onUpdateExercise,
+}: {
+  children: React.ReactNode;
+  exercise: Exercise;
+  onUpdateExercise: (exercise: Exercise) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [sets, setSets] = useState<Set[]>(exercise.sets);
+
+  const handleSetChange = (id: number, field: keyof Set, value: string) => {
+    setSets((prevSets) =>
+      prevSets.map((s) => (s.id === id ? { ...s, [field]: value } : s))
+    );
+  };
+
+  const addNewSet = () => {
+    const newSet: Set = {
+      id: sets.length > 0 ? Math.max(...sets.map(s => s.id)) + 1 : 1,
+      type: 'trabalho',
+      reps: '8-12',
+      interval: '60',
+      rir: '',
+    };
+    setSets([...sets, newSet]);
+  };
+
+  const removeSet = (id: number) => {
+    setSets(sets.filter((s) => s.id !== id));
+  };
+
+  const handleSave = () => {
+    onUpdateExercise({ ...exercise, sets });
+    setOpen(false);
+  };
+  
+  // Sync state if exercise prop changes
+  React.useEffect(() => {
+    setSets(exercise.sets);
+  }, [exercise.sets]);
+
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-2xl bg-card">
         <DialogHeader>
@@ -106,8 +132,8 @@ export function EditSetsDialog({ children }: { children: React.ReactNode }) {
             </Button>
           </DialogClose>
         </DialogHeader>
-        <div className="py-4">
-          <div className="grid grid-cols-[auto_1fr_1fr_1fr_1fr] items-center gap-x-4 gap-y-2 text-sm text-muted-foreground px-4">
+        <div className="py-4 max-h-[60vh] overflow-y-auto">
+          <div className="grid grid-cols-[auto_1fr_1fr_1fr_1fr_auto] items-center gap-x-4 gap-y-2 text-sm text-muted-foreground px-4">
             <div className="font-medium">Série</div>
             <div className="font-medium">Tipo</div>
             <div className="font-medium">Repetições</div>
@@ -115,15 +141,21 @@ export function EditSetsDialog({ children }: { children: React.ReactNode }) {
             <div className="flex items-center gap-1 font-medium">
               RIR <HelpCircle className="h-4 w-4" />
             </div>
+            <div></div>
 
-            {mockSets.map((set) => {
-              const setType = setTypes.find((t) => t.value === set.type);
+            {sets.map((set, index) => {
+              const setType = setTypeOptions.find((t) => t.value === set.type);
               const Icon = setType?.icon;
               return (
                 <React.Fragment key={set.id}>
-                  <div className="font-semibold text-foreground">{set.id}</div>
+                  <div className="font-semibold text-foreground">{index + 1}</div>
                   <div>
-                    <Select defaultValue={set.type}>
+                    <Select
+                      value={set.type}
+                      onValueChange={(value) =>
+                        handleSetChange(set.id, 'type', value)
+                      }
+                    >
                       <SelectTrigger className="bg-background">
                         <SelectValue>
                           <div className="flex items-center gap-2">
@@ -133,21 +165,45 @@ export function EditSetsDialog({ children }: { children: React.ReactNode }) {
                         </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
-                        {setTypes.map((type) => (
+                        {setTypeOptions.map((type) => (
                           <SetTypeSelectItem key={type.value} {...type} />
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
                   <div>
-                    <Input defaultValue={set.reps} className="bg-background" />
+                    <Input
+                      value={set.reps}
+                      onChange={(e) =>
+                        handleSetChange(set.id, 'reps', e.target.value)
+                      }
+                      className="bg-background"
+                    />
                   </div>
                   <div className="flex items-center gap-2">
                     <Timer className="h-5 w-5 text-primary" />
-                    <Input defaultValue={set.interval} className="bg-background" />
+                    <Input
+                      value={set.interval}
+                      onChange={(e) =>
+                        handleSetChange(set.id, 'interval', e.target.value)
+                      }
+                      className="bg-background"
+                    />
                   </div>
                   <div>
-                    <Input placeholder="" className="bg-background" />
+                    <Input
+                      placeholder=""
+                      value={set.rir}
+                      onChange={(e) =>
+                        handleSetChange(set.id, 'rir', e.target.value)
+                      }
+                      className="bg-background"
+                    />
+                  </div>
+                  <div>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/70" onClick={() => removeSet(set.id)}>
+                        <X className='h-4 w-4' />
+                    </Button>
                   </div>
                 </React.Fragment>
               );
@@ -156,7 +212,7 @@ export function EditSetsDialog({ children }: { children: React.ReactNode }) {
         </div>
         <Separator />
         <div className='px-6 py-2'>
-            <Button variant="link" className="p-0 h-auto text-primary">
+            <Button variant="link" className="p-0 h-auto text-primary" onClick={addNewSet}>
                 <Plus className="h-4 w-4 mr-1" />
                 Adicionar nova série
             </Button>
@@ -165,6 +221,7 @@ export function EditSetsDialog({ children }: { children: React.ReactNode }) {
           <Button
             className="w-full bg-[#01bfa5] hover:bg-[#01bfa5]/90 text-white"
             size="lg"
+            onClick={handleSave}
           >
             Salvar
           </Button>

@@ -4,8 +4,8 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '../ui/button';
-import { GripVertical, PlaySquare, MessageSquare, Trash2, AppWindow, Flame, Wrench, Check, Pencil, SlidersHorizontal } from 'lucide-react';
-import type { Exercise, Set } from '@/lib/types';
+import { GripVertical, PlaySquare, MessageSquare, Trash2, AppWindow, Flame, Check, Pencil, SlidersHorizontal } from 'lucide-react';
+import type { Exercise, Set, SetType } from '@/lib/types';
 import {
   Select,
   SelectContent,
@@ -18,26 +18,40 @@ import { Input } from '../ui/input';
 import { EditSetsDialog } from './edit-sets-dialog';
 
 const setTypeConfig: {
-  [key in Set['type']]: {
+  [key in SetType]: {
     icon: React.ElementType;
     className: string;
+    label: string;
   };
 } = {
-  Aquec: {
+  aquecimento: {
     icon: Flame,
     className: 'bg-[#dd694d] hover:bg-[#dd694d]/90 text-white border-transparent',
+    label: 'Aquec'
   },
-  Prep: {
+  preparatoria: {
     icon: SlidersHorizontal,
     className: 'bg-[#4a80e3] hover:bg-[#4a80e3]/90 text-white border-transparent',
+    label: 'Prep'
   },
-  Válidas: {
+  trabalho: {
     icon: Check,
     className: 'bg-[#56ac73] hover:bg-[#56ac73]/90 text-white border-transparent',
+    label: 'Válidas'
   },
 };
 
-export function ExerciseCard({ exercise }: { exercise: Exercise }) {
+export function ExerciseCard({
+  exercise,
+  onUpdateExercise,
+}: {
+  exercise: Exercise;
+  onUpdateExercise: (exercise: Exercise) => void;
+}) {
+  const visibleSets = exercise.sets
+    .map((s) => s.type)
+    .filter((v, i, a) => a.indexOf(v) === i);
+
   return (
     <>
       <TableRow className="align-top hover:bg-muted/50 border-b-0">
@@ -76,17 +90,24 @@ export function ExerciseCard({ exercise }: { exercise: Exercise }) {
         </TableCell>
         <TableCell className="w-[70px] p-1 pt-3 text-center">
             <div className="flex items-center justify-center">
-              <Input className="w-10 text-center bg-chart-1 text-black placeholder:text-black/80" defaultValue="3" />
-              <EditSetsDialog>
+              <Input
+                className="w-10 text-center bg-[hsl(var(--chart-1))] text-black placeholder:text-black/80 font-bold"
+                value={exercise.sets.length}
+                readOnly
+              />
+              <EditSetsDialog
+                exercise={exercise}
+                onUpdateExercise={onUpdateExercise}
+              >
                 <Button variant="ghost" size="icon" className="h-8 w-8 text-primary">
                   <Pencil className="h-4 w-4" />
                 </Button>
               </EditSetsDialog>
             </div>
         </TableCell>
-        <TableCell className="w-[70px] px-1 pt-3 text-center"><Badge className="bg-chart-1 text-black hover:bg-chart-1">{exercise.repsRange}</Badge></TableCell>
-        <TableCell className="w-[70px] px-1 pt-3 text-center"><Badge className="bg-chart-2 text-black hover:bg-chart-2">30</Badge></TableCell>
-        <TableCell className="w-[70px] px-1 pt-3 text-center"><Badge className="bg-chart-3 text-black hover:bg-chart-3">2.2</Badge></TableCell>
+        <TableCell className="w-[70px] px-1 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-2))] text-black hover:bg-[hsl(var(--chart-2))] font-bold">{exercise.repsRange}</Badge></TableCell>
+        <TableCell className="w-[70px] px-1 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-3))] text-black hover:bg-[hsl(var(--chart-3))] font-bold">30</Badge></TableCell>
+        <TableCell className="w-[70px] px-1 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-4))] text-black hover:bg-[hsl(var(--chart-4))] font-bold">2.2</Badge></TableCell>
         <TableCell className="w-[40px] p-2 pt-3">
           <Button variant="ghost" size="icon">
              <AppWindow className="text-muted-foreground" />
@@ -102,16 +123,16 @@ export function ExerciseCard({ exercise }: { exercise: Exercise }) {
         <TableCell></TableCell>
         <TableCell className="pt-0 pb-4 pl-2" colSpan={9}>
             <div className="flex items-center gap-2">
-              {exercise.sets.map((set) => {
-                  const config = setTypeConfig[set.type];
+              {visibleSets.map((setType) => {
+                  const config = setTypeConfig[setType];
                   const Icon = config.icon;
                   return (
                     <Badge
-                      key={set.label}
+                      key={setType}
                       className={cn("text-xs font-semibold gap-1.5", config.className)}
                     >
                       <Icon className="h-3 w-3" />
-                      {set.label}
+                      {config.label}
                     </Badge>
                   );
                 })}

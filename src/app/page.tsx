@@ -8,7 +8,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { mockWorkout } from '@/lib/data';
+import { mockWorkout as initialWorkoutData } from '@/lib/data';
 import { ExerciseCard } from '@/components/workouts/exercise-card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
@@ -16,8 +16,20 @@ import { Textarea } from '@/components/ui/textarea';
 import { TrainingPlanHeader } from '@/components/plan/training-plan-header';
 import { TrainingSplit } from '@/components/plan/training-split';
 import { PageSidebar } from '@/components/sidebar/page-sidebar';
+import { useState } from 'react';
+import type { Exercise, Set } from '@/lib/types';
 
 export default function Home() {
+  const [workoutData, setWorkoutData] = useState<Exercise[]>(initialWorkoutData);
+
+  const handleUpdateExercise = (updatedExercise: Exercise) => {
+    setWorkoutData((prevData) =>
+      prevData.map((ex) =>
+        ex.id === updatedExercise.id ? updatedExercise : ex
+      )
+    );
+  };
+
   return (
     <div className="flex flex-1 flex-col p-4 md:p-6 lg:p-8 text-foreground gap-6">
       <div className="flex flex-col lg:flex-row gap-6">
@@ -79,27 +91,31 @@ export default function Home() {
                       <TableHead className="w-[100px] text-center">
                         Observação
                       </TableHead>
-                      <TableHead className="w-[80px] text-center">Série</TableHead>
-                      <TableHead className="w-[80px] text-center">Repetições</TableHead>
-                      <TableHead className="w-[80px] text-center">Intervalo</TableHead>
-                      <TableHead className="w-[80px] text-center">Cadência</TableHead>
+                      <TableHead className="w-[80px] text-center px-1">Série</TableHead>
+                      <TableHead className="w-[80px] text-center px-1">Repetições</TableHead>
+                      <TableHead className="w-[80px] text-center px-1">Intervalo</TableHead>
+                      <TableHead className="w-[80px] text-center px-1">Cadência</TableHead>
                       <TableHead className="w-[40px]">Cor</TableHead>
                       <TableHead className="w-[40px]"></TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {mockWorkout.map((exercise, index) => (
-                      <ExerciseCard key={index} exercise={exercise} />
+                    {workoutData.map((exercise) => (
+                      <ExerciseCard
+                        key={exercise.id}
+                        exercise={exercise}
+                        onUpdateExercise={handleUpdateExercise}
+                      />
                     ))}
                   </TableBody>
                 </Table>
               </div>
 
               <div className="mt-6 flex gap-2">
-                  <Button>Protocolo aeróbico</Button>
-                  <Button>Hiit</Button>
-                  <Button>Exercício</Button>
-                  <Button>Aquecimento</Button>
+                <Button>Protocolo aeróbico</Button>
+                <Button>Hiit</Button>
+                <Button>Exercício</Button>
+                <Button>Aquecimento</Button>
               </div>
 
               <div className="mt-6">
