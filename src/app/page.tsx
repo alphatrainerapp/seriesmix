@@ -8,27 +8,11 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import {
-  MessageSquare,
-  PlaySquare,
-  Trash2,
-  GripVertical,
-  Palette,
-  Plus,
-} from 'lucide-react';
+import { CreateWorkoutDialog } from '@/components/workouts/create-workout-dialog';
 import { mockWorkout } from '@/lib/data';
 import { ExerciseCard } from '@/components/workouts/exercise-card';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Card } from '@/components/ui/card';
-import { CreateWorkoutDialog } from '@/components/workouts/create-workout-dialog';
 
 export default function Home() {
   return (
@@ -79,7 +63,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="border rounded-lg bg-card">
+          <div className="border rounded-lg bg-card shadow-sm">
             <Table>
               <TableHeader>
                 <TableRow className="hover:bg-transparent border-b-border">
@@ -106,7 +90,7 @@ export default function Home() {
           </div>
         </TabsContent>
         <TabsContent value="treino-b" className="mt-6">
-          <Card className="flex items-center justify-center p-16 bg-card">
+          <Card className="flex items-center justify-center p-16 bg-card shadow-sm">
             <p className="text-muted-foreground">No workout history yet.</p>
           </Card>
         </TabsContent>
