@@ -8,9 +8,9 @@ body {
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 0 0% 95%;
     --foreground: 240 10% 3.9%;
-    --card: 0 0% 95%;
+    --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
     --workout-card: 0 0% 95%;
     --exercise-card: 0 0% 74%;
@@ -40,7 +40,7 @@ body {
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 240 10% 3.9%;
     --sidebar-border: 240 5.9% 90%;
-    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent: 0 0% 95%;
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-ring: 175 75% 40%;
     
@@ -52,8 +52,8 @@ body {
     --foreground: 20 5% 98%;
     --card: 20 10% 10%;
     --card-foreground: 20 5% 98%;
-    --workout-card: 20 10% 10%;
-    --exercise-card: 20 10% 20%;
+    --workout-card: 0 0% 95%;
+    --exercise-card: 0 0% 74%;
     --popover: 20 10% 10%;
     --popover-foreground: 20 5% 98%;
     --primary: 175 75% 40%;
