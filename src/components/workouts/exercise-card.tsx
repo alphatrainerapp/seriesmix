@@ -75,15 +75,15 @@ export function ExerciseCard({ exercise }: { exercise: Exercise }) {
         </TableCell>
         <TableCell className="w-[50px] p-2 pt-3 text-center">
             <div className="flex items-center justify-center gap-1">
-              <Input className="w-12 text-center" defaultValue="3" />
+              <Input className="w-12 text-center bg-[hsl(var(--chart-1))] text-black placeholder:text-black/80" defaultValue="3" />
               <Button variant="ghost" size="icon" className="h-8 w-8 text-primary">
                 <Pencil className="h-4 w-4" />
               </Button>
             </div>
         </TableCell>
-        <TableCell className="w-[80px] p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-1))] text-black hover:bg-[hsl(var(--chart-1))]">{exercise.repsRange}</Badge></TableCell>
-        <TableCell className="w-[80px] p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-2))] text-black hover:bg-[hsl(var(--chart-2))]">30</Badge></TableCell>
-        <TableCell className="w-[80px] p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-3))] text-black hover:bg-[hsl(var(--chart-3))]">2.2</Badge></TableCell>
+        <TableCell className="w-[80px] p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-2))] text-black hover:bg-[hsl(var(--chart-2))]">{exercise.repsRange}</Badge></TableCell>
+        <TableCell className="w-[80px] p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-3))] text-black hover:bg-[hsl(var(--chart-3))]">30</Badge></TableCell>
+        <TableCell className="w-[80px] p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-4))] text-primary-foreground hover:bg-[hsl(var(--chart-4))]">2.2</Badge></TableCell>
         <TableCell className="w-[40px] p-2 pt-3">
           <Button variant="ghost" size="icon">
              <AppWindow className="text-muted-foreground" />
