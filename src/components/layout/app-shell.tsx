@@ -9,13 +9,11 @@ import { AppSidebar } from './app-sidebar';
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-white">
-      <SidebarProvider>
+    <div className="bg-background">
+      <SidebarProvider defaultOpen={false}>
         <AppSidebar />
         <SidebarInset>{children}</SidebarInset>
       </SidebarProvider>
     </div>
   );
 }
-
-    

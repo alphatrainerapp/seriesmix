@@ -15,6 +15,7 @@ import {
   Trash2,
   GripVertical,
   Palette,
+  Plus,
 } from 'lucide-react';
 import { mockWorkout } from '@/lib/data';
 import { ExerciseCard } from '@/components/workouts/exercise-card';
@@ -27,37 +28,41 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Card } from '@/components/ui/card';
+import { CreateWorkoutDialog } from '@/components/workouts/create-workout-dialog';
 
 export default function Home() {
   return (
-    <div className="flex flex-1 flex-col p-4 md:p-6 lg:p-8">
+    <div className="flex flex-1 flex-col p-4 md:p-6 lg:p-8 text-foreground">
       <Tabs defaultValue="treino-a" className="w-full">
-        <TabsList className="bg-transparent p-0 border-b rounded-none w-full justify-start">
-          <TabsTrigger
-            value="treino-a"
-            className="data-[state=active]:border-primary data-[state=active]:border-b-2 data-[state=active]:shadow-none data-[state=active]:bg-transparent rounded-none px-4"
-          >
-            Treino A
-          </TabsTrigger>
-          <TabsTrigger
-            value="treino-b"
-            className="data-[state=active]:border-primary data-[state=active]:border-b-2 data-[state=active]:shadow-none data-[state=active]:bg-transparent rounded-none text-muted-foreground px-4"
-          >
-            Treino B
-          </TabsTrigger>
-          <TabsTrigger
-            value="treino-c"
-            className="data-[state=active]:border-primary data-[state=active]:border-b-2 data-[state=active]:shadow-none data-[state=active]:bg-transparent rounded-none text-muted-foreground px-4"
-          >
-            Treino C
-          </TabsTrigger>
-          <TabsTrigger
-            value="treino-d"
-            className="data-[state=active]:border-primary data-[state=active]:border-b-2 data-[state=active]:shadow-none data-[state=active]:bg-transparent rounded-none text-muted-foreground px-4"
-          >
-            Treino D
-          </TabsTrigger>
-        </TabsList>
+        <div className="flex justify-between items-center">
+          <TabsList className="bg-transparent p-0 border-b-0 rounded-none w-full justify-start">
+            <TabsTrigger
+              value="treino-a"
+              className="data-[state=active]:border-primary data-[state=active]:border-b-2 data-[state=active]:shadow-none data-[state=active]:bg-transparent rounded-none px-4"
+            >
+              Treino A
+            </TabsTrigger>
+            <TabsTrigger
+              value="treino-b"
+              className="data-[state=active]:border-primary data-[state=active]:border-b-2 data-[state=active]:shadow-none data-[state=active]:bg-transparent rounded-none text-muted-foreground px-4"
+            >
+              Treino B
+            </TabsTrigger>
+            <TabsTrigger
+              value="treino-c"
+              className="data-[state=active]:border-primary data-[state=active]:border-b-2 data-[state=active]:shadow-none data-[state=active]:bg-transparent rounded-none text-muted-foreground px-4"
+            >
+              Treino C
+            </TabsTrigger>
+            <TabsTrigger
+              value="treino-d"
+              className="data-[state=active]:border-primary data-[state=active]:border-b-2 data-[state=active]:shadow-none data-[state=active]:bg-transparent rounded-none text-muted-foreground px-4"
+            >
+              Treino D
+            </TabsTrigger>
+          </TabsList>
+          <CreateWorkoutDialog />
+        </div>
         <TabsContent value="treino-a" className="mt-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex flex-col">
@@ -74,14 +79,14 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="border rounded-lg">
+          <div className="border rounded-lg bg-card">
             <Table>
               <TableHeader>
-                <TableRow className="hover:bg-transparent">
+                <TableRow className="hover:bg-transparent border-b-border">
                   <TableHead className="w-[50px]"></TableHead>
                   <TableHead>Exercício</TableHead>
                   <TableHead>Método</TableHead>
-                  <TableHead className="w-[200px] text-center">
+                  <TableHead className="w-[120px] text-center">
                     Observação
                   </TableHead>
                   <TableHead>Série</TableHead>
@@ -101,7 +106,7 @@ export default function Home() {
           </div>
         </TabsContent>
         <TabsContent value="treino-b" className="mt-6">
-          <Card className="flex items-center justify-center p-16">
+          <Card className="flex items-center justify-center p-16 bg-card">
             <p className="text-muted-foreground">No workout history yet.</p>
           </Card>
         </TabsContent>
@@ -109,5 +114,3 @@ export default function Home() {
     </div>
   );
 }
-
-    

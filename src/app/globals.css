@@ -8,51 +8,13 @@ body {
 
 @layer base {
   :root {
-    --background: 20 56% 95%; /* #F8F1EE */
-    --foreground: 20 10% 10%;
-    --card: 20 30% 99%;
-    --card-foreground: 20 10% 10%;
-    --popover: 20 30% 99%;
-    --popover-foreground: 20 10% 10%;
-    --primary: 151 83% 40%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 20 10% 90%;
-    --secondary-foreground: 20 10% 9%;
-    --muted: 20 10% 85%;
-    --muted-foreground: 20 10% 45%;
-    --accent: 151 83% 40%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 20 10% 88%;
-    --input: 20 10% 88%;
-    --ring: 15 100% 62%;
-    --radius: 0.5rem;
-
-    --chart-1: 10 100% 60%; /* aquec */
-    --chart-2: 217 91% 60%; /* prep */
-    --chart-3: 147 62% 46%; /* validas */
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-
-    --sidebar-background: 20 30% 99%;
-    --sidebar-foreground: 20 10% 25%;
-    --sidebar-border: 20 10% 88%;
-    --sidebar-accent: 20 10% 92%;
-    --sidebar-accent-foreground: 20 10% 10%;
-    --sidebar-ring: 15 100% 62%;
-    
-    --tag-soft-blue-bg: 210 100% 96%;
-    --tag-soft-blue-fg: 210 90% 50%;
-  }
-  .dark {
     --background: 20 10% 5%;
     --foreground: 20 5% 98%;
     --card: 20 10% 10%;
     --card-foreground: 20 5% 98%;
     --popover: 20 10% 10%;
     --popover-foreground: 20 5% 98%;
-    --primary: 15 100% 62%;
+    --primary: 151 83% 40%;
     --primary-foreground: 0 0% 100%;
     --secondary: 20 10% 15%;
     --secondary-foreground: 20 5% 98%;
@@ -64,7 +26,8 @@ body {
     --destructive-foreground: 0 0% 98%;
     --border: 20 10% 20%;
     --input: 20 10% 20%;
-    --ring: 15 100% 62%;
+    --ring: 151 83% 40%;
+    --radius: 0.5rem;
 
     --chart-1: 10 100% 60%;
     --chart-2: 217 91% 60%;
@@ -77,7 +40,44 @@ body {
     --sidebar-border: 20 10% 20%;
     --sidebar-accent: 20 10% 22%;
     --sidebar-accent-foreground: 20 5% 98%;
-    --sidebar-ring: 15 100% 62%;
+    --sidebar-ring: 151 83% 40%;
+    
+    --tag-soft-blue-bg: 210 30% 15%;
+    --tag-soft-blue-fg: 210 90% 70%;
+  }
+  .dark {
+    --background: 20 10% 5%;
+    --foreground: 20 5% 98%;
+    --card: 20 10% 10%;
+    --card-foreground: 20 5% 98%;
+    --popover: 20 10% 10%;
+    --popover-foreground: 20 5% 98%;
+    --primary: 151 83% 40%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 20 10% 15%;
+    --secondary-foreground: 20 5% 98%;
+    --muted: 20 10% 20%;
+    --muted-foreground: 20 5% 65%;
+    --accent: 10 100% 60%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 20 10% 20%;
+    --input: 20 10% 20%;
+    --ring: 151 83% 40%;
+
+    --chart-1: 10 100% 60%;
+    --chart-2: 217 91% 60%;
+    --chart-3: 147 62% 46%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+
+    --sidebar-background: 20 10% 10%;
+    --sidebar-foreground: 20 5% 95%;
+    --sidebar-border: 20 10% 20%;
+    --sidebar-accent: 20 10% 22%;
+    --sidebar-accent-foreground: 20 5% 98%;
+    --sidebar-ring: 151 83% 40%;
 
     --tag-soft-blue-bg: 210 30% 15%;
     --tag-soft-blue-fg: 210 90% 70%;
@@ -92,5 +92,3 @@ body {
     @apply bg-background text-foreground;
   }
 }
-
-    
