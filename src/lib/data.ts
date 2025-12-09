@@ -10,6 +10,7 @@ export const mockWorkout: Exercise[] = [
       { id: 2, type: 'preparatoria', unit: 'time', reps: '20s', interval: '30', rir: '' },
     ],
     repsRange: '20s',
+    observation: 'Focar na amplitude do movimento.',
   },
   {
     id: 2,
@@ -31,6 +32,7 @@ export const mockWorkout: Exercise[] = [
       { id: 3, type: 'trabalho', unit: 'reps', reps: '8-10', interval: '60', rir: '' },
     ],
     repsRange: '8-10',
+    observation: 'Manter a coluna reta durante todo o movimento.',
   },
   {
     id: 4,

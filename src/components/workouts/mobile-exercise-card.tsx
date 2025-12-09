@@ -6,11 +6,13 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Button } from '../ui/button';
-import { Check, MessageSquare, PlaySquare, Trash2, X } from 'lucide-react';
+import { Check, MessageSquare, Pencil, PlaySquare, Trash2, X } from 'lucide-react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { Exercise } from '@/lib/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { EditSetsDialog } from './edit-sets-dialog';
+import { EditObservationDialog } from './edit-observation-dialog';
 
 export function MobileExerciseCard({
   exercise,
@@ -53,10 +55,15 @@ export function MobileExerciseCard({
               </div>
             )}
             <div className="grid grid-cols-3 gap-2 text-center">
-              <div className="space-y-1">
-                <p className="text-xs font-medium text-muted-foreground">Série</p>
-                <div className="bg-[hsl(var(--chart-1))] text-black font-bold rounded-md py-2 text-sm">{exercise.sets.length}</div>
-              </div>
+              <EditSetsDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
+                <div className="space-y-1 cursor-pointer">
+                  <p className="text-xs font-medium text-muted-foreground">Série</p>
+                  <div className="bg-[hsl(var(--chart-1))] text-black font-bold rounded-md py-2 text-sm flex items-center justify-center gap-1">
+                    {exercise.sets.length}
+                    <Pencil className="h-3 w-3"/>
+                  </div>
+                </div>
+              </EditSetsDialog>
               <div className="space-y-1">
                 <p className="text-xs font-medium text-muted-foreground">Repetições</p>
                 <div className="bg-[hsl(var(--chart-2))] text-black font-bold rounded-md py-2 text-sm">{exercise.repsRange}</div>
@@ -69,12 +76,14 @@ export function MobileExerciseCard({
                 <p className-="text-xs font-medium text-muted-foreground">Cadência</p>
                 <div className="bg-[hsl(var(--chart-4))] text-black font-bold rounded-md py-2 text-sm">2.2</div>
               </div>
-               <div className="space-y-1">
-                <p className="text-xs font-medium text-muted-foreground">Observação</p>
-                 <div className="bg-primary/20 text-primary rounded-md py-2 flex justify-center items-center">
-                    <MessageSquare className="h-4 w-4"/>
+               <EditObservationDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
+                <div className="space-y-1 cursor-pointer">
+                  <p className="text-xs font-medium text-muted-foreground">Observação</p>
+                   <div className="bg-primary/20 text-primary rounded-md py-2 flex justify-center items-center">
+                      <MessageSquare className="h-4 w-4"/>
+                  </div>
                 </div>
-              </div>
+               </EditObservationDialog>
             </div>
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">

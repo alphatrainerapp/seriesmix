@@ -91,10 +91,10 @@ export default function Home() {
                       <TableHead className="w-[40px] px-2"></TableHead>
                       <TableHead className="min-w-[400px]">Exercício</TableHead>
                       <TableHead>Método</TableHead>
-                      <TableHead className="w-[100px] text-center px-1">
+                      <TableHead className="w-[80px] text-center px-1">
                         Observação
                       </TableHead>
-                      <TableHead className="w-[80px] text-center px-1">Série</TableHead>
+                      <TableHead className="w-[100px] text-center px-1">Série</TableHead>
                       <TableHead className="w-[80px] text-center px-1">Repetições</TableHead>
                       <TableHead className="w-[80px] text-center px-1">Intervalo</TableHead>
                       <TableHead className="w-[80px] text-center px-1">Cadência</TableHead>

@@ -15,4 +15,5 @@ export type Exercise = {
   preExhaustion: boolean;
   sets: Set[];
   repsRange: string;
+  observation?: string;
 };

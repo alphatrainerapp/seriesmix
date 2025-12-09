@@ -16,6 +16,7 @@ import {
 import { cn } from '@/lib/utils';
 import { Input } from '../ui/input';
 import { EditSetsDialog } from './edit-sets-dialog';
+import { EditObservationDialog } from './edit-observation-dialog';
 
 const setTypeConfig: {
   [key in SetType]: {
@@ -87,12 +88,17 @@ export function ExerciseCard({
             </Select>
           </div>
         </TableCell>
-        <TableCell className="w-[100px] text-center p-2 pt-3">
-          <Button variant="ghost" size="icon">
-            <MessageSquare className="text-primary" />
-          </Button>
+        <TableCell className="w-[80px] text-center p-1 pt-3">
+          <EditObservationDialog
+            exercise={exercise}
+            onUpdateExercise={onUpdateExercise}
+          >
+            <Button variant="ghost" size="icon">
+              <MessageSquare className="text-primary" />
+            </Button>
+          </EditObservationDialog>
         </TableCell>
-        <TableCell className="w-[80px] p-1 pt-3 text-center">
+        <TableCell className="w-[100px] p-1 pt-3 text-center">
             <div className="flex items-center justify-center">
               <Input
                 className="w-10 text-center bg-[hsl(var(--chart-1))] text-black placeholder:text-black/80 font-bold"
