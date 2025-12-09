@@ -4,8 +4,8 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '../ui/button';
-import { GripVertical, PlaySquare, MessageSquare, Trash2, Palette } from 'lucide-react';
-import type { Exercise } from '@/lib/types';
+import { GripVertical, PlaySquare, MessageSquare, Trash2, Palette, Flame, Puzzle, Check } from 'lucide-react';
+import type { Exercise, Set } from '@/lib/types';
 import {
   Select,
   SelectContent,
@@ -13,6 +13,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
+import { cn } from '@/lib/utils';
+
+const setTypeConfig: {
+  [key in Set['type']]: {
+    icon: React.ElementType;
+    className: string;
+  };
+} = {
+  Aquec: {
+    icon: Flame,
+    className: 'bg-[#dd694d] hover:bg-[#dd694d]/90 text-white border-transparent',
+  },
+  Prep: {
+    icon: Puzzle,
+    className: 'bg-[#4a80e3] hover:bg-[#4a80e3]/90 text-white border-transparent',
+  },
+  Válidas: {
+    icon: Check,
+    className: 'bg-[#56ac73] hover:bg-[#56ac73]/90 text-white border-transparent',
+  },
+};
 
 export function ExerciseCard({ exercise }: { exercise: Exercise }) {
   return (
@@ -28,15 +49,19 @@ export function ExerciseCard({ exercise }: { exercise: Exercise }) {
                 <p className='flex-1 text-sm text-foreground/80'>{exercise.name}</p>
             </div>
             <div className="flex items-center gap-2 pl-2 pt-1">
-              {exercise.sets.map((set) => (
-                <Badge
-                  key={set.label}
-                  variant="outline"
-                  className="text-xs font-normal"
-                >
-                  {set.label}
-                </Badge>
-              ))}
+              {exercise.sets.map((set) => {
+                  const config = setTypeConfig[set.type];
+                  const Icon = config.icon;
+                  return (
+                    <Badge
+                      key={set.label}
+                      className={cn("text-xs font-semibold gap-1.5", config.className)}
+                    >
+                      <Icon className="h-3 w-3" />
+                      {set.label}
+                    </Badge>
+                  );
+                })}
             </div>
         </TableCell>
         <TableCell className="p-2 pt-3">
