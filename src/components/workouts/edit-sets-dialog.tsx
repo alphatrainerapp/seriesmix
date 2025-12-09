@@ -26,6 +26,7 @@ import {
   HelpCircle,
   Plus,
   X,
+  Hash,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Separator } from '../ui/separator';
@@ -84,9 +85,20 @@ export function EditSetsDialog({
   const [open, setOpen] = useState(false);
   const [sets, setSets] = useState<Set[]>(exercise.sets);
 
-  const handleSetChange = (id: number, field: keyof Set, value: string) => {
+  const handleSetChange = (id: number, field: keyof Set, value: string | 'reps' | 'time') => {
     setSets((prevSets) =>
       prevSets.map((s) => (s.id === id ? { ...s, [field]: value } : s))
+    );
+  };
+
+  const toggleSetUnit = (id: number) => {
+    setSets((prevSets) =>
+      prevSets.map((s) => {
+        if (s.id === id) {
+          return { ...s, unit: s.unit === 'reps' ? 'time' : 'reps' };
+        }
+        return s;
+      })
     );
   };
 
@@ -94,6 +106,7 @@ export function EditSetsDialog({
     const newSet: Set = {
       id: sets.length > 0 ? Math.max(...sets.map(s => s.id)) + 1 : 1,
       type: 'trabalho',
+      unit: 'reps',
       reps: '8-12',
       interval: '60',
       rir: '',
@@ -171,7 +184,10 @@ export function EditSetsDialog({
                       </SelectContent>
                     </Select>
                   </div>
-                  <div>
+                  <div className='flex items-center gap-2'>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-primary" onClick={() => toggleSetUnit(set.id)}>
+                      {set.unit === 'reps' ? <Hash className="h-5 w-5"/> : <Timer className="h-5 w-5"/>}
+                    </Button>
                     <Input
                       value={set.reps}
                       onChange={(e) =>
@@ -180,8 +196,7 @@ export function EditSetsDialog({
                       className="bg-background"
                     />
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Timer className="h-5 w-5 text-primary" />
+                  <div>
                     <Input
                       value={set.interval}
                       onChange={(e) =>
