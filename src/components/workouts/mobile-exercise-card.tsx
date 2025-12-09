@@ -112,7 +112,7 @@ export function MobileExerciseCard({
             <div className="grid grid-cols-3 gap-2 text-center">
               <EditSetsDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
                 <div className="space-y-1 cursor-pointer">
-                  <p className="text-xs font-medium text-muted-foreground">Série</p>
+                  <p className="text-[10px] font-medium text-muted-foreground">Série</p>
                   <div className="bg-[hsl(var(--chart-1))] text-black font-bold rounded-md py-2 text-sm flex items-center justify-center gap-1">
                     {exercise.sets.length}
                     <Pencil className="h-3 w-3"/>
@@ -120,20 +120,20 @@ export function MobileExerciseCard({
                 </div>
               </EditSetsDialog>
               <div className="space-y-1">
-                <p className="text-xs font-medium text-muted-foreground">Repetições</p>
+                <p className="text-[10px] font-medium text-muted-foreground">Repetições</p>
                 <div className="bg-[hsl(var(--chart-2))] text-black font-bold rounded-md py-2 text-sm">{exercise.repsRange}</div>
               </div>
               <div className="space-y-1">
-                <p className="text-xs font-medium text-muted-foreground">Intervalo</p>
+                <p className="text-[10px] font-medium text-muted-foreground">Intervalo</p>
                 <div className="bg-[hsl(var(--chart-3))] text-black font-bold rounded-md py-2 text-sm">30</div>
               </div>
                <div className="space-y-1">
-                <p className="text-xs font-medium text-muted-foreground">Cadência</p>
+                <p className="text-[10px] font-medium text-muted-foreground">Cadência</p>
                 <div className="bg-[hsl(var(--chart-4))] text-black font-bold rounded-md py-2 text-sm">2.2</div>
               </div>
                <EditObservationDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
                 <div className="space-y-1 cursor-pointer">
-                  <p className="text-xs font-medium text-muted-foreground">Observação</p>
+                  <p className="text-[10px] font-medium text-muted-foreground">Observação</p>
                    <div className="bg-primary/20 text-primary rounded-md py-2 flex justify-center items-center">
                       <MessageSquare className="h-4 w-4"/>
                   </div>
@@ -142,7 +142,7 @@ export function MobileExerciseCard({
             </div>
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                    <label className="text-xs font-medium text-muted-foreground">Método</label>
+                    <label className="text-[10px] font-medium text-muted-foreground">Método</label>
                     <Select defaultValue="biset">
                         <SelectTrigger className="rounded-full bg-muted border-border">
                             <SelectValue />
@@ -154,7 +154,7 @@ export function MobileExerciseCard({
                     </Select>
                 </div>
                 <div className="space-y-1">
-                    <label className="text-xs font-medium text-muted-foreground">Cor</label>
+                    <label className="text-[10px] font-medium text-muted-foreground">Cor</label>
                      <div className="flex items-center justify-center h-10 rounded-full bg-muted border-border">
                         <div className="w-6 h-6 bg-gray-300 border-2 border-white rounded-sm shadow-inner" style={{ "backgroundImage": "url(\"data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23333' stroke-width='4' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e\")" }}></div>
                     </div>
