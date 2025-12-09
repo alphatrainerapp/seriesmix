@@ -48,9 +48,13 @@ export function ExerciseCard({
   exercise: Exercise;
   onUpdateExercise: (exercise: Exercise) => void;
 }) {
-  const visibleSets = exercise.sets
-    .map((s) => s.type)
-    .filter((v, i, a) => a.indexOf(v) === i);
+  const setCounts = exercise.sets.reduce((acc, set) => {
+    acc[set.type] = (acc[set.type] || 0) + 1;
+    return acc;
+  }, {} as Record<SetType, number>);
+
+  const setTypesInOrder: SetType[] = ['aquecimento', 'preparatoria', 'trabalho'];
+
 
   return (
     <>
@@ -60,7 +64,7 @@ export function ExerciseCard({
             <GripVertical className="text-muted-foreground" />
           </Button>
         </TableCell>
-        <TableCell className="font-medium p-2 min-w-[300px]">
+        <TableCell className="font-medium p-2 min-w-[400px]">
           <Input 
             className='bg-exercise-card border-border shadow-sm w-full rounded-full'
             defaultValue={exercise.name}
@@ -88,7 +92,7 @@ export function ExerciseCard({
             <MessageSquare className="text-primary" />
           </Button>
         </TableCell>
-        <TableCell className="w-[70px] p-1 pt-3 text-center">
+        <TableCell className="w-[80px] p-1 pt-3 text-center">
             <div className="flex items-center justify-center">
               <Input
                 className="w-10 text-center bg-[hsl(var(--chart-1))] text-black placeholder:text-black/80 font-bold"
@@ -105,9 +109,9 @@ export function ExerciseCard({
               </EditSetsDialog>
             </div>
         </TableCell>
-        <TableCell className="w-[70px] px-1 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-2))] text-black hover:bg-[hsl(var(--chart-2))] font-bold">{exercise.repsRange}</Badge></TableCell>
-        <TableCell className="w-[70px] px-1 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-3))] text-black hover:bg-[hsl(var(--chart-3))] font-bold">30</Badge></TableCell>
-        <TableCell className="w-[70px] px-1 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-4))] text-black hover:bg-[hsl(var(--chart-4))] font-bold">2.2</Badge></TableCell>
+        <TableCell className="w-[80px] px-1 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-2))] text-black hover:bg-[hsl(var(--chart-2))] font-bold">{exercise.repsRange}</Badge></TableCell>
+        <TableCell className="w-[80px] px-1 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-3))] text-black hover:bg-[hsl(var(--chart-3))] font-bold">30</Badge></TableCell>
+        <TableCell className="w-[80px] px-1 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-4))] text-black hover:bg-[hsl(var(--chart-4))] font-bold">2.2</Badge></TableCell>
         <TableCell className="w-[40px] p-2 pt-3">
           <Button variant="ghost" size="icon">
              <AppWindow className="text-muted-foreground" />
@@ -123,7 +127,10 @@ export function ExerciseCard({
         <TableCell></TableCell>
         <TableCell className="pt-0 pb-4 pl-2" colSpan={9}>
             <div className="flex items-center gap-2">
-              {visibleSets.map((setType) => {
+              {setTypesInOrder.map((setType) => {
+                  const count = setCounts[setType];
+                  if (!count) return null;
+
                   const config = setTypeConfig[setType];
                   const Icon = config.icon;
                   return (
@@ -132,7 +139,7 @@ export function ExerciseCard({
                       className={cn("text-xs font-semibold gap-1.5", config.className)}
                     >
                       <Icon className="h-3 w-3" />
-                      {config.label}
+                      {config.label} ({count})
                     </Badge>
                   );
                 })}
