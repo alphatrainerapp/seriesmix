@@ -8,11 +8,12 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CreateWorkoutDialog } from '@/components/workouts/create-workout-dialog';
 import { mockWorkout } from '@/lib/data';
 import { ExerciseCard } from '@/components/workouts/exercise-card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 
 export default function Home() {
   return (
@@ -45,7 +46,6 @@ export default function Home() {
               Treino D
             </TabsTrigger>
           </TabsList>
-          <CreateWorkoutDialog />
         </div>
         <TabsContent value="treino-a" className="mt-6">
           <div className="flex items-center justify-between mb-6">
@@ -88,6 +88,19 @@ export default function Home() {
               </TableBody>
             </Table>
           </div>
+
+          <div className="mt-6 flex gap-2">
+              <Button>Protocolo aeróbico</Button>
+              <Button variant="outline">Hiit</Button>
+              <Button variant="outline">Exercício</Button>
+              <Button variant="outline">Aquecimento</Button>
+          </div>
+
+          <div className="mt-6">
+            <h2 className="text-xl font-semibold tracking-tight mb-2">Observações Treino A:</h2>
+            <Textarea placeholder="Adicione observações sobre o treino..."/>
+          </div>
+
         </TabsContent>
         <TabsContent value="treino-b" className="mt-6">
           <Card className="flex items-center justify-center p-16 bg-card shadow-sm">

@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from '../ui/select';
 import { cn } from '@/lib/utils';
+import { Input } from '../ui/input';
 
 const setTypeConfig: {
   [key in Set['type']]: {
@@ -45,24 +46,10 @@ export function ExerciseCard({ exercise }: { exercise: Exercise }) {
           </Button>
         </TableCell>
         <TableCell className="font-medium p-2">
-            <div className='flex items-center bg-exercise-card rounded-lg p-2 shadow-sm border'>
-                <p className='flex-1 text-sm text-foreground/80'>{exercise.name}</p>
-            </div>
-            <div className="flex items-center gap-2 pl-2 pt-1">
-              {exercise.sets.map((set) => {
-                  const config = setTypeConfig[set.type];
-                  const Icon = config.icon;
-                  return (
-                    <Badge
-                      key={set.label}
-                      className={cn("text-xs font-semibold gap-1.5", config.className)}
-                    >
-                      <Icon className="h-3 w-3" />
-                      {set.label}
-                    </Badge>
-                  );
-                })}
-            </div>
+          <Input 
+            className='bg-exercise-card border-border shadow-sm'
+            defaultValue={exercise.name}
+          />
         </TableCell>
         <TableCell className="p-2 pt-3">
           <div className="flex items-center gap-1">
@@ -70,7 +57,7 @@ export function ExerciseCard({ exercise }: { exercise: Exercise }) {
               <PlaySquare className="text-primary" />
             </Button>
             <Select>
-              <SelectTrigger className="w-[180px] bg-card border shadow-sm">
+              <SelectTrigger className="w-[180px] bg-exercise-card border-border shadow-sm">
                 <SelectValue placeholder="Selecione o método..." />
               </SelectTrigger>
               <SelectContent>
@@ -99,6 +86,26 @@ export function ExerciseCard({ exercise }: { exercise: Exercise }) {
           <Button variant="ghost" size="icon" className="text-destructive/70 hover:text-destructive hover:bg-destructive/10">
             <Trash2 />
           </Button>
+        </TableCell>
+      </TableRow>
+       <TableRow className="hover:bg-transparent">
+        <TableCell></TableCell>
+        <TableCell className="pt-0 pb-4 pl-2" colSpan={9}>
+            <div className="flex items-center gap-2">
+              {exercise.sets.map((set) => {
+                  const config = setTypeConfig[set.type];
+                  const Icon = config.icon;
+                  return (
+                    <Badge
+                      key={set.label}
+                      className={cn("text-xs font-semibold gap-1.5", config.className)}
+                    >
+                      <Icon className="h-3 w-3" />
+                      {set.label}
+                    </Badge>
+                  );
+                })}
+            </div>
         </TableCell>
       </TableRow>
     </>
