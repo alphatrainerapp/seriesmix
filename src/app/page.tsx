@@ -20,6 +20,7 @@ import { useState } from 'react';
 import type { Exercise, Set } from '@/lib/types';
 import { MobileExerciseCard } from '@/components/workouts/mobile-exercise-card';
 import { Accordion } from '@/components/ui/accordion';
+import { CombineExercisesDialog } from '@/components/workouts/combine-exercises-dialog';
 
 const CombineIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg
@@ -129,10 +130,12 @@ export default function Home() {
                       <label htmlFor="editar-varios">Editar Vários</label>
                     </div>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Button variant="ghost" className="text-primary hover:text-primary gap-2">
-                        <CombineIcon className="text-primary" />
-                        Combinar
-                      </Button>
+                      <CombineExercisesDialog>
+                        <Button variant="ghost" className="text-primary hover:text-primary gap-2">
+                          <CombineIcon className="text-primary" />
+                          Combinar
+                        </Button>
+                      </CombineExercisesDialog>
                     </div>
                   </div>
                 </div>
@@ -143,15 +146,15 @@ export default function Home() {
                   <TableHeader>
                     <TableRow className="hover:bg-transparent border-b-border">
                       <TableHead className="w-[40px] px-2"></TableHead>
-                      <TableHead className="min-w-[400px]">Exercício</TableHead>
+                      <TableHead className="min-w-[450px]">Exercício</TableHead>
                       <TableHead>Método</TableHead>
                       <TableHead className="w-[80px] text-center px-1">
                         Observação
                       </TableHead>
-                      <TableHead className="w-[100px] text-center px-1">Série</TableHead>
-                      <TableHead className="w-[80px] text-center px-1">Repetições</TableHead>
-                      <TableHead className="w-[80px] text-center px-1">Intervalo</TableHead>
-                      <TableHead className="w-[80px] text-center px-1">Cadência</TableHead>
+                      <TableHead className="w-[80px] text-center px-0">Série</TableHead>
+                      <TableHead className="w-[60px] text-center px-0">Repetições</TableHead>
+                      <TableHead className="w-[60px] text-center px-0">Intervalo</TableHead>
+                      <TableHead className="w-[60px] text-center px-0">Cadência</TableHead>
                       <TableHead className="w-[40px]">Cor</TableHead>
                       <TableHead className="w-[40px]"></TableHead>
                     </TableRow>
