@@ -18,3 +18,5 @@ export type Exercise = {
   observation?: string;
   groupId?: string;
 };
+
+export type CombinationType = 'biset' | 'triset' | 'superserie' | 'hiit';

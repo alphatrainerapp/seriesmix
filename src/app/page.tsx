@@ -17,7 +17,7 @@ import { TrainingPlanHeader } from '@/components/plan/training-plan-header';
 import { TrainingSplit } from '@/components/plan/training-split';
 import { PageSidebar } from '@/components/sidebar/page-sidebar';
 import { useState } from 'react';
-import type { Exercise } from '@/lib/types';
+import type { CombinationType, Exercise } from '@/lib/types';
 import { MobileExerciseCard } from '@/components/workouts/mobile-exercise-card';
 import { Accordion } from '@/components/ui/accordion';
 import { CombineExercisesDialog } from '@/components/workouts/combine-exercises-dialog';
@@ -72,6 +72,9 @@ const CombineIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export default function Home() {
   const [workoutData, setWorkoutData] = useState<Exercise[]>(initialWorkoutData);
+  const [combinationTypes, setCombinationTypes] = useState<Record<string, CombinationType>>({
+    'warmup': 'biset'
+  });
 
   const handleUpdateExercise = (updatedExercise: Exercise) => {
     setWorkoutData((prevData) =>
@@ -93,6 +96,7 @@ export default function Home() {
       
       if (currentExercise.groupId) {
         const group = workoutData.filter(e => e.groupId === currentExercise.groupId);
+        const combinationType = combinationTypes[currentExercise.groupId];
         elements.push(
           <tbody key={`group-${currentExercise.groupId}`} className="relative border-b-0">
              {group.map((exercise, idx) => (
@@ -103,6 +107,7 @@ export default function Home() {
                   isFirstInGroup={idx === 0}
                   isLastInGroup={idx === group.length - 1}
                   isGrouped={group.length > 1}
+                  combinationType={combinationType}
                 />
               ))}
           </tbody>
@@ -172,7 +177,12 @@ export default function Home() {
                       <label htmlFor="editar-varios">Editar Vários</label>
                     </div>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <CombineExercisesDialog exercises={workoutData} onUpdateWorkout={setWorkoutData}>
+                      <CombineExercisesDialog
+                        exercises={workoutData}
+                        onUpdateWorkout={setWorkoutData}
+                        combinationTypes={combinationTypes}
+                        onUpdateCombinationTypes={setCombinationTypes}
+                      >
                         <Button variant="ghost" className="text-primary hover:text-primary gap-2">
                           <CombineIcon className="text-primary" />
                           Combinar

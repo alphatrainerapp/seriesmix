@@ -25,10 +25,8 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '../ui/input';
-import type { Exercise } from '@/lib/types';
+import type { Exercise, CombinationType } from '@/lib/types';
 import { Badge } from '../ui/badge';
-
-type CombinationType = 'biset' | 'triset' | 'superserie' | 'hiit';
 
 const combinationOptions = [
   {
@@ -79,10 +77,14 @@ export function CombineExercisesDialog({
   children,
   exercises,
   onUpdateWorkout,
+  combinationTypes,
+  onUpdateCombinationTypes,
 }: {
   children: React.ReactNode;
   exercises: Exercise[];
   onUpdateWorkout: (updatedExercises: Exercise[]) => void;
+  combinationTypes: Record<string, CombinationType>;
+  onUpdateCombinationTypes: (types: Record<string, CombinationType>) => void;
 }) {
   const [open, setOpen] = React.useState(false);
   const [step, setStep] = React.useState<'select' | 'configure'>('select');
@@ -111,13 +113,15 @@ export function CombineExercisesDialog({
   const handleUncombine = (groupIdToUncombine: string) => {
     const updatedExercises = exercises.map(ex => {
       if (ex.groupId === groupIdToUncombine) {
-        // Create a new object without the groupId property
         const { groupId, ...rest } = ex;
         return rest;
       }
       return ex;
     });
     onUpdateWorkout(updatedExercises);
+    const newCombinationTypes = { ...combinationTypes };
+    delete newCombinationTypes[groupIdToUncombine];
+    onUpdateCombinationTypes(newCombinationTypes);
   };
 
   const handleSaveCombination = () => {
@@ -136,6 +140,10 @@ export function CombineExercisesDialog({
     });
 
     onUpdateWorkout(updatedExercises);
+    onUpdateCombinationTypes({
+      ...combinationTypes,
+      [newGroupId]: selectedType,
+    })
     setOpen(false); // Close dialog on save
   };
 
@@ -262,7 +270,7 @@ export function CombineExercisesDialog({
                         {Object.entries(grouped).map(([groupId, groupExercises]) => (
                             <div key={groupId} className="rounded-lg border bg-muted/50 p-3">
                                 <div className='flex justify-between items-center mb-2'>
-                                  <Badge variant="secondary">Combinação {groupId.split('-')[1]}</Badge>
+                                  <Badge variant="secondary">Combinação {combinationOptions.find(opt => opt.type === combinationTypes[groupId])?.title}</Badge>
                                   <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => handleUncombine(groupId)}>
                                       <Unplug className="h-4 w-4" />
                                   </Button>

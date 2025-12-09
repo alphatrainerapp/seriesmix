@@ -4,8 +4,8 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '../ui/button';
-import { GripVertical, PlaySquare, MessageSquare, Trash2, AppWindow, Flame, Check, Pencil, SlidersHorizontal, Link2 } from 'lucide-react';
-import type { Exercise, Set, SetType } from '@/lib/types';
+import { GripVertical, PlaySquare, MessageSquare, Trash2, Link2, Flame, Check, Pencil, SlidersHorizontal, Dumbbell, Timer } from 'lucide-react';
+import type { Exercise, Set, SetType, CombinationType } from '@/lib/types';
 import {
   Select,
   SelectContent,
@@ -42,18 +42,32 @@ const setTypeConfig: {
   },
 };
 
+const combinationIconConfig: {
+  [key in CombinationType]: {
+    icon: React.ElementType;
+    className: string;
+  };
+} = {
+  biset: { icon: Dumbbell, className: 'text-blue-500' },
+  triset: { icon: Dumbbell, className: 'text-blue-500' },
+  superserie: { icon: Link2, className: 'text-green-500' },
+  hiit: { icon: Timer, className: 'text-orange-500' },
+};
+
 export function ExerciseCard({
   exercise,
   onUpdateExercise,
   isGrouped = false,
   isFirstInGroup = false,
   isLastInGroup = false,
+  combinationType,
 }: {
   exercise: Exercise;
   onUpdateExercise: (exercise: Exercise) => void;
   isGrouped?: boolean;
   isFirstInGroup?: boolean;
   isLastInGroup?: boolean;
+  combinationType?: CombinationType;
 }) {
   const setCounts = exercise.sets.reduce((acc, set) => {
     acc[set.type] = (acc[set.type] || 0) + 1;
@@ -61,6 +75,9 @@ export function ExerciseCard({
   }, {} as Record<SetType, number>);
 
   const setTypesInOrder: SetType[] = ['aquecimento', 'preparatoria', 'trabalho'];
+
+  const CombinationIcon = combinationType ? combinationIconConfig[combinationType]?.icon : null;
+  const combinationIconClassName = combinationType ? combinationIconConfig[combinationType]?.className : '';
 
 
   return (
@@ -144,7 +161,11 @@ export function ExerciseCard({
         <TableCell className="w-[80px] px-1 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-4))] text-black hover:bg-[hsl(var(--chart-4))] font-bold">2.2</Badge></TableCell>
         <TableCell className="w-[40px] p-2 pt-3">
           <Button variant="ghost" size="icon">
-             <AppWindow className="text-muted-foreground" />
+            {CombinationIcon ? (
+              <CombinationIcon className={cn("h-5 w-5", combinationIconClassName)} />
+            ) : (
+               <div className="w-5 h-5 bg-gray-300 border-2 border-white rounded-sm shadow-inner" style={{ "backgroundImage": "url(\"data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23333' stroke-width='4' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e\")" }}></div>
+            )}
           </Button>
         </TableCell>
         <TableCell className="w-[40px] p-2 pt-3">
