@@ -65,6 +65,13 @@ export default {
           border: 'hsl(var(--sidebar-border))',
           ring: 'hsl(var(--sidebar-ring))',
         },
+        'tag-soft-blue': {
+          DEFAULT: 'hsl(var(--tag-soft-blue-bg))',
+          foreground: 'hsl(var(--tag-soft-blue-fg))',
+        },
+        'tag-red': 'hsl(var(--chart-1))',
+        'tag-blue': 'hsl(var(--chart-2))',
+        'tag-green': 'hsl(var(--chart-3))',
       },
       borderRadius: {
         lg: 'var(--radius)',
