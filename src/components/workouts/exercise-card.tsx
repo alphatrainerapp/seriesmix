@@ -4,7 +4,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '../ui/button';
-import { GripVertical, PlaySquare, MessageSquare, Trash2, Palette, Flame, Wrench, Check, Pencil } from 'lucide-react';
+import { GripVertical, PlaySquare, MessageSquare, Trash2, Palette, Flame, Wrench, Check, Pencil, AppWindow } from 'lucide-react';
 import type { Exercise, Set } from '@/lib/types';
 import {
   Select,
@@ -81,12 +81,12 @@ export function ExerciseCard({ exercise }: { exercise: Exercise }) {
               </Button>
             </div>
         </TableCell>
-        <TableCell className="w-[80px] p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-1))] text-black hover:bg-[hsl(var(--chart-1))]">12-14</Badge></TableCell>
+        <TableCell className="w-[80px] p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-1))] text-black hover:bg-[hsl(var(--chart-1))]">{exercise.repsRange}</Badge></TableCell>
         <TableCell className="w-[80px] p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-2))] text-black hover:bg-[hsl(var(--chart-2))]">30</Badge></TableCell>
-        <TableCell className="w-[80px] p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-4))] text-white hover:bg-[hsl(var(--chart-4))]">2.2</Badge></TableCell>
+        <TableCell className="w-[80px] p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-3))] text-black hover:bg-[hsl(var(--chart-3))]">2.2</Badge></TableCell>
         <TableCell className="w-[40px] p-2 pt-3">
           <Button variant="ghost" size="icon">
-             <Palette className="text-muted-foreground" />
+             <AppWindow className="text-muted-foreground" />
           </Button>
         </TableCell>
         <TableCell className="w-[40px] p-2 pt-3">

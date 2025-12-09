@@ -83,7 +83,7 @@ export default function Home() {
                       <TableHead className="w-[80px] text-center">Repetições</TableHead>
                       <TableHead className="w-[80px] text-center">Intervalo</TableHead>
                       <TableHead className="w-[80px] text-center">Cadência</TableHead>
-                      <TableHead className="w-[40px]"></TableHead>
+                      <TableHead className="w-[40px]">Cor</TableHead>
                       <TableHead className="w-[40px]"></TableHead>
                     </TableRow>
                   </TableHeader>

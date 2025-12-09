@@ -31,10 +31,10 @@ body {
     --ring: 180 96% 34%;
     --radius: 0.5rem;
 
-    --chart-1: 35 97% 58%; /* #fca726 */
-    --chart-2: 118 89% 85%; /* #b7fdb4 */
-    --chart-3: 122 71% 54%; /* #38de3e */
-    --chart-4: 182 93% 34%; /* #07a6aa */
+    --chart-1: 35 97% 58%; /* #fca726 - Laranja para Série */
+    --chart-2: 118 89% 85%; /* #b7fdb4 - Verde claro para Repetições */
+    --chart-3: 122 71% 54%; /* #38de3e - Verde vivo para Intervalo */
+    --chart-4: 182 93% 34%; /* #07a6aa - Ciano para Cadência */
     --chart-5: 217 91% 60%;
 
     --sidebar-background: 0 0% 100%;
