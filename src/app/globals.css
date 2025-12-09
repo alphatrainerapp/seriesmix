@@ -8,11 +8,11 @@ body {
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 0 0% 95%;
     --foreground: 240 10% 3.9%;
-    --card: 0 0% 95%;
+    --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
-    --workout-card: 0 0% 95%;
+    --workout-card: 240 4.8% 95.9%;
     --exercise-card: 0 0% 74%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
