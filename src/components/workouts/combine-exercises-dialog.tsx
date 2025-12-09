@@ -79,9 +79,11 @@ const InputRow = ({
 export function CombineExercisesDialog({
   children,
   exercises,
+  onUpdateWorkout,
 }: {
   children: React.ReactNode;
   exercises: Exercise[];
+  onUpdateWorkout: (updatedExercises: Exercise[]) => void;
 }) {
   const [open, setOpen] = React.useState(false);
   const [step, setStep] = React.useState<'select' | 'configure'>('select');
@@ -107,6 +109,18 @@ export function CombineExercisesDialog({
     );
   };
   
+  const handleUncombine = (groupIdToUncombine: string) => {
+    const updatedExercises = exercises.map(ex => {
+      if (ex.groupId === groupIdToUncombine) {
+        // Create a new object without the groupId property
+        const { groupId, ...rest } = ex;
+        return rest;
+      }
+      return ex;
+    });
+    onUpdateWorkout(updatedExercises);
+  };
+
   // Reset state when dialog closes
   React.useEffect(() => {
     if (!open) {
@@ -231,7 +245,7 @@ export function CombineExercisesDialog({
                             <div key={groupId} className="rounded-lg border bg-muted/50 p-3">
                                 <div className='flex justify-between items-center mb-2'>
                                   <Badge variant="secondary">Combinação {groupId}</Badge>
-                                  <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive">
+                                  <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => handleUncombine(groupId)}>
                                       <Unplug className="h-4 w-4" />
                                   </Button>
                                 </div>

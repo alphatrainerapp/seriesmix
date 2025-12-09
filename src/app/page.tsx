@@ -215,7 +215,7 @@ export default function Home() {
                       <label htmlFor="editar-varios">Editar Vários</label>
                     </div>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <CombineExercisesDialog exercises={workoutData}>
+                      <CombineExercisesDialog exercises={workoutData} onUpdateWorkout={setWorkoutData}>
                         <Button variant="ghost" className="text-primary hover:text-primary gap-2">
                           <CombineIcon className="text-primary" />
                           Combinar
