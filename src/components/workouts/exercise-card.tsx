@@ -47,7 +47,7 @@ export function ExerciseCard({ exercise }: { exercise: Exercise }) {
         </TableCell>
         <TableCell className="font-medium p-2 min-w-[250px]">
           <Input 
-            className='bg-exercise-card border-border shadow-sm w-full rounded-lg'
+            className='bg-exercise-card border-border shadow-sm w-full rounded-full'
             defaultValue={exercise.name}
           />
         </TableCell>
@@ -57,7 +57,7 @@ export function ExerciseCard({ exercise }: { exercise: Exercise }) {
               <PlaySquare className="text-primary" />
             </Button>
             <Select>
-              <SelectTrigger className="w-[180px] bg-exercise-card border-border shadow-sm rounded-lg">
+              <SelectTrigger className="w-[180px] bg-exercise-card border-border shadow-sm rounded-full">
                 <SelectValue placeholder="Selecione o método..." />
               </SelectTrigger>
               <SelectContent>
