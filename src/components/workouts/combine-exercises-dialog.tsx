@@ -27,6 +27,7 @@ import { cn } from '@/lib/utils';
 import { Input } from '../ui/input';
 import { Checkbox } from '../ui/checkbox';
 import type { Exercise } from '@/lib/types';
+import { Badge } from '../ui/badge';
 
 type CombinationType = 'biset' | 'triset' | 'superserie' | 'hiit';
 
@@ -120,6 +121,24 @@ export function CombineExercisesDialog({
     (opt) => opt.type === selectedType
   );
 
+  const { grouped, singles } = React.useMemo(() => {
+    const grouped: { [key: string]: Exercise[] } = {};
+    const singles: Exercise[] = [];
+
+    exercises.forEach(exercise => {
+      if (exercise.groupId) {
+        if (!grouped[exercise.groupId]) {
+          grouped[exercise.groupId] = [];
+        }
+        grouped[exercise.groupId].push(exercise);
+      } else {
+        singles.push(exercise);
+      }
+    });
+
+    return { grouped, singles };
+  }, [exercises]);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -193,7 +212,7 @@ export function CombineExercisesDialog({
                 </div>
               </div>
             </DialogHeader>
-            <div className="px-6 space-y-4 max-h-[50vh] overflow-y-auto">
+            <div className="px-6 space-y-6 max-h-[50vh] overflow-y-auto">
               {selectedType === 'hiit' && (
                 <div className='space-y-3'>
                   <InputRow icon={Clock} label="Tempo de exercício" defaultValue="00:30" />
@@ -201,13 +220,42 @@ export function CombineExercisesDialog({
                   <InputRow icon={Repeat} label="Nº de voltas" defaultValue="4" />
                 </div>
               )}
+              {Object.keys(grouped).length > 0 && (
+                <div>
+                   <h4 className="font-medium text-sm mb-2 flex items-center gap-3">
+                      <Link2 className="h-5 w-5 text-muted-foreground" />
+                      Combinações Atuais
+                    </h4>
+                    <div className="space-y-2">
+                        {Object.entries(grouped).map(([groupId, groupExercises]) => (
+                            <div key={groupId} className="rounded-lg border bg-muted/50 p-3">
+                                <div className='flex justify-between items-center mb-2'>
+                                  <Badge variant="secondary">Combinação {groupId}</Badge>
+                                  <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive">
+                                      <Unplug className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                                <div className="space-y-1">
+                                {groupExercises.map(exercise => (
+                                    <div key={exercise.id} className="flex items-center justify-between rounded-md p-2 bg-background text-sm">
+                                        <span>{exercise.name}</span>
+                                        <Dumbbell className="h-4 w-4 text-muted-foreground" />
+                                    </div>
+                                ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+              )}
+
               <div>
                 <h4 className="font-medium text-sm mb-2 flex items-center gap-3">
-                  <Unplug className="h-5 w-5 text-muted-foreground" />
-                  Exercícios do {selectedConfig.title}
+                  <Dumbbell className="h-5 w-5 text-muted-foreground" />
+                  Exercícios Individuais
                 </h4>
                 <div className="space-y-2">
-                  {exercises.map((exercise) => (
+                  {singles.map((exercise) => (
                     <div
                       key={exercise.id}
                       className="flex items-center justify-between rounded-md p-2 hover:bg-muted/50 cursor-pointer"
@@ -222,7 +270,6 @@ export function CombineExercisesDialog({
                         </div>
                         <span className="text-sm">{exercise.name}</span>
                       </div>
-                      <Dumbbell className="h-4 w-4 text-muted-foreground" />
                     </div>
                   ))}
                 </div>
