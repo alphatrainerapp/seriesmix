@@ -17,11 +17,10 @@ import { TrainingPlanHeader } from '@/components/plan/training-plan-header';
 import { TrainingSplit } from '@/components/plan/training-split';
 import { PageSidebar } from '@/components/sidebar/page-sidebar';
 import { useState } from 'react';
-import type { Exercise, Set } from '@/lib/types';
+import type { Exercise } from '@/lib/types';
 import { MobileExerciseCard } from '@/components/workouts/mobile-exercise-card';
 import { Accordion } from '@/components/ui/accordion';
 import { CombineExercisesDialog } from '@/components/workouts/combine-exercises-dialog';
-import { Link2 } from 'lucide-react';
 
 const CombineIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg
@@ -71,52 +70,6 @@ const CombineIcon = (props: React.SVGProps<SVGSVGElement>) => (
     </svg>
   );
 
-  const renderExerciseRows = (exercises: Exercise[]) => {
-    const groupedExercises: { [key: string]: Exercise[] } = {};
-    const singleExercises: Exercise[] = [];
-
-    exercises.forEach(exercise => {
-      if (exercise.groupId) {
-        if (!groupedExercises[exercise.groupId]) {
-          groupedExercises[exercise.groupId] = [];
-        }
-        groupedExercises[exercise.groupId].push(exercise);
-      } else {
-        singleExercises.push(exercise);
-      }
-    });
-
-    const renderedGroups = Object.values(groupedExercises).map((group, groupIndex) => (
-      <TableBody key={`group-${groupIndex}`} className="relative">
-        {group.map((exercise, exerciseIndex) => (
-           <ExerciseCard
-            key={exercise.id}
-            exercise={exercise}
-            onUpdateExercise={handleUpdateExercise}
-            isFirstInGroup={exerciseIndex === 0}
-            isLastInGroup={exerciseIndex === group.length - 1}
-            isGrouped={group.length > 1}
-          />
-        ))}
-      </TableBody>
-    ));
-
-    const renderedSingles = singleExercises.map(exercise => (
-      <TableBody key={exercise.id}>
-        <ExerciseCard
-          exercise={exercise}
-          onUpdateExercise={handleUpdateExercise}
-        />
-      </TableBody>
-    ));
-    
-    // This is not ideal as it assumes a certain order, but it's a quick way to interleave them
-    // A better approach would be to process the original list in order.
-    // For now, let's just put groups first.
-    return [...renderedGroups, ...renderedSingles];
-  };
-
-
 export default function Home() {
   const [workoutData, setWorkoutData] = useState<Exercise[]>(initialWorkoutData);
 
@@ -130,26 +83,31 @@ export default function Home() {
   
     const processedExercises = () => {
     const elements: React.ReactNode[] = [];
-    let i = 0;
-    while (i < workoutData.length) {
-      const currentExercise = workoutData[i];
+    const renderedGroupIds = new Set<string>();
+
+    workoutData.forEach((currentExercise, index) => {
+      // Skip if already rendered as part of a group
+      if (currentExercise.groupId && renderedGroupIds.has(currentExercise.groupId)) {
+        return;
+      }
+      
       if (currentExercise.groupId) {
         const group = workoutData.filter(e => e.groupId === currentExercise.groupId);
         elements.push(
           <tbody key={`group-${currentExercise.groupId}`} className="relative border-b-0">
-             {group.map((exercise, index) => (
+             {group.map((exercise, idx) => (
                 <ExerciseCard
                   key={exercise.id}
                   exercise={exercise}
                   onUpdateExercise={handleUpdateExercise}
-                  isFirstInGroup={index === 0}
-                  isLastInGroup={index === group.length - 1}
+                  isFirstInGroup={idx === 0}
+                  isLastInGroup={idx === group.length - 1}
                   isGrouped={group.length > 1}
                 />
               ))}
           </tbody>
         );
-        i += group.length;
+        renderedGroupIds.add(currentExercise.groupId);
       } else {
         elements.push(
           <tbody key={currentExercise.id}>
@@ -159,9 +117,8 @@ export default function Home() {
             />
           </tbody>
         );
-        i++;
       }
-    }
+    });
     return elements;
   };
 

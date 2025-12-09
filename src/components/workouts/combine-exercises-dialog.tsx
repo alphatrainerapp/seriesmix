@@ -25,7 +25,6 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '../ui/input';
-import { Checkbox } from '../ui/checkbox';
 import type { Exercise } from '@/lib/types';
 import { Badge } from '../ui/badge';
 
@@ -119,6 +118,25 @@ export function CombineExercisesDialog({
       return ex;
     });
     onUpdateWorkout(updatedExercises);
+  };
+
+  const handleSaveCombination = () => {
+    if (selectedExercises.length < 2) {
+      // Maybe show a toast or message here
+      console.log("Select at least 2 exercises to combine.");
+      return;
+    }
+
+    const newGroupId = `group-${Date.now()}`;
+    const updatedExercises = exercises.map(ex => {
+      if (selectedExercises.includes(ex.id)) {
+        return { ...ex, groupId: newGroupId };
+      }
+      return ex;
+    });
+
+    onUpdateWorkout(updatedExercises);
+    setOpen(false); // Close dialog on save
   };
 
   // Reset state when dialog closes
@@ -244,7 +262,7 @@ export function CombineExercisesDialog({
                         {Object.entries(grouped).map(([groupId, groupExercises]) => (
                             <div key={groupId} className="rounded-lg border bg-muted/50 p-3">
                                 <div className='flex justify-between items-center mb-2'>
-                                  <Badge variant="secondary">Combinação {groupId}</Badge>
+                                  <Badge variant="secondary">Combinação {groupId.split('-')[1]}</Badge>
                                   <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => handleUncombine(groupId)}>
                                       <Unplug className="h-4 w-4" />
                                   </Button>
@@ -296,7 +314,8 @@ export function CombineExercisesDialog({
             <DialogFooter className="mt-6 p-6 bg-muted/50 sm:justify-center rounded-b-lg">
               <Button
                 className="w-full bg-[#01bfa5] hover:bg-[#01bfa5]/90 text-white"
-                onClick={() => setOpen(false)}
+                onClick={handleSaveCombination}
+                disabled={selectedExercises.length < 2}
               >
                 Salvar {selectedConfig.title}
               </Button>
