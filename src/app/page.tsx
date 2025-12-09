@@ -21,6 +21,54 @@ import type { Exercise, Set } from '@/lib/types';
 import { MobileExerciseCard } from '@/components/workouts/mobile-exercise-card';
 import { Accordion } from '@/components/ui/accordion';
 
+const CombineIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      {...props}
+    >
+      <path
+        d="M13.5 2.5H9.5C8.39543 2.5 7.5 3.39543 7.5 4.5V6.5H11.5C12.6046 6.5 13.5 7.39543 13.5 8.5V12.5H15.5C16.6046 12.5 17.5 11.6046 17.5 10.5V4.5C17.5 3.39543 16.6046 2.5 15.5 2.5Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M6.5 7.5H4.5C3.39543 7.5 2.5 8.39543 2.5 9.5V15.5C2.5 16.6046 3.39543 17.5 4.5 17.5H10.5C11.6046 17.5 12.5 16.6046 12.5 15.5V13.5H8.5C7.39543 13.5 6.5 12.6046 6.5 11.5V7.5Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M10.5 9.16667C10.5 9.58784 10.1544 9.93333 9.73333 9.93333C9.31217 9.93333 8.96667 9.58784 8.96667 9.16667C8.96667 8.7455 9.31217 8.4 9.73333 8.4C10.1544 8.4 10.5 8.7455 10.5 9.16667Z"
+        fill="currentColor"
+        stroke="currentColor"
+        strokeWidth="0.5"
+      />
+      <path
+        d="M11.75 10.4167C11.75 10.8378 11.4044 11.1833 10.9833 11.1833C10.5622 11.1833 10.2167 10.8378 10.2167 10.4167C10.2167 9.9955 10.5622 9.65 10.9833 9.65C11.4044 9.65 11.75 9.9955 11.75 10.4167Z"
+        fill="currentColor"
+        stroke="currentColor"
+        strokeWidth="0.5"
+      />
+      <path
+        d="M9.25 10.4167C9.25 10.8378 8.90443 11.1833 8.48333 11.1833C8.06217 11.1833 7.71667 10.8378 7.71667 10.4167C7.71667 9.9955 8.06217 9.65 8.48333 9.65C8.90443 9.65 9.25 9.9955 9.25 10.4167Z"
+        fill="currentColor"
+        stroke="currentColor"
+        strokeWidth="0.5"
+      />
+      <path
+        d="M10.5 11.6667C10.5 12.0878 10.1544 12.4333 9.73333 12.4333C9.31217 12.4333 8.96667 12.0878 8.96667 11.6667C8.96667 11.2455 9.31217 10.9 9.73333 10.9C10.1544 10.9 10.5 11.2455 10.5 11.6667Z"
+        fill="currentColor"
+        stroke="currentColor"
+        strokeWidth="0.5"
+      />
+    </svg>
+  );
+
 export default function Home() {
   const [workoutData, setWorkoutData] = useState<Exercise[]>(initialWorkoutData);
 
@@ -79,6 +127,12 @@ export default function Home() {
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Checkbox id="editar-varios" />
                       <label htmlFor="editar-varios">Editar Vários</label>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Button variant="ghost" className="text-primary hover:text-primary gap-2">
+                        <CombineIcon className="text-primary" />
+                        Combinar
+                      </Button>
                     </div>
                   </div>
                 </div>
