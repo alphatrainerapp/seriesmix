@@ -4,7 +4,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '../ui/button';
-import { GripVertical, PlaySquare, MessageSquare, Trash2, Palette, Flame, Wrench, Check } from 'lucide-react';
+import { GripVertical, PlaySquare, MessageSquare, Trash2, Palette, Flame, Wrench, Check, Pencil } from 'lucide-react';
 import type { Exercise, Set } from '@/lib/types';
 import {
   Select,
@@ -47,7 +47,7 @@ export function ExerciseCard({ exercise }: { exercise: Exercise }) {
         </TableCell>
         <TableCell className="font-medium p-2">
           <Input 
-            className='bg-workout-card border-border shadow-sm w-full min-w-[250px]'
+            className='bg-exercise-card border-border shadow-sm w-full min-w-[250px]'
             defaultValue={exercise.name}
           />
         </TableCell>
@@ -57,7 +57,7 @@ export function ExerciseCard({ exercise }: { exercise: Exercise }) {
               <PlaySquare className="text-primary" />
             </Button>
             <Select>
-              <SelectTrigger className="w-[180px] bg-workout-card border-border shadow-sm">
+              <SelectTrigger className="w-[180px] bg-exercise-card border-border shadow-sm">
                 <SelectValue placeholder="Selecione o método..." />
               </SelectTrigger>
               <SelectContent>
@@ -73,7 +73,11 @@ export function ExerciseCard({ exercise }: { exercise: Exercise }) {
             <MessageSquare className="text-primary" />
           </Button>
         </TableCell>
-        <TableCell className="p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-1))] text-black hover:bg-[hsl(var(--chart-1))]">3</Badge></TableCell>
+        <TableCell className="p-2 pt-3 text-center">
+            <Button className="bg-[hsl(var(--chart-1))] text-black hover:bg-[hsl(var(--chart-1))] font-bold text-xs h-8 w-10 gap-1">
+              3 <Pencil className="h-3 w-3" />
+            </Button>
+        </TableCell>
         <TableCell className="p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-2))] text-black hover:bg-[hsl(var(--chart-2))]">12-14</Badge></TableCell>
         <TableCell className="p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-3))] text-white hover:bg-[hsl(var(--chart-3))]">30</Badge></TableCell>
         <TableCell className="p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-4))] text-white hover:bg-[hsl(var(--chart-4))]">2.2</Badge></TableCell>
