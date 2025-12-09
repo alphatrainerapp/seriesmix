@@ -11,6 +11,7 @@ export const mockWorkout: Exercise[] = [
     ],
     repsRange: '20s',
     observation: 'Focar na amplitude do movimento.',
+    groupId: 'warmup',
   },
   {
     id: 2,
@@ -21,6 +22,7 @@ export const mockWorkout: Exercise[] = [
       { id: 2, type: 'preparatoria', unit: 'reps', reps: '15', interval: '30', rir: '' },
     ],
     repsRange: '15',
+    groupId: 'warmup',
   },
   {
     id: 3,

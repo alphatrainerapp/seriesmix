@@ -21,6 +21,7 @@ import type { Exercise, Set } from '@/lib/types';
 import { MobileExerciseCard } from '@/components/workouts/mobile-exercise-card';
 import { Accordion } from '@/components/ui/accordion';
 import { CombineExercisesDialog } from '@/components/workouts/combine-exercises-dialog';
+import { Link2 } from 'lucide-react';
 
 const CombineIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg
@@ -70,6 +71,52 @@ const CombineIcon = (props: React.SVGProps<SVGSVGElement>) => (
     </svg>
   );
 
+  const renderExerciseRows = (exercises: Exercise[]) => {
+    const groupedExercises: { [key: string]: Exercise[] } = {};
+    const singleExercises: Exercise[] = [];
+
+    exercises.forEach(exercise => {
+      if (exercise.groupId) {
+        if (!groupedExercises[exercise.groupId]) {
+          groupedExercises[exercise.groupId] = [];
+        }
+        groupedExercises[exercise.groupId].push(exercise);
+      } else {
+        singleExercises.push(exercise);
+      }
+    });
+
+    const renderedGroups = Object.values(groupedExercises).map((group, groupIndex) => (
+      <TableBody key={`group-${groupIndex}`} className="relative">
+        {group.map((exercise, exerciseIndex) => (
+           <ExerciseCard
+            key={exercise.id}
+            exercise={exercise}
+            onUpdateExercise={handleUpdateExercise}
+            isFirstInGroup={exerciseIndex === 0}
+            isLastInGroup={exerciseIndex === group.length - 1}
+            isGrouped={group.length > 1}
+          />
+        ))}
+      </TableBody>
+    ));
+
+    const renderedSingles = singleExercises.map(exercise => (
+      <TableBody key={exercise.id}>
+        <ExerciseCard
+          exercise={exercise}
+          onUpdateExercise={handleUpdateExercise}
+        />
+      </TableBody>
+    ));
+    
+    // This is not ideal as it assumes a certain order, but it's a quick way to interleave them
+    // A better approach would be to process the original list in order.
+    // For now, let's just put groups first.
+    return [...renderedGroups, ...renderedSingles];
+  };
+
+
 export default function Home() {
   const [workoutData, setWorkoutData] = useState<Exercise[]>(initialWorkoutData);
 
@@ -80,6 +127,44 @@ export default function Home() {
       )
     );
   };
+  
+    const processedExercises = () => {
+    const elements: React.ReactNode[] = [];
+    let i = 0;
+    while (i < workoutData.length) {
+      const currentExercise = workoutData[i];
+      if (currentExercise.groupId) {
+        const group = workoutData.filter(e => e.groupId === currentExercise.groupId);
+        elements.push(
+          <tbody key={`group-${currentExercise.groupId}`} className="relative border-b-0">
+             {group.map((exercise, index) => (
+                <ExerciseCard
+                  key={exercise.id}
+                  exercise={exercise}
+                  onUpdateExercise={handleUpdateExercise}
+                  isFirstInGroup={index === 0}
+                  isLastInGroup={index === group.length - 1}
+                  isGrouped={group.length > 1}
+                />
+              ))}
+          </tbody>
+        );
+        i += group.length;
+      } else {
+        elements.push(
+          <tbody key={currentExercise.id}>
+            <ExerciseCard
+              exercise={currentExercise}
+              onUpdateExercise={handleUpdateExercise}
+            />
+          </tbody>
+        );
+        i++;
+      }
+    }
+    return elements;
+  };
+
 
   return (
     <div className="flex flex-1 flex-col p-4 md:p-6 lg:p-8 text-foreground gap-6">
@@ -159,15 +244,7 @@ export default function Home() {
                       <TableHead className="w-[40px]"></TableHead>
                     </TableRow>
                   </TableHeader>
-                  <TableBody>
-                    {workoutData.map((exercise) => (
-                      <ExerciseCard
-                        key={exercise.id}
-                        exercise={exercise}
-                        onUpdateExercise={handleUpdateExercise}
-                      />
-                    ))}
-                  </TableBody>
+                  {processedExercises()}
                 </Table>
               </div>
 

@@ -16,4 +16,5 @@ export type Exercise = {
   sets: Set[];
   repsRange: string;
   observation?: string;
+  groupId?: string;
 };

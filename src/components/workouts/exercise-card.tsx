@@ -4,7 +4,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '../ui/button';
-import { GripVertical, PlaySquare, MessageSquare, Trash2, AppWindow, Flame, Check, Pencil, SlidersHorizontal } from 'lucide-react';
+import { GripVertical, PlaySquare, MessageSquare, Trash2, AppWindow, Flame, Check, Pencil, SlidersHorizontal, Link2 } from 'lucide-react';
 import type { Exercise, Set, SetType } from '@/lib/types';
 import {
   Select,
@@ -45,9 +45,15 @@ const setTypeConfig: {
 export function ExerciseCard({
   exercise,
   onUpdateExercise,
+  isGrouped = false,
+  isFirstInGroup = false,
+  isLastInGroup = false,
 }: {
   exercise: Exercise;
   onUpdateExercise: (exercise: Exercise) => void;
+  isGrouped?: boolean;
+  isFirstInGroup?: boolean;
+  isLastInGroup?: boolean;
 }) {
   const setCounts = exercise.sets.reduce((acc, set) => {
     acc[set.type] = (acc[set.type] || 0) + 1;
@@ -59,13 +65,31 @@ export function ExerciseCard({
 
   return (
     <>
-      <TableRow className="align-top hover:bg-muted/50 border-b-0">
-        <TableCell className="w-[40px] pt-4 px-2">
+      <TableRow className={cn(
+        "align-top hover:bg-muted/50",
+        isGrouped && !isLastInGroup ? "border-b-0" : "",
+        isGrouped ? "bg-muted/30" : ""
+      )}>
+        <TableCell className="w-[40px] pt-4 px-2 relative">
+          {isGrouped && (
+             <div className="absolute left-[26px] top-0 h-full w-[2px] bg-primary/20">
+                {isFirstInGroup && <div className="absolute -top-0 left-1/2 -translate-x-1/2 h-3 w-3 rounded-full bg-primary/20" />}
+                {isLastInGroup && <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 h-3 w-3 rounded-full bg-primary/20" />}
+             </div>
+          )}
+           {isGrouped && (
+             <div className="absolute left-[34px] top-1/2 -translate-y-1/2 w-4 h-[2px] bg-primary/20" />
+           )}
           <Button variant="ghost" size="icon">
             <GripVertical className="text-muted-foreground" />
           </Button>
         </TableCell>
         <TableCell className="font-medium p-2 min-w-[400px]">
+          {isFirstInGroup && (
+             <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 bg-primary/20 text-primary rounded-full">
+                <Link2 className="h-4 w-4"/>
+              </div>
+          )}
           <Input 
             className='bg-exercise-card border-border shadow-sm w-full rounded-full'
             defaultValue={exercise.name}
@@ -129,8 +153,8 @@ export function ExerciseCard({
           </Button>
         </TableCell>
       </TableRow>
-       <TableRow className="hover:bg-transparent">
-        <TableCell></TableCell>
+       <TableRow className={cn("hover:bg-transparent", isGrouped ? "bg-muted/30" : "")}>
+        <TableCell className={cn(isGrouped ? "border-b-0" : "")}></TableCell>
         <TableCell className="pt-0 pb-4 pl-2" colSpan={9}>
             <div className="flex items-center gap-2">
               {setTypesInOrder.map((setType) => {
