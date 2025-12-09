@@ -14,13 +14,13 @@ body {
     --card-foreground: 20 10% 10%;
     --popover: 20 30% 99%;
     --popover-foreground: 20 10% 10%;
-    --primary: 15 100% 62%; /* #FF6A3D */
+    --primary: 151 83% 40%;
     --primary-foreground: 0 0% 100%;
     --secondary: 20 10% 90%;
     --secondary-foreground: 20 10% 9%;
     --muted: 20 10% 85%;
     --muted-foreground: 20 10% 45%;
-    --accent: 10 100% 60%; /* #FF5733 */
+    --accent: 151 83% 40%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
@@ -92,3 +92,5 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+    
