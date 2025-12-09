@@ -63,7 +63,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="border rounded-lg bg-card shadow-sm">
+          <div className="border rounded-lg bg-workout-card shadow-sm">
             <Table>
               <TableHeader>
                 <TableRow className="hover:bg-transparent border-b-border">

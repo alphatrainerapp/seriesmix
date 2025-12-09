@@ -45,7 +45,7 @@ export function ExerciseCard({ exercise }: { exercise: Exercise }) {
           </Button>
         </TableCell>
         <TableCell className="font-medium p-2">
-            <div className='flex items-center bg-card rounded-lg p-2 shadow-sm border'>
+            <div className='flex items-center bg-exercise-card rounded-lg p-2 shadow-sm border'>
                 <p className='flex-1 text-sm text-foreground/80'>{exercise.name}</p>
             </div>
             <div className="flex items-center gap-2 pl-2 pt-1">
