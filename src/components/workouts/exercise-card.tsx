@@ -4,7 +4,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '../ui/button';
-import { GripVertical, PlaySquare, MessageSquare, Trash2, Palette, Flame, Puzzle, Check } from 'lucide-react';
+import { GripVertical, PlaySquare, MessageSquare, Trash2, Palette, Flame, Wrench, Check } from 'lucide-react';
 import type { Exercise, Set } from '@/lib/types';
 import {
   Select,
@@ -26,7 +26,7 @@ const setTypeConfig: {
     className: 'bg-[#dd694d] hover:bg-[#dd694d]/90 text-white border-transparent',
   },
   Prep: {
-    icon: Puzzle,
+    icon: Wrench,
     className: 'bg-[#4a80e3] hover:bg-[#4a80e3]/90 text-white border-transparent',
   },
   Válidas: {
