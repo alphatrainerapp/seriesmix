@@ -4,7 +4,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '../ui/button';
-import { GripVertical, PlaySquare, MessageSquare, Trash2, AppWindow, Flame, Wrench, Check, Pencil } from 'lucide-react';
+import { GripVertical, PlaySquare, MessageSquare, Trash2, AppWindow, Flame, Wrench, Check, Pencil, SlidersHorizontal } from 'lucide-react';
 import type { Exercise, Set } from '@/lib/types';
 import {
   Select,
@@ -15,6 +15,7 @@ import {
 } from '../ui/select';
 import { cn } from '@/lib/utils';
 import { Input } from '../ui/input';
+import { EditSetsDialog } from './edit-sets-dialog';
 
 const setTypeConfig: {
   [key in Set['type']]: {
@@ -27,7 +28,7 @@ const setTypeConfig: {
     className: 'bg-[#dd694d] hover:bg-[#dd694d]/90 text-white border-transparent',
   },
   Prep: {
-    icon: Wrench,
+    icon: SlidersHorizontal,
     className: 'bg-[#4a80e3] hover:bg-[#4a80e3]/90 text-white border-transparent',
   },
   Válidas: {
@@ -73,17 +74,19 @@ export function ExerciseCard({ exercise }: { exercise: Exercise }) {
             <MessageSquare className="text-primary" />
           </Button>
         </TableCell>
-        <TableCell className="w-[70px] p-2 pt-3 text-center">
-            <div className="flex items-center justify-center gap-1">
-              <Input className="w-10 text-center bg-[hsl(var(--chart-1))] text-black placeholder:text-black/80" defaultValue="3" />
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-primary">
-                <Pencil className="h-4 w-4" />
-              </Button>
+        <TableCell className="w-[70px] p-1 pt-3 text-center">
+            <div className="flex items-center justify-center">
+              <Input className="w-10 text-center bg-chart-1 text-black placeholder:text-black/80" defaultValue="3" />
+              <EditSetsDialog>
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-primary">
+                  <Pencil className="h-4 w-4" />
+                </Button>
+              </EditSetsDialog>
             </div>
         </TableCell>
-        <TableCell className="w-[70px] px-1 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-2))] text-black hover:bg-[hsl(var(--chart-2))]">{exercise.repsRange}</Badge></TableCell>
-        <TableCell className="w-[70px] px-1 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-3))] text-black hover:bg-[hsl(var(--chart-3))]">30</Badge></TableCell>
-        <TableCell className="w-[70px] px-1 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-4))] text-primary-foreground hover:bg-[hsl(var(--chart-4))]">2.2</Badge></TableCell>
+        <TableCell className="w-[70px] px-1 pt-3 text-center"><Badge className="bg-chart-1 text-black hover:bg-chart-1">{exercise.repsRange}</Badge></TableCell>
+        <TableCell className="w-[70px] px-1 pt-3 text-center"><Badge className="bg-chart-2 text-black hover:bg-chart-2">30</Badge></TableCell>
+        <TableCell className="w-[70px] px-1 pt-3 text-center"><Badge className="bg-chart-3 text-black hover:bg-chart-3">2.2</Badge></TableCell>
         <TableCell className="w-[40px] p-2 pt-3">
           <Button variant="ghost" size="icon">
              <AppWindow className="text-muted-foreground" />
