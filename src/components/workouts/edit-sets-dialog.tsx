@@ -7,7 +7,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -135,15 +134,6 @@ export function EditSetsDialog({
       <DialogContent className="sm:max-w-2xl bg-card">
         <DialogHeader>
           <DialogTitle className="text-xl">Editar Séries do Exercício</DialogTitle>
-          <DialogClose asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute right-4 top-4"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </DialogClose>
         </DialogHeader>
         <div className="py-4 max-h-[60vh] overflow-y-auto">
           <div className="grid grid-cols-[auto_1fr_1fr_1fr_1fr_auto] items-center gap-x-4 gap-y-2 text-sm text-muted-foreground px-4">
