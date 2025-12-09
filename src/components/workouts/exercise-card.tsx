@@ -45,9 +45,9 @@ export function ExerciseCard({ exercise }: { exercise: Exercise }) {
             <GripVertical className="text-muted-foreground" />
           </Button>
         </TableCell>
-        <TableCell className="font-medium p-2">
+        <TableCell className="font-medium p-2 min-w-[250px]">
           <Input 
-            className='bg-exercise-card border-border shadow-sm w-full min-w-[250px]'
+            className='bg-exercise-card border-border shadow-sm w-full'
             defaultValue={exercise.name}
           />
         </TableCell>
@@ -74,9 +74,12 @@ export function ExerciseCard({ exercise }: { exercise: Exercise }) {
           </Button>
         </TableCell>
         <TableCell className="p-2 pt-3 text-center">
-            <Button className="bg-[hsl(var(--chart-1))] text-black hover:bg-[hsl(var(--chart-1))] font-bold text-xs h-8 w-10 gap-1">
-              3 <Pencil className="h-3 w-3" />
-            </Button>
+            <div className="flex items-center justify-center gap-1">
+              <Input className="w-12 text-center" defaultValue="3" />
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Pencil className="h-4 w-4" />
+              </Button>
+            </div>
         </TableCell>
         <TableCell className="p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-2))] text-black hover:bg-[hsl(var(--chart-2))]">12-14</Badge></TableCell>
         <TableCell className="p-2 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-3))] text-white hover:bg-[hsl(var(--chart-3))]">30</Badge></TableCell>
