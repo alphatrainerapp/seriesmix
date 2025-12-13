@@ -78,6 +78,7 @@ export function ExerciseCard({
 
   const CombinationIcon = combinationType ? combinationIconConfig[combinationType]?.icon : null;
   const combinationIconClassName = combinationType ? combinationIconConfig[combinationType]?.className : '';
+  const firstInterval = exercise.sets[0]?.interval || '0';
 
 
   return (
@@ -157,7 +158,7 @@ export function ExerciseCard({
             </div>
         </TableCell>
         <TableCell className="w-[80px] px-1 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-2))] text-black hover:bg-[hsl(var(--chart-2))] font-bold">{exercise.repsRange}</Badge></TableCell>
-        <TableCell className="w-[80px] px-1 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-3))] text-black hover:bg-[hsl(var(--chart-3))] font-bold">30</Badge></TableCell>
+        <TableCell className="w-[80px] px-1 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-3))] text-black hover:bg-[hsl(var(--chart-3))] font-bold">{firstInterval}</Badge></TableCell>
         <TableCell className="w-[80px] px-1 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-4))] text-black hover:bg-[hsl(var(--chart-4))] font-bold">2.2</Badge></TableCell>
         <TableCell className="w-[40px] p-2 pt-3">
           <Button variant="ghost" size="icon">
