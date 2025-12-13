@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '../ui/input';
-import type { Exercise, CombinationType } from '@/lib/types';
+import type { Exercise, CombinationType, Set } from '@/lib/types';
 import { Badge } from '../ui/badge';
 
 const combinationOptions = [
@@ -58,18 +58,20 @@ const combinationOptions = [
 const InputRow = ({
   icon: Icon,
   label,
-  defaultValue,
+  value,
+  onChange,
 }: {
   icon: React.ElementType;
   label: string;
-  defaultValue: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) => (
   <div className="flex items-center justify-between">
     <div className="flex items-center gap-3 text-sm">
       <Icon className="h-5 w-5 text-muted-foreground" />
       <span>{label}</span>
     </div>
-    <Input className="w-20 bg-muted" defaultValue={defaultValue} />
+    <Input className="w-20 bg-muted" value={value} onChange={onChange} />
   </div>
 );
 
@@ -93,6 +95,10 @@ export function CombineExercisesDialog({
   const [selectedExercises, setSelectedExercises] = React.useState<number[]>(
     []
   );
+  const [exerciseTime, setExerciseTime] = React.useState('00:30');
+  const [restTime, setRestTime] = React.useState('00:15');
+  const [rounds, setRounds] = React.useState('4');
+
 
   const handleContinue = () => {
     setStep('configure');
@@ -113,6 +119,7 @@ export function CombineExercisesDialog({
   const handleUncombine = (groupIdToUncombine: string) => {
     const updatedExercises = exercises.map(ex => {
       if (ex.groupId === groupIdToUncombine) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { groupId, ...rest } = ex;
         return rest;
       }
@@ -132,12 +139,40 @@ export function CombineExercisesDialog({
     }
 
     const newGroupId = `group-${Date.now()}`;
-    const updatedExercises = exercises.map(ex => {
-      if (selectedExercises.includes(ex.id)) {
-        return { ...ex, groupId: newGroupId };
-      }
-      return ex;
-    });
+    
+    let updatedExercises;
+
+    if (selectedType === 'hiit') {
+        const numRounds = parseInt(rounds, 10);
+        const newSets: Set[] = Array.from({ length: numRounds }, (_, i) => ({
+            id: Date.now() + i, // simple unique id
+            type: 'trabalho',
+            unit: 'time',
+            reps: exerciseTime,
+            interval: restTime,
+            rir: '',
+        }));
+
+        updatedExercises = exercises.map(ex => {
+            if (selectedExercises.includes(ex.id)) {
+                return { 
+                  ...ex, 
+                  groupId: newGroupId,
+                  sets: newSets,
+                  repsRange: exerciseTime,
+                };
+            }
+            return ex;
+        });
+
+    } else {
+        updatedExercises = exercises.map(ex => {
+            if (selectedExercises.includes(ex.id)) {
+                return { ...ex, groupId: newGroupId };
+            }
+            return ex;
+        });
+    }
 
     onUpdateWorkout(updatedExercises);
     onUpdateCombinationTypes({
@@ -153,6 +188,9 @@ export function CombineExercisesDialog({
       setTimeout(() => {
         setStep('select');
         setSelectedExercises([]);
+        setExerciseTime('00:30');
+        setRestTime('00:15');
+        setRounds('4');
       }, 200);
     }
   }, [open]);
@@ -255,9 +293,9 @@ export function CombineExercisesDialog({
             <div className="px-6 space-y-6 max-h-[50vh] overflow-y-auto">
               {selectedType === 'hiit' && (
                 <div className='space-y-3'>
-                  <InputRow icon={Clock} label="Tempo de exercício" defaultValue="00:30" />
-                  <InputRow icon={Timer} label="Tempo de descanso" defaultValue="00:15" />
-                  <InputRow icon={Repeat} label="Nº de voltas" defaultValue="4" />
+                  <InputRow icon={Clock} label="Tempo de exercício" value={exerciseTime} onChange={(e) => setExerciseTime(e.target.value)} />
+                  <InputRow icon={Timer} label="Tempo de descanso" value={restTime} onChange={(e) => setRestTime(e.target.value)} />
+                  <InputRow icon={Repeat} label="Nº de voltas" value={rounds} onChange={(e) => setRounds(e.target.value)} />
                 </div>
               )}
               {Object.keys(grouped).length > 0 && (
