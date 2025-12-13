@@ -15,6 +15,7 @@ import { EditSetsDialog } from './edit-sets-dialog';
 import { EditObservationDialog } from './edit-observation-dialog';
 import { Badge } from '../ui/badge';
 import { cn } from '@/lib/utils';
+import { Input } from '../ui/input';
 
 
 const setTypeConfig: {
@@ -113,7 +114,7 @@ export function MobileExerciseCard({
               <EditSetsDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
                 <div className="space-y-1 cursor-pointer">
                   <p className="text-[10px] font-medium text-muted-foreground">Série</p>
-                  <div className="bg-[hsl(var(--chart-1))] text-black font-bold rounded-md py-2 text-sm flex items-center justify-center gap-1">
+                  <div className="bg-[hsl(var(--chart-1))] text-black font-bold rounded-md py-2 text-sm flex items-center justify-center gap-1 h-10">
                     {exercise.sets.length}
                     <Pencil className="h-3 w-3"/>
                   </div>
@@ -121,20 +122,29 @@ export function MobileExerciseCard({
               </EditSetsDialog>
               <div className="space-y-1">
                 <p className="text-[10px] font-medium text-muted-foreground">Repetições</p>
-                <div className="bg-[hsl(var(--chart-2))] text-black font-bold rounded-md py-2 text-sm">{exercise.repsRange}</div>
+                <Input 
+                  className="bg-[hsl(var(--chart-2))] text-black font-bold text-center h-10"
+                  defaultValue={exercise.repsRange}
+                />
               </div>
               <div className="space-y-1">
                 <p className="text-[10px] font-medium text-muted-foreground">Intervalo</p>
-                <div className="bg-[hsl(var(--chart-3))] text-black font-bold rounded-md py-2 text-sm">30</div>
+                <Input 
+                  className="bg-[hsl(var(--chart-3))] text-black font-bold text-center h-10"
+                  defaultValue={exercise.sets[0]?.interval || '30'}
+                />
               </div>
                <div className="space-y-1">
                 <p className="text-[10px] font-medium text-muted-foreground">Cadência</p>
-                <div className="bg-[hsl(var(--chart-4))] text-black font-bold rounded-md py-2 text-sm">2.2</div>
+                <Input 
+                  className="bg-[hsl(var(--chart-4))] text-black font-bold text-center h-10"
+                  defaultValue="2.2"
+                />
               </div>
                <EditObservationDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
                 <div className="space-y-1 cursor-pointer">
                   <p className="text-[10px] font-medium text-muted-foreground">Observação</p>
-                   <div className="bg-primary/20 text-primary rounded-md py-2 flex justify-center items-center">
+                   <div className="bg-primary/20 text-primary rounded-md h-10 flex justify-center items-center">
                       <MessageSquare className="h-4 w-4"/>
                   </div>
                 </div>

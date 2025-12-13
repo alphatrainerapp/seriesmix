@@ -157,9 +157,24 @@ export function ExerciseCard({
               </EditSetsDialog>
             </div>
         </TableCell>
-        <TableCell className="w-[80px] px-1 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-2))] text-black hover:bg-[hsl(var(--chart-2))] font-bold">{exercise.repsRange}</Badge></TableCell>
-        <TableCell className="w-[80px] px-1 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-3))] text-black hover:bg-[hsl(var(--chart-3))] font-bold">{firstInterval}</Badge></TableCell>
-        <TableCell className="w-[80px] px-1 pt-3 text-center"><Badge className="bg-[hsl(var(--chart-4))] text-black hover:bg-[hsl(var(--chart-4))] font-bold">2.2</Badge></TableCell>
+        <TableCell className="w-[80px] px-1 pt-3 text-center">
+          <Input
+            className="w-full text-center bg-[hsl(var(--chart-2))] text-black placeholder:text-black/80 font-bold"
+            defaultValue={exercise.repsRange}
+          />
+        </TableCell>
+        <TableCell className="w-[80px] px-1 pt-3 text-center">
+          <Input
+            className="w-full text-center bg-[hsl(var(--chart-3))] text-black placeholder:text-black/80 font-bold"
+            defaultValue={firstInterval}
+          />
+        </TableCell>
+        <TableCell className="w-[80px] px-1 pt-3 text-center">
+          <Input
+            className="w-full text-center bg-[hsl(var(--chart-4))] text-black placeholder:text-black/80 font-bold"
+            defaultValue="2.2"
+          />
+        </TableCell>
         <TableCell className="w-[40px] p-2 pt-3">
           <Button variant="ghost" size="icon">
             {CombinationIcon ? (
