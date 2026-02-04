@@ -143,7 +143,7 @@ export function ExerciseCard({
         <TableCell className="w-[100px] p-1 pt-3 text-center">
             <div className="flex items-center justify-center">
               <Input
-                className="w-10 text-center bg-[hsl(var(--chart-1))] text-black placeholder:text-black/80 font-bold"
+                className="w-10 text-center bg-[hsl(var(--chart-1))] text-black placeholder:text-black/80 font-bold border-none"
                 value={exercise.sets.length}
                 readOnly
               />
@@ -159,19 +159,19 @@ export function ExerciseCard({
         </TableCell>
         <TableCell className="w-[80px] px-1 pt-3 text-center">
           <Input
-            className="w-full text-center bg-[hsl(var(--chart-2))] text-black placeholder:text-black/80 font-bold"
+            className="w-full text-center bg-[hsl(var(--chart-2))] text-black placeholder:text-black/80 font-bold border-none"
             defaultValue={exercise.repsRange}
           />
         </TableCell>
         <TableCell className="w-[80px] px-1 pt-3 text-center">
           <Input
-            className="w-full text-center bg-[hsl(var(--chart-3))] text-black placeholder:text-black/80 font-bold"
+            className="w-full text-center bg-[hsl(var(--chart-3))] text-black placeholder:text-black/80 font-bold border-none"
             defaultValue={firstInterval}
           />
         </TableCell>
         <TableCell className="w-[80px] px-1 pt-3 text-center">
           <Input
-            className="w-full text-center bg-[hsl(var(--chart-4))] text-black placeholder:text-black/80 font-bold"
+            className="w-full text-center bg-[hsl(var(--chart-4))] text-black placeholder:text-black/80 font-bold border-none"
             defaultValue="2.2"
           />
         </TableCell>

@@ -6,17 +6,16 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Button } from '../ui/button';
-import { Check, MessageSquare, Pencil, PlaySquare, Trash2, X, Flame, SlidersHorizontal } from 'lucide-react';
+import { Check, MessageSquare, Pencil, PlaySquare, Trash2, X, Flame, SlidersHorizontal, Dumbbell, Link2, Timer } from 'lucide-react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import type { Exercise, SetType } from '@/lib/types';
+import type { Exercise, SetType, CombinationType } from '@/lib/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { EditSetsDialog } from './edit-sets-dialog';
 import { EditObservationDialog } from './edit-observation-dialog';
 import { Badge } from '../ui/badge';
 import { cn } from '@/lib/utils';
 import { Input } from '../ui/input';
-
 
 const setTypeConfig: {
   [key in SetType]: {
@@ -42,13 +41,26 @@ const setTypeConfig: {
   },
 };
 
+const combinationIconConfig: {
+  [key in CombinationType]: {
+    icon: React.ElementType;
+    className: string;
+  };
+} = {
+  biset: { icon: Dumbbell, className: 'text-blue-500' },
+  triset: { icon: Dumbbell, className: 'text-blue-500' },
+  superserie: { icon: Link2, className: 'text-green-500' },
+  hiit: { icon: Timer, className: 'text-orange-500' },
+};
 
 export function MobileExerciseCard({
   exercise,
   onUpdateExercise,
+  combinationType,
 }: {
   exercise: Exercise;
   onUpdateExercise: (exercise: Exercise) => void;
+  combinationType?: CombinationType;
 }) {
   const videoThumbnail = PlaceHolderImages.find(
     (img) => img.id === 'exercise-video-thumbnail'
@@ -60,7 +72,8 @@ export function MobileExerciseCard({
   }, {} as Record<SetType, number>);
 
   const setTypesInOrder: SetType[] = ['aquecimento', 'preparatoria', 'trabalho'];
-
+  const CombinationIcon = combinationType ? combinationIconConfig[combinationType]?.icon : null;
+  const combinationIconClassName = combinationType ? combinationIconConfig[combinationType]?.className : '';
 
   return (
     <AccordionItem value={`item-${exercise.id}`} className="border-none">
@@ -92,6 +105,8 @@ export function MobileExerciseCard({
                 </div>
               </div>
             )}
+            
+            {/* Badges de organização de séries abaixo do vídeo */}
             <div className="flex items-center gap-2 -mt-2 mb-4">
               {setTypesInOrder.map((setType) => {
                   const count = setCounts[setType];
@@ -102,7 +117,7 @@ export function MobileExerciseCard({
                   return (
                     <Badge
                       key={setType}
-                      className={cn("text-xs font-semibold gap-1.5", config.className)}
+                      className={cn("text-[10px] font-semibold gap-1.5", config.className)}
                     >
                       <Icon className="h-3 w-3" />
                       {config.label} ({count})
@@ -110,10 +125,12 @@ export function MobileExerciseCard({
                   );
                 })}
             </div>
+
+            {/* Grid de Métricas Editáveis */}
             <div className="grid grid-cols-3 gap-2 text-center">
               <EditSetsDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
                 <div className="space-y-1 cursor-pointer">
-                  <p className="text-[10px] font-medium text-muted-foreground">Série</p>
+                  <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Série</p>
                   <div className="bg-[hsl(var(--chart-1))] text-black font-bold rounded-md py-2 text-sm flex items-center justify-center gap-1 h-10">
                     {exercise.sets.length}
                     <Pencil className="h-3 w-3"/>
@@ -121,40 +138,41 @@ export function MobileExerciseCard({
                 </div>
               </EditSetsDialog>
               <div className="space-y-1">
-                <p className="text-[10px] font-medium text-muted-foreground">Repetições</p>
+                <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Repetições</p>
                 <Input 
-                  className="bg-[hsl(var(--chart-2))] text-black font-bold text-center h-10"
+                  className="bg-[hsl(var(--chart-2))] text-black font-bold text-center h-10 border-none shadow-none focus-visible:ring-1 focus-visible:ring-primary"
                   defaultValue={exercise.repsRange}
                 />
               </div>
               <div className="space-y-1">
-                <p className="text-[10px] font-medium text-muted-foreground">Intervalo</p>
+                <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Intervalo</p>
                 <Input 
-                  className="bg-[hsl(var(--chart-3))] text-black font-bold text-center h-10"
+                  className="bg-[hsl(var(--chart-3))] text-black font-bold text-center h-10 border-none shadow-none focus-visible:ring-1 focus-visible:ring-primary"
                   defaultValue={exercise.sets[0]?.interval || '30'}
                 />
               </div>
                <div className="space-y-1">
-                <p className="text-[10px] font-medium text-muted-foreground">Cadência</p>
+                <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Cadência</p>
                 <Input 
-                  className="bg-[hsl(var(--chart-4))] text-black font-bold text-center h-10"
+                  className="bg-[hsl(var(--chart-4))] text-black font-bold text-center h-10 border-none shadow-none focus-visible:ring-1 focus-visible:ring-primary"
                   defaultValue="2.2"
                 />
               </div>
                <EditObservationDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
                 <div className="space-y-1 cursor-pointer">
-                  <p className="text-[10px] font-medium text-muted-foreground">Observação</p>
+                  <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Observação</p>
                    <div className="bg-primary/20 text-primary rounded-md h-10 flex justify-center items-center">
                       <MessageSquare className="h-4 w-4"/>
                   </div>
                 </div>
                </EditObservationDialog>
             </div>
+
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                    <label className="text-[10px] font-medium text-muted-foreground">Método</label>
+                    <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Método</label>
                     <Select defaultValue="biset">
-                        <SelectTrigger className="rounded-full bg-muted border-border">
+                        <SelectTrigger className="rounded-full bg-muted border-border h-9">
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -164,9 +182,13 @@ export function MobileExerciseCard({
                     </Select>
                 </div>
                 <div className="space-y-1">
-                    <label className="text-[10px] font-medium text-muted-foreground">Cor</label>
-                     <div className="flex items-center justify-center h-10 rounded-full bg-muted border-border">
-                        <div className="w-6 h-6 bg-gray-300 border-2 border-white rounded-sm shadow-inner" style={{ "backgroundImage": "url(\"data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23333' stroke-width='4' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e\")" }}></div>
+                    <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Cor</label>
+                     <div className="flex items-center justify-center h-9 rounded-full bg-muted border-border">
+                        {CombinationIcon ? (
+                          <CombinationIcon className={cn("h-5 w-5", combinationIconClassName)} />
+                        ) : (
+                          <div className="w-5 h-5 bg-gray-300 border-2 border-white rounded-sm shadow-inner" style={{ "backgroundImage": "url(\"data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23333' stroke-width='4' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e\")" }}></div>
+                        )}
                     </div>
                 </div>
             </div>

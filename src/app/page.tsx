@@ -84,12 +84,11 @@ export default function Home() {
     );
   };
   
-    const processedExercises = () => {
+  const processedExercises = () => {
     const elements: React.ReactNode[] = [];
     const renderedGroupIds = new Set<string>();
 
-    workoutData.forEach((currentExercise, index) => {
-      // Skip if already rendered as part of a group
+    workoutData.forEach((currentExercise) => {
       if (currentExercise.groupId && renderedGroupIds.has(currentExercise.groupId)) {
         return;
       }
@@ -127,7 +126,6 @@ export default function Home() {
     return elements;
   };
 
-
   return (
     <div className="flex flex-1 flex-col p-4 md:p-6 lg:p-8 text-foreground gap-6">
       <div className="flex flex-col lg:flex-row gap-6">
@@ -136,7 +134,7 @@ export default function Home() {
           <TrainingSplit />
           <Tabs defaultValue="treino-a" className="w-full">
             <div className="flex justify-between items-center">
-              <TabsList className="bg-transparent p-0 border-b-0 rounded-none w-full justify-start">
+              <TabsList className="bg-transparent p-0 border-b-0 rounded-none w-full justify-start overflow-x-auto">
                 <TabsTrigger
                   value="treino-a"
                   className="data-[state=active]:border-primary data-[state=active]:border-b-2 data-[state=active]:shadow-none data-[state=active]:bg-transparent rounded-none px-4"
@@ -164,9 +162,9 @@ export default function Home() {
               </TabsList>
             </div>
             <TabsContent value="treino-a" className="mt-6">
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
                 <div className="flex flex-col">
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-4 flex-wrap">
                     <h1 className="text-xl font-bold tracking-tight">TREINO A</h1>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Checkbox id="presencial" />
@@ -223,17 +221,18 @@ export default function Home() {
                       key={exercise.id}
                       exercise={exercise}
                       onUpdateExercise={handleUpdateExercise}
+                      combinationType={exercise.groupId ? combinationTypes[exercise.groupId] : undefined}
                     />
                   ))}
                 </Accordion>
               </div>
 
 
-              <div className="mt-6 flex gap-2">
-                <Button>Protocolo aeróbico</Button>
-                <Button>Hiit</Button>
-                <Button>Exercício</Button>
-                <Button>Aquecimento</Button>
+              <div className="mt-6 flex gap-2 overflow-x-auto pb-2">
+                <Button variant="outline" size="sm">Protocolo aeróbico</Button>
+                <Button variant="outline" size="sm">Hiit</Button>
+                <Button variant="outline" size="sm">Exercício</Button>
+                <Button variant="outline" size="sm">Aquecimento</Button>
               </div>
 
               <div className="mt-6">
