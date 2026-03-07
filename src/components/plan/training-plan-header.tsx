@@ -68,7 +68,7 @@ const StudentProfile = () => {
               src={studentAvatar.imageUrl}
               alt={studentAvatar.description}
               fill
-              className="object-cover"
+              className="object-cover rounded-full"
               data-ai-hint={studentAvatar.imageHint}
             />
           ) : (
@@ -131,7 +131,7 @@ export function TrainingPlanHeader() {
                         src={studentAvatar.imageUrl}
                         alt="João Silva"
                         fill
-                        className="object-cover"
+                        className="object-cover rounded-full"
                       />
                     ) : (
                       <User className="w-6 h-6 text-muted-foreground" />
