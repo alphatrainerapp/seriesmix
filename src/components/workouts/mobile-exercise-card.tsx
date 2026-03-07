@@ -6,7 +6,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Button } from '../ui/button';
-import { Check, MessageSquare, Pencil, PlaySquare, Trash2, Flame, SlidersHorizontal, Dumbbell, Link2, Timer, Hash } from 'lucide-react';
+import { MessageSquare, PlaySquare, Trash2, Flame, SlidersHorizontal, Dumbbell, Link2, Timer, Hash } from 'lucide-react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { Exercise, SetType, CombinationType } from '@/lib/types';
@@ -35,7 +35,7 @@ const setTypeConfig: {
     label: 'Prep'
   },
   trabalho: {
-    icon: Check,
+    icon: Dumbbell,
     className: 'bg-[#56ac73] hover:bg-[#56ac73]/90 text-white border-transparent',
     label: 'Válidas'
   },
@@ -76,36 +76,37 @@ export function MobileExerciseCard({
   const combinationIconClassName = combinationType ? combinationIconConfig[combinationType]?.className : '';
 
   return (
-    <AccordionItem value={`item-${exercise.id}`} className="border-none mb-3">
+    <AccordionItem value={`item-${exercise.id}`} className="border-none mb-4">
       <div className={cn(
-        "bg-card rounded-xl shadow-sm border overflow-hidden transition-all",
+        "bg-card rounded-3xl shadow-sm border overflow-hidden transition-all",
         exercise.groupId ? "border-primary/30" : "border-border"
       )}>
-        <div className="flex items-center p-0">
-          <AccordionTrigger className="flex-1 px-3 py-4 hover:no-underline hover:bg-muted/30">
-            <div className="flex items-center gap-3 flex-1 overflow-hidden">
-              {exercise.groupId && (
-                <div className="w-1.5 h-6 bg-primary/40 rounded-full shrink-0" />
-              )}
-              <span className="font-bold text-sm text-left line-clamp-1">{exercise.name}</span>
-            </div>
-            
-            <div className="flex items-center gap-1 mr-2" onClick={(e) => e.stopPropagation()}>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="h-8 w-8 text-destructive/70 hover:bg-destructive/5 rounded-full"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </div>
-          </AccordionTrigger>
-        </div>
+        <AccordionTrigger className="flex items-center px-4 py-4 hover:no-underline hover:bg-muted/10 [&>svg]:ml-1">
+          <div className="flex items-center gap-3 flex-1 overflow-hidden">
+            {exercise.groupId && (
+              <div className="w-1.5 h-6 bg-primary/40 rounded-full shrink-0" />
+            )}
+            <span className="font-bold text-sm text-left truncate">{exercise.name}</span>
+          </div>
+          
+          <div 
+            className="flex items-center shrink-0" 
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-9 w-9 text-destructive/80 hover:bg-destructive/10 rounded-full"
+            >
+              <Trash2 className="h-5 w-5" />
+            </Button>
+          </div>
+        </AccordionTrigger>
 
-        <AccordionContent className="px-4 pb-4 pt-0">
+        <AccordionContent className="px-5 pb-5 pt-0">
           <div className="space-y-5">
             {videoThumbnail && (
-              <div className="relative aspect-video rounded-lg overflow-hidden border border-border shadow-inner-sm">
+              <div className="relative aspect-video rounded-2xl overflow-hidden border border-border shadow-inner-sm">
                 <Image
                   src={videoThumbnail.imageUrl}
                   alt={videoThumbnail.description}
@@ -113,8 +114,8 @@ export function MobileExerciseCard({
                   className="object-cover"
                   data-ai-hint={videoThumbnail.imageHint}
                 />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                  <div className="bg-white/90 p-3 rounded-full shadow-lg">
+                <div className="absolute inset-0 flex items-center justify-center bg-black/10">
+                  <div className="bg-white/95 p-3 rounded-full shadow-lg">
                     <PlaySquare className="h-8 w-8 text-primary" />
                   </div>
                 </div>
@@ -131,7 +132,7 @@ export function MobileExerciseCard({
                   return (
                     <Badge
                       key={setType}
-                      className={cn("text-[10px] py-0.5 px-2 font-bold gap-1.5 rounded-full", config.className)}
+                      className={cn("text-[10px] py-1 px-3 font-bold gap-1.5 rounded-full shadow-sm", config.className)}
                     >
                       <Icon className="h-3 w-3" />
                       {config.label} ({count})
@@ -140,54 +141,54 @@ export function MobileExerciseCard({
                 })}
             </div>
 
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-4">
               <EditSetsDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
                 <div className="space-y-1.5 cursor-pointer group">
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Séries</p>
-                  <div className="bg-[hsl(var(--chart-1))] text-black font-extrabold rounded-lg py-2 text-sm flex items-center justify-center gap-1.5 h-11 shadow-sm transition-transform active:scale-95">
+                  <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-widest pl-1">Séries</p>
+                  <div className="bg-[hsl(var(--chart-1))] text-black font-extrabold rounded-2xl py-2 text-sm flex items-center justify-center gap-2 h-12 shadow-sm transition-all active:scale-95 group-hover:brightness-105">
                     {exercise.sets.length}
-                    <Hash className="h-3.5 w-3.5 opacity-60"/>
+                    <Hash className="h-3.5 w-3.5 opacity-40"/>
                   </div>
                 </div>
               </EditSetsDialog>
 
               <div className="space-y-1.5">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Reps</p>
+                <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-widest pl-1">Reps</p>
                 <Input 
-                  className="bg-[hsl(var(--chart-2))] text-black font-extrabold text-center h-11 border-none shadow-sm text-sm focus-visible:ring-2 focus-visible:ring-primary/50 rounded-lg"
+                  className="bg-[hsl(var(--chart-2))] text-black font-extrabold text-center h-12 border-none shadow-sm text-sm focus-visible:ring-2 focus-visible:ring-primary/40 rounded-2xl"
                   defaultValue={exercise.repsRange}
                 />
               </div>
 
               <div className="space-y-1.5">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Intervalo</p>
+                <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-widest pl-1">Intervalo</p>
                 <Input 
-                  className="bg-[hsl(var(--chart-3))] text-black font-extrabold text-center h-11 border-none shadow-sm text-sm focus-visible:ring-2 focus-visible:ring-primary/50 rounded-lg"
+                  className="bg-[hsl(var(--chart-3))] text-black font-extrabold text-center h-12 border-none shadow-sm text-sm focus-visible:ring-2 focus-visible:ring-primary/40 rounded-2xl"
                   defaultValue={exercise.sets[0]?.interval || '30'}
                 />
               </div>
 
               <div className="space-y-1.5">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Cadência</p>
+                <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-widest pl-1">Cadência</p>
                 <Input 
-                  className="bg-[hsl(var(--chart-4))] text-black font-extrabold text-center h-11 border-none shadow-sm text-sm focus-visible:ring-2 focus-visible:ring-primary/50 rounded-lg"
+                  className="bg-[hsl(var(--chart-4))] text-black font-extrabold text-center h-12 border-none shadow-sm text-sm focus-visible:ring-2 focus-visible:ring-primary/40 rounded-2xl"
                   defaultValue="2.2"
                 />
               </div>
 
               <EditObservationDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
                 <div className="space-y-1.5 cursor-pointer group">
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Obs</p>
-                   <div className="bg-primary/10 text-primary border border-primary/20 rounded-lg h-11 flex justify-center items-center shadow-sm transition-transform active:scale-95">
+                  <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-widest pl-1">Obs</p>
+                   <div className="bg-primary/5 text-primary border border-primary/20 rounded-2xl h-12 flex justify-center items-center shadow-sm transition-all active:scale-95 group-hover:bg-primary/10">
                       <MessageSquare className="h-5 w-5"/>
                   </div>
                 </div>
                </EditObservationDialog>
 
                <div className="space-y-1.5">
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Método</p>
+                  <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-widest pl-1">Método</p>
                   <Select defaultValue="padrao">
-                      <SelectTrigger className="rounded-lg bg-muted border-border h-11 text-xs font-semibold shadow-sm">
+                      <SelectTrigger className="rounded-2xl bg-muted/30 border-border h-12 text-xs font-bold shadow-sm focus:ring-primary/20">
                           <SelectValue placeholder="Padrão" />
                       </SelectTrigger>
                       <SelectContent>
@@ -199,23 +200,19 @@ export function MobileExerciseCard({
                </div>
             </div>
 
-            <div className="flex items-center justify-between pt-2 border-t border-border/50">
-              <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center border border-border">
+            <div className="flex items-center justify-between pt-4 border-t border-border/40">
+              <div className="flex items-center gap-3">
+                <div className="h-9 w-9 rounded-full bg-muted/40 flex items-center justify-center border border-border/50">
                    {CombinationIcon ? (
                       <CombinationIcon className={cn("h-4 w-4", combinationIconClassName)} />
                     ) : (
-                      <Dumbbell className="h-4 w-4 text-muted-foreground/40" />
+                      <Dumbbell className="h-4 w-4 text-muted-foreground/30" />
                     )}
                 </div>
-                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
                   {combinationType ? `Combinado (${combinationType})` : 'Individual'}
                 </span>
               </div>
-              <Button variant="ghost" size="sm" className="h-8 text-primary font-bold text-[11px] px-2 uppercase tracking-wide">
-                <Pencil className="h-3 w-3 mr-1.5" />
-                Editar Detalhes
-              </Button>
             </div>
           </div>
         </AccordionContent>
