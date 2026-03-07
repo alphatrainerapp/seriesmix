@@ -1,3 +1,4 @@
+
 'use client';
 import {
   Table,
@@ -21,6 +22,14 @@ import type { CombinationType, Exercise } from '@/lib/types';
 import { MobileExerciseCard } from '@/components/workouts/mobile-exercise-card';
 import { Accordion } from '@/components/ui/accordion';
 import { CombineExercisesDialog } from '@/components/workouts/combine-exercises-dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Plus, ListOrdered } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const CombineIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg
@@ -75,6 +84,7 @@ export default function Home() {
   const [combinationTypes, setCombinationTypes] = useState<Record<string, CombinationType>>({
     'warmup': 'biset'
   });
+  const [isSorting, setIsSorting] = useState(false);
 
   const handleUpdateExercise = (updatedExercise: Exercise) => {
     setWorkoutData((prevData) =>
@@ -190,6 +200,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+              
               {/* Desktop View */}
               <div className="border rounded-lg bg-card shadow-sm hidden md:block">
                 <Table>
@@ -227,17 +238,46 @@ export default function Home() {
                 </Accordion>
               </div>
 
+              {/* Action Buttons and Observations */}
+              <div className="mt-8 space-y-6">
+                <div className="flex flex-wrap items-center gap-3">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button className="bg-[#009688] hover:bg-[#00796b] text-white rounded-xl px-6 h-12 font-bold gap-2 shadow-sm border-none">
+                        <Plus className="h-5 w-5" />
+                        Adicionar Exercício
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" className="w-56 rounded-xl p-2">
+                      <DropdownMenuItem className="rounded-lg p-3 cursor-pointer">Protocolo aeróbico</DropdownMenuItem>
+                      <DropdownMenuItem className="rounded-lg p-3 cursor-pointer">Hiit</DropdownMenuItem>
+                      <DropdownMenuItem className="rounded-lg p-3 cursor-pointer">Exercício</DropdownMenuItem>
+                      <DropdownMenuItem className="rounded-lg p-3 cursor-pointer">Aquecimento</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
 
-              <div className="mt-6 flex gap-2 overflow-x-auto pb-2">
-                <Button variant="outline" size="sm">Protocolo aeróbico</Button>
-                <Button variant="outline" size="sm">Hiit</Button>
-                <Button variant="outline" size="sm">Exercício</Button>
-                <Button variant="outline" size="sm">Aquecimento</Button>
-              </div>
+                  <Button 
+                    variant="outline" 
+                    className={cn(
+                      "rounded-xl px-6 h-12 font-bold gap-2 shadow-sm border-border bg-card",
+                      isSorting && "border-primary text-primary"
+                    )}
+                    onClick={() => setIsSorting(!isSorting)}
+                  >
+                    <ListOrdered className="h-5 w-5" />
+                    Ordenar Lista
+                  </Button>
+                </div>
 
-              <div className="mt-6">
-                <h2 className="text-xl font-semibold tracking-tight mb-2">Observações Treino A:</h2>
-                <Textarea placeholder="Adicione observações sobre o treino..."/>
+                <div className="space-y-3">
+                  <h2 className="text-lg font-bold tracking-tight text-foreground ml-1">Observações Treino A:</h2>
+                  <div className="rounded-2xl border bg-card p-1 shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+                    <Textarea 
+                      placeholder="ao final do treino escreva a duração no campo de feedback" 
+                      className="min-h-[120px] border-none shadow-none resize-none focus-visible:ring-0 p-4 text-sm font-medium leading-relaxed"
+                    />
+                  </div>
+                </div>
               </div>
 
             </TabsContent>
