@@ -12,11 +12,11 @@ import {
 
 export function TrainingPlanHeader() {
   return (
-    <Card className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 bg-card shadow-sm">
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-muted-foreground">Nome</label>
+    <Card className="p-4 md:p-6 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 bg-card shadow-sm rounded-xl">
+      <div className="space-y-1.5 col-span-2 md:col-span-1">
+        <label className="text-[10px] md:text-sm font-bold text-muted-foreground uppercase tracking-wider">Cliente</label>
         <Select defaultValue="anadelis">
-          <SelectTrigger>
+          <SelectTrigger className="h-10 md:h-11 font-semibold">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -24,66 +24,49 @@ export function TrainingPlanHeader() {
           </SelectContent>
         </Select>
       </div>
-      <div className="space-y-2 lg:col-span-2">
-        <label className="text-sm font-medium text-muted-foreground">Observação Cliente</label>
-        <Input disabled />
+      <div className="space-y-1.5 col-span-2 lg:col-span-2">
+        <label className="text-[10px] md:text-sm font-bold text-muted-foreground uppercase tracking-wider">Observação</label>
+        <Input disabled className="h-10 md:h-11 bg-muted/30" placeholder="Sem observações" />
       </div>
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-muted-foreground">Objetivo</label>
-        <Input defaultValue="Hipertrofia" />
+      <div className="space-y-1.5">
+        <label className="text-[10px] md:text-sm font-bold text-muted-foreground uppercase tracking-wider">Objetivo</label>
+        <Input defaultValue="Hipertrofia" className="h-10 md:h-11 font-semibold" />
       </div>
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-muted-foreground">Exercício</label>
-        <Input defaultValue="Musculação" />
-      </div>
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-muted-foreground">Tempo</label>
-        <Input defaultValue="1h" />
-      </div>
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-muted-foreground">Intensidade</label>
+      <div className="space-y-1.5">
+        <label className="text-[10px] md:text-sm font-bold text-muted-foreground uppercase tracking-wider">Intensidade</label>
         <Select defaultValue="media-alta">
-          <SelectTrigger>
+          <SelectTrigger className="h-10 md:h-11 font-semibold">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="media-alta">Media a Alta</SelectItem>
+            <SelectItem value="media-alta">Média a Alta</SelectItem>
+            <SelectItem value="alta">Alta</SelectItem>
           </SelectContent>
         </Select>
       </div>
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-muted-foreground">Frequência</label>
-        <Input defaultValue="5" />
+      <div className="space-y-1.5">
+        <label className="text-[10px] md:text-sm font-bold text-muted-foreground uppercase tracking-wider">Data Início</label>
+        <Input defaultValue="22/09/2025" className="h-10 md:h-11 font-semibold" />
       </div>
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-muted-foreground">Data do início</label>
-        <Input defaultValue="22/09/2025" />
+      <div className="space-y-1.5">
+        <label className="text-[10px] md:text-sm font-bold text-muted-foreground uppercase tracking-wider">Validade</label>
+        <Input defaultValue="21/10/2025" className="h-10 md:h-11 font-semibold" />
       </div>
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-muted-foreground">Validade da ficha</label>
-        <Input defaultValue="21/10/2025" />
-      </div>
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-muted-foreground">Divisão ficha</label>
+      <div className="space-y-1.5">
+        <label className="text-[10px] md:text-sm font-bold text-muted-foreground uppercase tracking-wider">Divisão</label>
         <Select defaultValue="abcd">
-          <SelectTrigger>
+          <SelectTrigger className="h-10 md:h-11 font-semibold">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="abcd">ABCD</SelectItem>
+            <SelectItem value="abc">ABC</SelectItem>
           </SelectContent>
         </Select>
       </div>
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-muted-foreground">Semana</label>
-        <Select defaultValue="intro">
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="intro">SEMANA INTRODUTÓRIA</SelectItem>
-          </SelectContent>
-        </Select>
+      <div className="space-y-1.5">
+        <label className="text-[10px] md:text-sm font-bold text-muted-foreground uppercase tracking-wider">Frequência</label>
+        <Input defaultValue="5x Semana" className="h-10 md:h-11 font-semibold" />
       </div>
     </Card>
   );
