@@ -2,71 +2,99 @@
 
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Target, CalendarDays, User } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+interface SectionHeaderProps {
+  icon: React.ElementType;
+  title: string;
+}
+
+const SectionHeader = ({ icon: Icon, title }: SectionHeaderProps) => (
+  <div className="flex items-center gap-2 mb-4 mt-6 first:mt-0">
+    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary">
+      <Icon className="w-4 h-4" />
+    </div>
+    <h3 className="text-lg font-bold text-foreground">{title}</h3>
+  </div>
+);
+
+interface FieldProps {
+  label: string;
+  value: string;
+  className?: string;
+  inputClassName?: string;
+}
+
+const Field = ({ label, value, className, inputClassName }: FieldProps) => (
+  <div className={cn("space-y-1.5", className)}>
+    <label className="text-sm font-medium text-muted-foreground ml-1">
+      {label}
+    </label>
+    <Input
+      defaultValue={value}
+      className={cn(
+        "h-11 bg-muted/30 border-none rounded-xl font-medium focus-visible:ring-primary/30",
+        inputClassName
+      )}
+    />
+  </div>
+);
 
 export function TrainingPlanHeader() {
   return (
-    <Card className="p-4 md:p-6 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 bg-card shadow-sm rounded-xl">
-      <div className="space-y-1.5 col-span-2 md:col-span-1">
-        <label className="text-[10px] md:text-sm font-bold text-muted-foreground uppercase tracking-wider">Cliente</label>
-        <Select defaultValue="anadelis">
-          <SelectTrigger className="h-10 md:h-11 font-semibold">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="anadelis">Anadelis de Oliveira</SelectItem>
-          </SelectContent>
-        </Select>
+    <Card className="p-6 bg-card shadow-sm rounded-2xl border-none">
+      {/* Mobile View */}
+      <div className="block md:hidden space-y-4">
+        {/* Programa */}
+        <SectionHeader icon={Target} title="Programa" />
+        <Field label="Objetivo" value="Ganho de massa muscular" />
+        <Field label="Tipo de Exercício" value="Musculação" />
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="Duração" value="60 minutos" />
+          <Field label="Intensidade" value="Moderada" />
+        </div>
+
+        {/* Cronograma */}
+        <SectionHeader icon={CalendarDays} title="Cronograma" />
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="Início" value="14/01/2024" />
+          <Field label="Fim" value="14/04/2024" />
+        </div>
+        <Field 
+          label="Divisão de Treino" 
+          value="ABCD" 
+          inputClassName="bg-[#e0f7f4] text-[#00897b] font-bold"
+        />
+        <Field label="Frequência Semanal" value="4x por semana" />
+
+        {/* Observações */}
+        <SectionHeader icon={User} title="Observações" />
+        <Field label="" value="Aluno focado em hipertrofia" />
       </div>
-      <div className="space-y-1.5 col-span-2 lg:col-span-2">
-        <label className="text-[10px] md:text-sm font-bold text-muted-foreground uppercase tracking-wider">Observação</label>
-        <Input disabled className="h-10 md:h-11 bg-muted/30" placeholder="Sem observações" />
-      </div>
-      <div className="space-y-1.5">
-        <label className="text-[10px] md:text-sm font-bold text-muted-foreground uppercase tracking-wider">Objetivo</label>
-        <Input defaultValue="Hipertrofia" className="h-10 md:h-11 font-semibold" />
-      </div>
-      <div className="space-y-1.5">
-        <label className="text-[10px] md:text-sm font-bold text-muted-foreground uppercase tracking-wider">Intensidade</label>
-        <Select defaultValue="media-alta">
-          <SelectTrigger className="h-10 md:h-11 font-semibold">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="media-alta">Média a Alta</SelectItem>
-            <SelectItem value="alta">Alta</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="space-y-1.5">
-        <label className="text-[10px] md:text-sm font-bold text-muted-foreground uppercase tracking-wider">Data Início</label>
-        <Input defaultValue="22/09/2025" className="h-10 md:h-11 font-semibold" />
-      </div>
-      <div className="space-y-1.5">
-        <label className="text-[10px] md:text-sm font-bold text-muted-foreground uppercase tracking-wider">Validade</label>
-        <Input defaultValue="21/10/2025" className="h-10 md:h-11 font-semibold" />
-      </div>
-      <div className="space-y-1.5">
-        <label className="text-[10px] md:text-sm font-bold text-muted-foreground uppercase tracking-wider">Divisão</label>
-        <Select defaultValue="abcd">
-          <SelectTrigger className="h-10 md:h-11 font-semibold">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="abcd">ABCD</SelectItem>
-            <SelectItem value="abc">ABC</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="space-y-1.5">
-        <label className="text-[10px] md:text-sm font-bold text-muted-foreground uppercase tracking-wider">Frequência</label>
-        <Input defaultValue="5x Semana" className="h-10 md:h-11 font-semibold" />
+
+      {/* Desktop View (Grid compactado para manter legibilidade) */}
+      <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="space-y-4">
+          <SectionHeader icon={Target} title="Programa" />
+          <Field label="Objetivo" value="Ganho de massa muscular" />
+          <Field label="Tipo" value="Musculação" />
+        </div>
+        <div className="space-y-4">
+          <div className="h-8 mb-4 mt-6 first:mt-0" /> {/* Spacer */}
+          <Field label="Duração" value="60 min" />
+          <Field label="Intensidade" value="Moderada" />
+        </div>
+        <div className="space-y-4">
+          <SectionHeader icon={CalendarDays} title="Cronograma" />
+          <Field label="Início" value="14/01/2024" />
+          <Field label="Divisão" value="ABCD" inputClassName="bg-[#e0f7f4] text-[#00897b]" />
+        </div>
+        <div className="space-y-4">
+          <SectionHeader icon={User} title="Notas" />
+          <Field label="Frequência" value="4x/Semana" />
+          <Field label="Observação" value="Hipertrofia" />
+        </div>
       </div>
     </Card>
   );
