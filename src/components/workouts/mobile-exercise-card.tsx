@@ -6,7 +6,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Button } from '../ui/button';
-import { Check, MessageSquare, Pencil, PlaySquare, Trash2, X, Flame, SlidersHorizontal, Dumbbell, Link2, Timer, Hash } from 'lucide-react';
+import { Check, MessageSquare, Pencil, PlaySquare, Trash2, Flame, SlidersHorizontal, Dumbbell, Link2, Timer, Hash } from 'lucide-react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { Exercise, SetType, CombinationType } from '@/lib/types';
@@ -82,21 +82,21 @@ export function MobileExerciseCard({
         exercise.groupId ? "border-primary/30" : "border-border"
       )}>
         <div className="flex items-center p-0">
-          <AccordionTrigger className="flex-1 px-3 py-4 font-bold text-sm text-left hover:no-underline hover:bg-muted/30">
-            <div className="flex items-center gap-3 flex-1">
+          <AccordionTrigger className="flex-1 px-3 py-4 hover:no-underline hover:bg-muted/30">
+            <div className="flex items-center gap-3 flex-1 overflow-hidden">
               {exercise.groupId && (
                 <div className="w-1.5 h-6 bg-primary/40 rounded-full shrink-0" />
               )}
-              <span className="line-clamp-1">{exercise.name}</span>
+              <span className="font-bold text-sm text-left line-clamp-1">{exercise.name}</span>
             </div>
             
-            <div className="flex items-center gap-0.5 px-1 mr-1" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center gap-1 mr-2" onClick={(e) => e.stopPropagation()}>
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-9 w-9 text-destructive/70 hover:bg-destructive/5"
+                className="h-8 w-8 text-destructive/70 hover:bg-destructive/5 rounded-full"
               >
-                <Trash2 className="h-5 w-5" />
+                <Trash2 className="h-4 w-4" />
               </Button>
             </div>
           </AccordionTrigger>
