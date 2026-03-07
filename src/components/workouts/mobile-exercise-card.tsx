@@ -81,23 +81,25 @@ export function MobileExerciseCard({
         "bg-card rounded-xl shadow-sm border overflow-hidden transition-all",
         exercise.groupId ? "border-primary/30" : "border-border"
       )}>
-        <div className="flex items-center p-1">
+        <div className="flex items-center p-0">
           <AccordionTrigger className="flex-1 px-3 py-4 font-bold text-sm text-left hover:no-underline hover:bg-muted/30">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-1">
               {exercise.groupId && (
                 <div className="w-1.5 h-6 bg-primary/40 rounded-full shrink-0" />
               )}
               <span className="line-clamp-1">{exercise.name}</span>
             </div>
+            
+            <div className="flex items-center gap-0.5 px-1 mr-1" onClick={(e) => e.stopPropagation()}>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-9 w-9 text-destructive/70 hover:bg-destructive/5"
+              >
+                <Trash2 className="h-5 w-5" />
+              </Button>
+            </div>
           </AccordionTrigger>
-          <div className="flex items-center gap-0.5 px-2">
-            <Button variant="ghost" size="icon" className="h-9 w-9 text-green-500 hover:bg-green-50">
-              <Check className="h-5 w-5" />
-            </Button>
-            <Button variant="ghost" size="icon" className="h-9 w-9 text-destructive/70 hover:bg-destructive/5">
-              <Trash2 className="h-5 w-5" />
-            </Button>
-          </div>
         </div>
 
         <AccordionContent className="px-4 pb-4 pt-0">
