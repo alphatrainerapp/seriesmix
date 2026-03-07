@@ -10,100 +10,86 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
-import { Plus, X } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
+import { Plus, X, ChevronDown } from 'lucide-react';
 
 const DayBadge = ({ children }: { children: React.ReactNode }) => (
   <Badge
-    variant="outline"
-    className="bg-tag-soft-blue text-tag-soft-blue-foreground border-transparent gap-1 pr-1.5"
+    variant="secondary"
+    className="bg-primary/10 text-primary border-transparent gap-1.5 px-3 py-1.5 rounded-full font-bold hover:bg-primary/20 transition-colors"
   >
     {children}
-    <button>
-      <X className="h-3 w-3" />
+    <button className="hover:text-destructive transition-colors">
+      <X className="h-3.5 w-3.5" />
     </button>
   </Badge>
 );
 
-const DayPicker = ({ children }: { children: React.ReactNode }) => (
-  <div className="mt-2 flex items-center gap-2">
-    <label className="text-sm font-medium text-muted-foreground">Dias</label>
-    {children}
-    <Button variant="ghost" size="icon" className="h-6 w-6">
-      <Plus className="h-4 w-4" />
-    </Button>
-  </div>
+interface TrainingCardProps {
+  title: string;
+  focus: string;
+  days: string[];
+}
+
+const TrainingCard = ({ title, focus, days }: TrainingCardProps) => (
+  <Card className="p-0 bg-card shadow-sm overflow-hidden rounded-2xl border-none">
+    <div className="p-5 space-y-4">
+      <h3 className="font-bold text-base tracking-tight uppercase">{title}</h3>
+      <Select defaultValue={focus.toLowerCase()}>
+        <SelectTrigger className="bg-background border-border rounded-xl h-12 focus:ring-primary/20">
+          <SelectValue placeholder={focus} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="empurrar">Empurrar</SelectItem>
+          <SelectItem value="puxar">Puxar</SelectItem>
+          <SelectItem value="inferiores">Inferiores</SelectItem>
+          <SelectItem value="completo">Completo</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
+    
+    <Separator className="bg-border/50" />
+    
+    <div className="p-5 space-y-3">
+      <label className="text-sm font-bold text-muted-foreground ml-1">Dias</label>
+      <div className="flex flex-wrap items-center gap-2">
+        {days.map((day) => (
+          <DayBadge key={day}>{day}</DayBadge>
+        ))}
+        <Button 
+          variant="outline" 
+          size="icon" 
+          className="h-10 w-10 rounded-full border-dashed border-2 bg-transparent text-muted-foreground/40 hover:text-primary hover:border-primary transition-all"
+        >
+          <div className="flex items-center gap-0.5">
+            <Plus className="h-4 w-4" />
+            <ChevronDown className="h-2.5 w-2.5" />
+          </div>
+        </Button>
+      </div>
+    </div>
+  </Card>
 );
 
 export function TrainingSplit() {
   return (
-    <Card className="p-6 bg-card shadow-sm">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold">DIVISÃO DE TREINAMENTO</h2>
-        <Button variant="outline">
-          <Plus className="mr-2 h-4 w-4" />
+    <div className="space-y-6">
+      <div className="space-y-4">
+        <h2 className="text-xl md:text-2xl font-black tracking-tighter text-foreground uppercase leading-tight">
+          DIVISÃO DE TREINAMENTO
+        </h2>
+        <Button className="bg-[#009688] hover:bg-[#00796b] text-white rounded-xl px-6 h-11 font-bold gap-2 shadow-sm transition-colors border-none">
+          <Plus className="h-5 w-5" />
           Selecionar Modelo
         </Button>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card className="p-4 border-dashed">
-          <Select>
-            <SelectTrigger className="font-semibold">
-              <SelectValue placeholder="TREINO A" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="a">TREINO A</SelectItem>
-            </SelectContent>
-          </Select>
-          <p className="text-sm text-muted-foreground mt-1">Inferiores</p>
-          <DayPicker>
-            <DayBadge>Segunda</DayBadge>
-          </DayPicker>
-        </Card>
-        <Card className="p-4 border-dashed">
-          <Select>
-            <SelectTrigger className="font-semibold">
-              <SelectValue placeholder="TREINO B" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="b">TREINO B</SelectItem>
-            </SelectContent>
-          </Select>
-          <p className="text-sm text-muted-foreground mt-1">Puxar</p>
-          <DayPicker>
-            <DayBadge>Terça</DayBadge>
-            <DayBadge>Sexta</DayBadge>
-          </DayPicker>
-        </Card>
-        <Card className="p-4 border-dashed">
-          <Select>
-            <SelectTrigger className="font-semibold">
-              <SelectValue placeholder="TREINO C" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="c">TREINO C</SelectItem>
-            </SelectContent>
-          </Select>
-          <p className="text-sm text-muted-foreground mt-1">Empurrar</p>
-          <DayPicker>
-            <DayBadge>Quarta</DayBadge>
-          </DayPicker>
-        </Card>
-        <Card className="p-4 border-dashed">
-          <Select>
-            <SelectTrigger className="font-semibold">
-              <SelectValue placeholder="TREINO D" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="d">TREINO D</SelectItem>
-            </SelectContent>
-          </Select>
-          <p className="text-sm text-muted-foreground mt-1">Inferiores</p>
-          <DayPicker>
-            <DayBadge>Quinta</DayBadge>
-          </DayPicker>
-        </Card>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+        <TrainingCard title="TREINO A" focus="Empurrar" days={["Segunda"]} />
+        <TrainingCard title="TREINO B" focus="Puxar" days={["Quarta"]} />
+        <TrainingCard title="TREINO C" focus="Inferiores" days={["Sexta"]} />
+        <TrainingCard title="TREINO D" focus="Puxar" days={["Terça", "Sábado"]} />
       </div>
-    </Card>
+    </div>
   );
 }
