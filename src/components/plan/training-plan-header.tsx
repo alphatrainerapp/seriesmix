@@ -1,9 +1,13 @@
+
 'use client';
 
+import Image from 'next/image';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Target, CalendarDays, User } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Target, CalendarDays, User, Pencil } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 interface SectionHeaderProps {
   icon: React.ElementType;
@@ -28,9 +32,11 @@ interface FieldProps {
 
 const Field = ({ label, value, className, inputClassName }: FieldProps) => (
   <div className={cn("space-y-1.5", className)}>
-    <label className="text-sm font-medium text-muted-foreground ml-1">
-      {label}
-    </label>
+    {label && (
+      <label className="text-sm font-medium text-muted-foreground ml-1">
+        {label}
+      </label>
+    )}
     <Input
       defaultValue={value}
       className={cn(
@@ -41,11 +47,44 @@ const Field = ({ label, value, className, inputClassName }: FieldProps) => (
   </div>
 );
 
+const StudentProfile = () => {
+  const studentAvatar = PlaceHolderImages.find((img) => img.id === 'student-avatar');
+  return (
+    <div className="flex flex-col items-center mb-8 w-full">
+      <div className="flex w-full justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold tracking-tight">Perfil do Aluno</h2>
+        <Button variant="outline" size="sm" className="h-9 px-4 rounded-xl gap-2 shadow-sm">
+          <Pencil className="h-4 w-4" />
+          Editar
+        </Button>
+      </div>
+      <div className="relative w-32 h-32 mb-4">
+        <div className="w-full h-full rounded-full overflow-hidden border-4 border-background shadow-xl">
+           {studentAvatar && (
+            <Image
+              src={studentAvatar.imageUrl}
+              alt={studentAvatar.description}
+              fill
+              className="object-cover"
+              data-ai-hint={studentAvatar.imageHint}
+            />
+          )}
+        </div>
+      </div>
+      <h3 className="text-xl font-bold">João Silva</h3>
+      <p className="text-sm text-muted-foreground font-medium">Aluno</p>
+    </div>
+  );
+};
+
 export function TrainingPlanHeader() {
   return (
     <Card className="p-6 bg-card shadow-sm rounded-2xl border-none">
       {/* Mobile View */}
       <div className="block md:hidden space-y-4">
+        {/* Perfil do Aluno */}
+        <StudentProfile />
+
         {/* Programa */}
         <SectionHeader icon={Target} title="Programa" />
         <Field label="Objetivo" value="Ganho de massa muscular" />
@@ -73,28 +112,53 @@ export function TrainingPlanHeader() {
         <Field label="" value="Aluno focado em hipertrofia" />
       </div>
 
-      {/* Desktop View (Grid compactado para manter legibilidade) */}
-      <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="space-y-4">
-          <SectionHeader icon={Target} title="Programa" />
-          <Field label="Objetivo" value="Ganho de massa muscular" />
-          <Field label="Tipo" value="Musculação" />
-        </div>
-        <div className="space-y-4">
-          <div className="h-8 mb-4 mt-6 first:mt-0" /> {/* Spacer */}
-          <Field label="Duração" value="60 min" />
-          <Field label="Intensidade" value="Moderada" />
-        </div>
-        <div className="space-y-4">
-          <SectionHeader icon={CalendarDays} title="Cronograma" />
-          <Field label="Início" value="14/01/2024" />
-          <Field label="Divisão" value="ABCD" inputClassName="bg-[#e0f7f4] text-[#00897b]" />
-        </div>
-        <div className="space-y-4">
-          <SectionHeader icon={User} title="Notas" />
-          <Field label="Frequência" value="4x/Semana" />
-          <Field label="Observação" value="Hipertrofia" />
-        </div>
+      {/* Desktop View */}
+      <div className="hidden md:block">
+         <div className="flex justify-between items-start mb-8">
+            <div className="flex items-center gap-4">
+                 <div className="relative w-16 h-16">
+                    <div className="w-full h-full rounded-full overflow-hidden border-2 border-background shadow-md">
+                    <Image
+                        src={PlaceHolderImages.find((img) => img.id === 'student-avatar')?.imageUrl || ''}
+                        alt="João Silva"
+                        fill
+                        className="object-cover"
+                    />
+                    </div>
+                </div>
+                <div>
+                    <h3 className="text-xl font-bold">João Silva</h3>
+                    <p className="text-sm text-muted-foreground">Aluno</p>
+                </div>
+            </div>
+            <Button variant="outline" size="sm" className="rounded-xl gap-2">
+                <Pencil className="h-4 w-4" />
+                Editar Perfil
+            </Button>
+         </div>
+
+         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="space-y-4">
+                <SectionHeader icon={Target} title="Programa" />
+                <Field label="Objetivo" value="Ganho de massa muscular" />
+                <Field label="Tipo" value="Musculação" />
+            </div>
+            <div className="space-y-4">
+                <div className="h-8 mb-4 mt-6 first:mt-0" />
+                <Field label="Duração" value="60 min" />
+                <Field label="Intensidade" value="Moderada" />
+            </div>
+            <div className="space-y-4">
+                <SectionHeader icon={CalendarDays} title="Cronograma" />
+                <Field label="Início" value="14/01/2024" />
+                <Field label="Divisão" value="ABCD" inputClassName="bg-[#e0f7f4] text-[#00897b]" />
+            </div>
+            <div className="space-y-4">
+                <SectionHeader icon={User} title="Notas" />
+                <Field label="Frequência" value="4x/Semana" />
+                <Field label="Observação" value="Hipertrofia" />
+            </div>
+         </div>
       </div>
     </Card>
   );
