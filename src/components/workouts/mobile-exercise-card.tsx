@@ -5,7 +5,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Button } from '../ui/button';
+import { Button, buttonVariants } from '../ui/button';
 import { MessageSquare, PlaySquare, Trash2, Flame, SlidersHorizontal, Dumbbell, Link2, Timer, Hash } from 'lucide-react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -93,13 +93,14 @@ export function MobileExerciseCard({
             className="flex items-center shrink-0" 
             onClick={(e) => e.stopPropagation()}
           >
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="h-9 w-9 text-destructive/80 hover:bg-destructive/10 rounded-full"
+            <div 
+              className={cn(
+                buttonVariants({ variant: 'ghost', size: 'icon' }),
+                "h-9 w-9 text-destructive/80 hover:bg-destructive/10 rounded-full cursor-pointer"
+              )}
             >
               <Trash2 className="h-5 w-5" />
-            </Button>
+            </div>
           </div>
         </AccordionTrigger>
 
