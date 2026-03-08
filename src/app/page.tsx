@@ -89,14 +89,14 @@ export default function Home() {
   };
 
   return (
-    <div className="w-full max-w-[720px] lg:max-w-[1200px] xl:max-w-[1400px] mx-auto px-4 py-8 text-foreground">
-      <div className="flex flex-col lg:flex-row gap-8">
-        <main className="flex-1 min-w-0 space-y-8">
+    <div className="w-full mx-auto px-4 py-8 text-foreground max-w-[1600px] transition-all duration-300">
+      <div className="flex flex-col lg:flex-row gap-8 items-start">
+        <main className="flex-1 min-w-0 w-full space-y-8">
           <TrainingPlanHeader />
           <TrainingSplit />
           <Tabs defaultValue="treino-a" className="w-full">
-            <div className="flex justify-between items-center border-b border-border/40">
-              <TabsList className="bg-transparent p-0 h-auto gap-2">
+            <div className="flex justify-between items-center border-b border-border/40 overflow-x-auto no-scrollbar">
+              <TabsList className="bg-transparent p-0 h-auto gap-2 min-w-max">
                 {['A', 'B', 'C', 'D'].map((letter) => (
                   <TabsTrigger
                     key={letter}
@@ -135,25 +135,27 @@ export default function Home() {
                 </CombineExercisesDialog>
               </div>
               
-              {/* Desktop View */}
-              <div className="border rounded-xl bg-card shadow-sm hidden md:block overflow-x-auto">
-                <Table className="min-w-[1000px]">
-                  <TableHeader>
-                    <TableRow className="hover:bg-transparent bg-muted/20 border-b-border">
-                      <TableHead className="w-[50px] px-2"></TableHead>
-                      <TableHead className="min-w-[250px]">Exercício</TableHead>
-                      <TableHead className="w-[180px]">Método</TableHead>
-                      <TableHead className="w-[80px] text-center">Obs</TableHead>
-                      <TableHead className="w-[100px] text-center">Série</TableHead>
-                      <TableHead className="w-[100px] text-center">Reps</TableHead>
-                      <TableHead className="w-[100px] text-center">Intervalo</TableHead>
-                      <TableHead className="w-[100px] text-center">Cadência</TableHead>
-                      <TableHead className="w-[50px] text-center">Status</TableHead>
-                      <TableHead className="w-[50px]"></TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  {processedExercises()}
-                </Table>
+              {/* Desktop View with optimized overflow */}
+              <div className="border rounded-xl bg-card shadow-sm hidden md:block overflow-hidden">
+                <div className="overflow-x-auto">
+                  <Table className="min-w-[950px] w-full">
+                    <TableHeader>
+                      <TableRow className="hover:bg-transparent bg-muted/20 border-b-border">
+                        <TableHead className="w-[50px] px-2"></TableHead>
+                        <TableHead className="min-w-[200px]">Exercício</TableHead>
+                        <TableHead className="w-[160px]">Método</TableHead>
+                        <TableHead className="w-[60px] text-center">Obs</TableHead>
+                        <TableHead className="w-[90px] text-center">Série</TableHead>
+                        <TableHead className="w-[90px] text-center">Reps</TableHead>
+                        <TableHead className="w-[90px] text-center">Intervalo</TableHead>
+                        <TableHead className="w-[90px] text-center">Cadência</TableHead>
+                        <TableHead className="w-[50px] text-center">Status</TableHead>
+                        <TableHead className="w-[50px]"></TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    {processedExercises()}
+                  </Table>
+                </div>
               </div>
 
               {/* Mobile View */}
@@ -216,7 +218,7 @@ export default function Home() {
           </Tabs>
         </main>
         
-        <aside className="w-full lg:w-[340px] xl:w-[380px] space-y-8 shrink-0">
+        <aside className="w-full lg:w-[320px] xl:w-[360px] space-y-8 shrink-0">
           <PageSidebar />
         </aside>
       </div>
