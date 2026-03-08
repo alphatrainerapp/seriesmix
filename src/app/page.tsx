@@ -88,7 +88,7 @@ export default function Home() {
   };
 
   return (
-    <div className="w-full max-w-[700px] lg:max-w-[1100px] mx-auto p-4 text-foreground">
+    <div className="w-full max-w-[700px] lg:max-w-[1100px] mx-auto px-4 text-foreground">
       <div className="flex flex-col lg:flex-row gap-6">
         <main className="flex-1 space-y-6">
           <TrainingPlanHeader />
