@@ -3,24 +3,17 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
-import { Plus, X, ChevronDown } from 'lucide-react';
+import { Plus, X } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const DayBadge = ({ children }: { children: React.ReactNode }) => (
   <Badge
     variant="secondary"
-    className="bg-primary/10 text-primary border-transparent gap-1.5 px-3 py-1.5 rounded-full font-bold hover:bg-primary/20 transition-colors"
+    className="bg-tag-soft-blue text-tag-soft-blue-foreground border-transparent gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"
   >
     {children}
-    <button className="hover:text-destructive transition-colors">
-      <X className="h-3.5 w-3.5" />
+    <button className="hover:text-destructive transition-colors ml-1">
+      <X className="h-3 w-3" />
     </button>
   </Badge>
 );
@@ -32,63 +25,42 @@ interface TrainingCardProps {
 }
 
 const TrainingCard = ({ title, focus, days }: TrainingCardProps) => (
-  <Card className="p-0 bg-card shadow-sm overflow-hidden rounded-2xl border-none">
-    <div className="p-5 space-y-4">
-      <h3 className="font-bold text-base tracking-tight uppercase">{title}</h3>
-      <Select defaultValue={focus.toLowerCase()}>
-        <SelectTrigger className="bg-background border-border rounded-xl h-12 focus:ring-primary/20">
-          <SelectValue placeholder={focus} />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="empurrar">Empurrar</SelectItem>
-          <SelectItem value="puxar">Puxar</SelectItem>
-          <SelectItem value="inferiores">Inferiores</SelectItem>
-          <SelectItem value="completo">Completo</SelectItem>
-        </SelectContent>
-      </Select>
+  <Card className="p-4 bg-muted/30 border-none shadow-none rounded-xl hover:bg-muted/50 transition-colors flex flex-col justify-between min-h-[100px]">
+    <div className="flex justify-between items-start">
+      <div>
+        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">{title}</p>
+        <h4 className="font-bold text-sm text-foreground uppercase tracking-tight">{focus}</h4>
+      </div>
+      <Button variant="ghost" size="icon" className="h-6 w-6 rounded-full text-muted-foreground hover:text-primary">
+        <Plus className="h-4 w-4" />
+      </Button>
     </div>
     
-    <Separator className="bg-border/50" />
-    
-    <div className="p-5 space-y-3">
-      <label className="text-sm font-bold text-muted-foreground ml-1">Dias</label>
-      <div className="flex flex-wrap items-center gap-2">
-        {days.map((day) => (
-          <DayBadge key={day}>{day}</DayBadge>
-        ))}
-        <Button 
-          variant="outline" 
-          size="icon" 
-          className="h-10 w-10 rounded-full border-dashed border-2 bg-transparent text-muted-foreground/40 hover:text-primary hover:border-primary transition-all"
-        >
-          <div className="flex items-center gap-0.5">
-            <Plus className="h-4 w-4" />
-            <ChevronDown className="h-2.5 w-2.5" />
-          </div>
-        </Button>
-      </div>
+    <div className="flex flex-wrap items-center gap-1.5 mt-4">
+      {days.map((day) => (
+        <DayBadge key={day}>{day}</DayBadge>
+      ))}
     </div>
   </Card>
 );
 
 export function TrainingSplit() {
   return (
-    <div className="space-y-6">
-      <div className="space-y-4">
-        <h2 className="text-xl md:text-2xl font-black tracking-tighter text-foreground uppercase leading-tight">
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-sm font-black tracking-[0.2em] text-muted-foreground uppercase">
           DIVISÃO DE TREINAMENTO
         </h2>
-        <Button className="bg-[#009688] hover:bg-[#00796b] text-white rounded-xl px-6 h-11 font-bold gap-2 shadow-sm transition-colors border-none">
-          <Plus className="h-5 w-5" />
-          Selecionar Modelo
+        <Button variant="link" className="text-primary text-xs font-bold p-0 h-auto">
+          EDITAR DIVISÃO
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
-        <TrainingCard title="TREINO A" focus="Empurrar" days={["Segunda"]} />
-        <TrainingCard title="TREINO B" focus="Puxar" days={["Quarta"]} />
-        <TrainingCard title="TREINO C" focus="Inferiores" days={["Sexta"]} />
-        <TrainingCard title="TREINO D" focus="Puxar" days={["Terça", "Sábado"]} />
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <TrainingCard title="TREINO A" focus="Empurrar" days={["Seg"]} />
+        <TrainingCard title="TREINO B" focus="Puxar" days={["Qua"]} />
+        <TrainingCard title="TREINO C" focus="Inferiores" days={["Sex"]} />
+        <TrainingCard title="TREINO D" focus="Puxar" days={["Ter", "Sáb"]} />
       </div>
     </div>
   );
