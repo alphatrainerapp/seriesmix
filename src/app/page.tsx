@@ -136,9 +136,9 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-1 flex-col p-4 md:p-6 lg:p-8 text-foreground gap-6">
-      <div className="flex flex-col lg:flex-row gap-6">
-        <main className="flex-1 space-y-6">
+    <div className="container text-foreground">
+      <div className="flex flex-col gap-6">
+        <main className="space-y-6">
           <TrainingPlanHeader />
           <TrainingSplit />
           <Tabs defaultValue="treino-a" className="w-full">
@@ -201,7 +201,7 @@ export default function Home() {
               </div>
               
               {/* Desktop View */}
-              <div className="border rounded-lg bg-card shadow-sm hidden md:block">
+              <div className="border rounded-lg bg-card shadow-sm hidden md:block overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow className="hover:bg-transparent border-b-border">
@@ -282,7 +282,9 @@ export default function Home() {
             </TabsContent>
           </Tabs>
         </main>
-        <aside className="w-full lg:w-80 space-y-6">
+        
+        {/* Sidebar as separate section below or beside based on screen */}
+        <aside className="w-full space-y-6">
           <PageSidebar />
         </aside>
       </div>
