@@ -22,7 +22,7 @@ interface TrainingBlockProps {
 
 const TrainingBlock = ({ title, focus, days }: TrainingBlockProps) => (
   <div className="space-y-3">
-    <div className="bg-white border border-border rounded-full px-7 py-4 flex items-center justify-between shadow-sm hover:border-[#00bfa5]/30 transition-all cursor-pointer">
+    <div className="bg-white border border-border rounded-2xl px-7 py-4 flex items-center justify-between shadow-sm hover:border-[#00bfa5]/30 transition-all cursor-pointer">
       <div className="space-y-0.5">
         <h4 className="text-[13px] font-semibold tracking-tight text-muted-foreground uppercase">{title}</h4>
         <p className="text-base text-foreground/80 font-medium">{focus}</p>
