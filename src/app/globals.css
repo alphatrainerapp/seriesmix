@@ -99,11 +99,7 @@ body {
 
 /* Custom classes for fitness layout */
 .treino-card {
-  width: 100%;
-  border-radius: 14px;
-  padding: 16px;
-  margin-bottom: 12px;
-  box-sizing: border-box;
+  @apply w-full rounded-[14px] p-4 mb-3 box-border bg-card border shadow-sm;
 }
 
 /* Styled container provided by user, scoped to not break PC view globally */
