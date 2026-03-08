@@ -141,13 +141,13 @@ export default function Home() {
                     <TableHeader>
                       <TableRow className="hover:bg-transparent bg-muted/20 border-b-border text-[11px] uppercase tracking-wider font-bold">
                         <TableHead className="w-[50px] px-2"></TableHead>
-                        <TableHead className="min-w-[200px]">Exercício</TableHead>
+                        <TableHead className="min-w-[400px]">Exercício</TableHead>
                         <TableHead className="w-[160px]">Método</TableHead>
                         <TableHead className="w-[60px] text-center">Obs</TableHead>
-                        <TableHead className="w-[90px] text-center">Série</TableHead>
-                        <TableHead className="w-[90px] text-center">Reps</TableHead>
-                        <TableHead className="w-[90px] text-center">Intervalo</TableHead>
-                        <TableHead className="w-[90px] text-center">Cadência</TableHead>
+                        <TableHead className="w-[75px] text-center">Série</TableHead>
+                        <TableHead className="w-[75px] text-center">Reps</TableHead>
+                        <TableHead className="w-[75px] text-center">Intervalo</TableHead>
+                        <TableHead className="w-[75px] text-center">Cadência</TableHead>
                         <TableHead className="w-[50px] text-center">Status</TableHead>
                         <TableHead className="w-[50px]"></TableHead>
                       </TableRow>

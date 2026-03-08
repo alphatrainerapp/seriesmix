@@ -1,4 +1,3 @@
-
 import {
   TableRow,
   TableCell,
@@ -103,7 +102,7 @@ export function ExerciseCard({
             <GripVertical className="text-muted-foreground w-4 h-4" />
           </Button>
         </TableCell>
-        <TableCell className="font-medium p-2 min-w-[180px]">
+        <TableCell className="font-medium p-2 min-w-[400px]">
           <div className="flex items-center gap-2">
             {isFirstInGroup && (
                <div className="flex items-center justify-center w-6 h-6 bg-primary/20 text-primary rounded-full shrink-0">
@@ -143,10 +142,10 @@ export function ExerciseCard({
             </Button>
           </EditObservationDialog>
         </TableCell>
-        <TableCell className="w-[90px] p-1 pt-3 text-center">
+        <TableCell className="w-[75px] p-1 pt-3 text-center">
             <div className="flex items-center justify-center">
               <Input
-                className="w-10 text-center bg-[hsl(var(--chart-1))] text-black placeholder:text-black/80 font-bold border-none h-8 text-xs rounded-sm"
+                className="w-8 text-center bg-[hsl(var(--chart-1))] text-black placeholder:text-black/80 font-bold border-none h-8 text-xs rounded-sm"
                 value={exercise.sets.length}
                 readOnly
               />
@@ -154,25 +153,25 @@ export function ExerciseCard({
                 exercise={exercise}
                 onUpdateExercise={onUpdateExercise}
               >
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-primary shrink-0">
+                <Button variant="ghost" size="icon" className="h-7 w-7 text-primary shrink-0">
                   <Pencil className="h-4 w-4" />
                 </Button>
               </EditSetsDialog>
             </div>
         </TableCell>
-        <TableCell className="w-[80px] px-1 pt-3 text-center">
+        <TableCell className="w-[75px] px-1 pt-3 text-center">
           <Input
             className="w-full text-center bg-[hsl(var(--chart-2))] text-black placeholder:text-black/80 font-bold border-none h-8 text-xs rounded-sm"
             defaultValue={exercise.repsRange}
           />
         </TableCell>
-        <TableCell className="w-[80px] px-1 pt-3 text-center">
+        <TableCell className="w-[75px] px-1 pt-3 text-center">
           <Input
             className="w-full text-center bg-[hsl(var(--chart-3))] text-black placeholder:text-black/80 font-bold border-none h-8 text-xs rounded-sm"
             defaultValue={firstInterval}
           />
         </TableCell>
-        <TableCell className="w-[80px] px-1 pt-3 text-center">
+        <TableCell className="w-[75px] px-1 pt-3 text-center">
           <Input
             className="w-full text-center bg-[hsl(var(--chart-4))] text-black placeholder:text-black/80 font-bold border-none h-8 text-xs rounded-sm"
             defaultValue="2.2"
