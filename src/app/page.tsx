@@ -1,3 +1,4 @@
+
 'use client';
 import {
   Table,
@@ -88,43 +89,28 @@ export default function Home() {
   };
 
   return (
-    <div className="w-full max-w-[720px] lg:max-w-[1100px] mx-auto px-4 text-foreground">
-      <div className="flex flex-col lg:flex-row gap-6">
-        <main className="flex-1 space-y-6">
+    <div className="w-full max-w-[720px] lg:max-w-[1200px] xl:max-w-[1400px] mx-auto px-4 py-8 text-foreground">
+      <div className="flex flex-col lg:flex-row gap-8">
+        <main className="flex-1 min-w-0 space-y-8">
           <TrainingPlanHeader />
           <TrainingSplit />
           <Tabs defaultValue="treino-a" className="w-full">
-            <div className="flex justify-between items-center">
-              <TabsList className="bg-transparent p-0 border-b-0 rounded-none w-full justify-start overflow-x-auto">
-                <TabsTrigger
-                  value="treino-a"
-                  className="data-[state=active]:border-primary data-[state=active]:border-b-2 data-[state=active]:shadow-none data-[state=active]:bg-transparent rounded-none px-4"
-                >
-                  Treino A
-                </TabsTrigger>
-                <TabsTrigger
-                  value="treino-b"
-                  className="data-[state=active]:border-primary data-[state=active]:border-b-2 data-[state=active]:shadow-none data-[state=active]:bg-transparent rounded-none text-muted-foreground px-4"
-                >
-                  Treino B
-                </TabsTrigger>
-                <TabsTrigger
-                  value="treino-c"
-                  className="data-[state=active]:border-primary data-[state=active]:border-b-2 data-[state=active]:shadow-none data-[state=active]:bg-transparent rounded-none text-muted-foreground px-4"
-                >
-                  Treino C
-                </TabsTrigger>
-                <TabsTrigger
-                  value="treino-d"
-                  className="data-[state=active]:border-primary data-[state=active]:border-b-2 data-[state=active]:shadow-none data-[state=active]:bg-transparent rounded-none text-muted-foreground px-4"
-                >
-                  Treino D
-                </TabsTrigger>
+            <div className="flex justify-between items-center border-b border-border/40">
+              <TabsList className="bg-transparent p-0 h-auto gap-2">
+                {['A', 'B', 'C', 'D'].map((letter) => (
+                  <TabsTrigger
+                    key={letter}
+                    value={`treino-${letter.toLowerCase()}`}
+                    className="data-[state=active]:border-primary data-[state=active]:text-primary border-b-2 border-transparent rounded-none px-6 py-3 font-bold transition-all bg-transparent shadow-none"
+                  >
+                    Treino {letter}
+                  </TabsTrigger>
+                ))}
               </TabsList>
             </div>
-            <TabsContent value="treino-a" className="mt-6">
-              <div className="flex flex-wrap items-center gap-6 mb-6">
-                <h2 className="text-xl font-bold tracking-tight uppercase">TREINO A</h2>
+            <TabsContent value="treino-a" className="mt-8">
+              <div className="flex flex-wrap items-center gap-6 mb-8">
+                <h2 className="text-2xl font-black tracking-tight uppercase">TREINO A</h2>
 
                 <label className="flex items-center gap-2 text-sm font-semibold text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
                   <Checkbox id="presencial" className="rounded-sm border-muted-foreground/30" />
@@ -150,22 +136,20 @@ export default function Home() {
               </div>
               
               {/* Desktop View */}
-              <div className="border rounded-lg bg-card shadow-sm hidden md:block overflow-x-auto">
+              <div className="border rounded-xl bg-card shadow-sm hidden md:block overflow-hidden">
                 <Table>
                   <TableHeader>
-                    <TableRow className="hover:bg-transparent border-b-border">
-                      <TableHead className="w-[40px] px-2"></TableHead>
-                      <TableHead className="min-w-[450px]">Exercício</TableHead>
-                      <TableHead>Método</TableHead>
-                      <TableHead className="w-[80px] text-center px-1">
-                        Observação
-                      </TableHead>
-                      <TableHead className="w-[80px] text-center px-0">Série</TableHead>
-                      <TableHead className="w-[60px] text-center px-0">Repetições</TableHead>
-                      <TableHead className="w-[60px] text-center px-0">Intervalo</TableHead>
-                      <TableHead className="w-[60px] text-center px-0">Cadência</TableHead>
-                      <TableHead className="w-[40px]">Cor</TableHead>
-                      <TableHead className="w-[40px]"></TableHead>
+                    <TableRow className="hover:bg-transparent bg-muted/20 border-b-border">
+                      <TableHead className="w-[50px] px-2"></TableHead>
+                      <TableHead className="min-w-[300px]">Exercício</TableHead>
+                      <TableHead className="w-[180px]">Método</TableHead>
+                      <TableHead className="w-[80px] text-center">Obs</TableHead>
+                      <TableHead className="w-[100px] text-center">Série</TableHead>
+                      <TableHead className="w-[100px] text-center">Reps</TableHead>
+                      <TableHead className="w-[100px] text-center">Intervalo</TableHead>
+                      <TableHead className="w-[100px] text-center">Cadência</TableHead>
+                      <TableHead className="w-[50px] text-center">Status</TableHead>
+                      <TableHead className="w-[50px]"></TableHead>
                     </TableRow>
                   </TableHeader>
                   {processedExercises()}
@@ -187,42 +171,42 @@ export default function Home() {
               </div>
 
               {/* Action Buttons and Observations */}
-              <div className="mt-8 space-y-6">
-                <div className="flex flex-wrap items-center gap-3">
+              <div className="mt-10 space-y-8">
+                <div className="flex flex-wrap items-center gap-4">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button className="bg-[#009688] hover:bg-[#00796b] text-white rounded-xl px-6 h-12 font-bold gap-2 shadow-sm border-none">
-                        <Plus className="h-5 w-5" />
-                        Adicionar Exercício
+                      <Button className="bg-[#009688] hover:bg-[#00796b] text-white rounded-xl px-8 h-14 font-black gap-3 shadow-lg shadow-teal-500/10 border-none">
+                        <Plus className="h-6 w-6" />
+                        ADICIONAR EXERCÍCIO
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start" className="w-56 rounded-xl p-2">
-                      <DropdownMenuItem className="rounded-lg p-3 cursor-pointer">Protocolo aeróbico</DropdownMenuItem>
-                      <DropdownMenuItem className="rounded-lg p-3 cursor-pointer">Hiit</DropdownMenuItem>
-                      <DropdownMenuItem className="rounded-lg p-3 cursor-pointer">Exercício</DropdownMenuItem>
-                      <DropdownMenuItem className="rounded-lg p-3 cursor-pointer">Aquecimento</DropdownMenuItem>
+                    <DropdownMenuContent align="start" className="w-64 rounded-xl p-2 shadow-xl border-border/40">
+                      <DropdownMenuItem className="rounded-lg p-4 cursor-pointer font-medium">Protocolo aeróbico</DropdownMenuItem>
+                      <DropdownMenuItem className="rounded-lg p-4 cursor-pointer font-medium">Hiit</DropdownMenuItem>
+                      <DropdownMenuItem className="rounded-lg p-4 cursor-pointer font-medium">Exercício</DropdownMenuItem>
+                      <DropdownMenuItem className="rounded-lg p-4 cursor-pointer font-medium">Aquecimento</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
 
                   <Button 
                     variant="outline" 
                     className={cn(
-                      "rounded-xl px-6 h-12 font-bold gap-2 shadow-sm border-border bg-card",
-                      isSorting && "border-primary text-primary"
+                      "rounded-xl px-8 h-14 font-black gap-3 shadow-sm border-border bg-card transition-all active:scale-95",
+                      isSorting && "border-primary text-primary bg-primary/5"
                     )}
                     onClick={() => setIsSorting(!isSorting)}
                   >
-                    <ListOrdered className="h-5 w-5" />
-                    Ordenar Lista
+                    <ListOrdered className="h-6 w-6" />
+                    ORDENAR LISTA
                   </Button>
                 </div>
 
-                <div className="space-y-3">
-                  <h2 className="text-lg font-bold tracking-tight text-foreground ml-1">Observações Treino A:</h2>
-                  <div className="rounded-2xl border bg-card p-1 shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+                <div className="space-y-4">
+                  <h2 className="text-xl font-black tracking-tight text-foreground ml-1 uppercase italic">Observações Treino A:</h2>
+                  <div className="rounded-2xl border bg-card shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-primary/20 transition-all border-border/40">
                     <Textarea 
-                      placeholder="ao final do treino escreva a duração no campo de feedback" 
-                      className="min-h-[120px] border-none shadow-none resize-none focus-visible:ring-0 p-4 text-sm font-medium leading-relaxed"
+                      placeholder="Ao final do treino escreva a duração no campo de feedback..." 
+                      className="min-h-[160px] border-none shadow-none resize-none focus-visible:ring-0 p-6 text-base font-medium leading-relaxed bg-transparent"
                     />
                   </div>
                 </div>
@@ -232,7 +216,7 @@ export default function Home() {
           </Tabs>
         </main>
         
-        <aside className="w-full lg:w-[320px] space-y-6">
+        <aside className="w-full lg:w-[340px] xl:w-[380px] space-y-8 shrink-0">
           <PageSidebar />
         </aside>
       </div>
