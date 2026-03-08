@@ -78,7 +78,7 @@ export function MobileExerciseCard({
   return (
     <AccordionItem value={`item-${exercise.id}`} className="border-none">
       <div className={cn(
-        "w-full rounded-xl border border-teal-700/40 bg-zinc-900 p-4 transition-all shadow-lg",
+        "w-full rounded-xl border border-teal-700/40 bg-card p-4 transition-all shadow-lg",
         exercise.groupId && "border-teal-500/60"
       )}>
         <AccordionTrigger className="flex items-center p-0 hover:no-underline [&>svg]:ml-2">
@@ -86,7 +86,7 @@ export function MobileExerciseCard({
             {exercise.groupId && (
               <div className="w-1 h-5 bg-teal-500/40 rounded-full shrink-0" />
             )}
-            <span className="font-bold text-sm text-left truncate text-zinc-100">{exercise.name}</span>
+            <span className="font-bold text-sm text-left truncate text-foreground">{exercise.name}</span>
           </div>
           
           <div 
@@ -96,7 +96,7 @@ export function MobileExerciseCard({
             <div 
               className={cn(
                 buttonVariants({ variant: 'ghost', size: 'icon' }),
-                "h-8 w-8 text-red-400/70 hover:bg-red-500/10 rounded-full cursor-pointer"
+                "h-8 w-8 text-destructive/70 hover:bg-destructive/10 rounded-full cursor-pointer"
               )}
             >
               <Trash2 className="h-4 w-4" />
@@ -107,7 +107,7 @@ export function MobileExerciseCard({
         <AccordionContent className="pb-0 pt-4 px-0">
           <div className="space-y-4">
             {videoThumbnail && (
-              <div className="relative aspect-video rounded-lg overflow-hidden border border-zinc-800">
+              <div className="relative aspect-video rounded-lg overflow-hidden border border-border">
                 <Image
                   src={videoThumbnail.imageUrl}
                   alt={videoThumbnail.description}
@@ -116,8 +116,8 @@ export function MobileExerciseCard({
                   data-ai-hint={videoThumbnail.imageHint}
                 />
                 <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                  <div className="bg-zinc-900/80 p-2 rounded-full border border-zinc-700">
-                    <PlaySquare className="h-6 w-6 text-teal-500" />
+                  <div className="bg-background/80 p-2 rounded-full border border-border">
+                    <PlaySquare className="h-6 w-6 text-primary" />
                   </div>
                 </div>
               </div>
@@ -146,8 +146,8 @@ export function MobileExerciseCard({
             <div className="grid grid-cols-3 gap-3">
               <EditSetsDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
                 <div className="space-y-1 cursor-pointer group">
-                  <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Séries</p>
-                  <div className="bg-zinc-800 text-zinc-100 font-bold rounded-lg h-10 flex items-center justify-center gap-2 border border-zinc-700/50 group-hover:border-teal-500/50 transition-colors">
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Séries</p>
+                  <div className="bg-muted text-foreground font-bold rounded-lg h-10 flex items-center justify-center gap-2 border border-border/50 group-hover:border-primary/50 transition-colors">
                     {exercise.sets.length}
                     <Hash className="h-3 w-3 opacity-30"/>
                   </div>
@@ -155,45 +155,45 @@ export function MobileExerciseCard({
               </EditSetsDialog>
 
               <div className="space-y-1">
-                <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Reps</p>
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Reps</p>
                 <Input 
-                  className="bg-zinc-800 text-zinc-100 font-bold text-center h-10 border-zinc-700/50 rounded-lg focus-visible:ring-teal-500/40"
+                  className="bg-muted text-foreground font-bold text-center h-10 border-border/50 rounded-lg focus-visible:ring-primary/40"
                   defaultValue={exercise.repsRange}
                 />
               </div>
 
               <div className="space-y-1">
-                <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Intervalo</p>
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Intervalo</p>
                 <Input 
-                  className="bg-zinc-800 text-zinc-100 font-bold text-center h-10 border-zinc-700/50 rounded-lg focus-visible:ring-teal-500/40"
+                  className="bg-muted text-foreground font-bold text-center h-10 border-border/50 rounded-lg focus-visible:ring-primary/40"
                   defaultValue={exercise.sets[0]?.interval || '30'}
                 />
               </div>
 
               <div className="space-y-1">
-                <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Cadência</p>
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Cadência</p>
                 <Input 
-                  className="bg-zinc-800 text-zinc-100 font-bold text-center h-10 border-zinc-700/50 rounded-lg focus-visible:ring-teal-500/40"
+                  className="bg-muted text-foreground font-bold text-center h-10 border-border/50 rounded-lg focus-visible:ring-primary/40"
                   defaultValue="2.2"
                 />
               </div>
 
               <EditObservationDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
                 <div className="space-y-1 cursor-pointer group">
-                  <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Obs</p>
-                   <div className="bg-zinc-800 text-teal-500 border border-zinc-700/50 rounded-lg h-10 flex justify-center items-center group-hover:border-teal-500/50 transition-colors">
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Obs</p>
+                   <div className="bg-muted text-primary border border-border/50 rounded-lg h-10 flex justify-center items-center group-hover:border-primary/50 transition-colors">
                       <MessageSquare className="h-4 w-4"/>
                   </div>
                 </div>
                </EditObservationDialog>
 
                <div className="space-y-1">
-                  <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Método</p>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Método</p>
                   <Select defaultValue="padrao">
-                      <SelectTrigger className="rounded-lg bg-zinc-800 border-zinc-700/50 h-10 text-[10px] font-bold text-zinc-100 focus:ring-teal-500/20">
+                      <SelectTrigger className="rounded-lg bg-muted border-border/50 h-10 text-[10px] font-bold text-foreground focus:ring-primary/20">
                           <SelectValue placeholder="Padrão" />
                       </SelectTrigger>
-                      <SelectContent className="bg-zinc-900 border-zinc-800">
+                      <SelectContent className="bg-popover border-border">
                           <SelectItem value="padrao">Padrão</SelectItem>
                           <SelectItem value="biset">Biset</SelectItem>
                           <SelectItem value="dropset">Dropset</SelectItem>
@@ -203,13 +203,13 @@ export function MobileExerciseCard({
             </div>
 
             {combinationType && (
-              <div className="flex items-center gap-2 pt-2 border-t border-zinc-800/50">
-                <div className="h-6 w-6 rounded-full bg-teal-500/10 flex items-center justify-center border border-teal-500/20">
+              <div className="flex items-center gap-2 pt-2 border-t border-border/50">
+                <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
                    {CombinationIcon && (
                       <CombinationIcon className={cn("h-3 w-3", combinationIconClassName)} />
                     )}
                 </div>
-                <span className="text-[9px] font-bold text-teal-500/80 uppercase tracking-widest">
+                <span className="text-[9px] font-bold text-primary/80 uppercase tracking-widest">
                   Combinado ({combinationType})
                 </span>
               </div>
