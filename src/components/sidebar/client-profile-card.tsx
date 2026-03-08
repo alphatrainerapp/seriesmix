@@ -10,7 +10,7 @@ export function ClientProfileCard() {
   );
 
   return (
-    <Card className="p-4 flex flex-col items-center bg-card shadow-sm">
+    <Card className="hidden lg:flex p-4 flex-col items-center bg-card shadow-sm">
       <div className="w-24 h-24 rounded-full overflow-hidden">
         {clientAvatar && (
           <Image
