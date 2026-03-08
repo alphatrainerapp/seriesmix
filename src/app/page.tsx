@@ -27,7 +27,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Plus, ListOrdered } from 'lucide-react';
+import { Plus, ListOrdered, SquarePen, Combine } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function Home() {
@@ -123,31 +123,30 @@ export default function Home() {
               </TabsList>
             </div>
             <TabsContent value="treino-a" className="mt-6">
-              <div className="flex flex-wrap items-center gap-3 mb-4">
-                <h2 className="text-xl font-bold">TREINO A</h2>
+              <div className="flex flex-wrap items-center gap-6 mb-6">
+                <h2 className="text-xl font-bold tracking-tight uppercase">TREINO A</h2>
 
-                <label className="flex items-center gap-2 text-sm cursor-pointer">
-                  <Checkbox id="presencial" />
+                <label className="flex items-center gap-2 text-sm font-semibold text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
+                  <Checkbox id="presencial" className="rounded-sm border-muted-foreground/30" />
                   Presencial
                 </label>
 
-                <label className="flex items-center gap-2 text-sm cursor-pointer">
-                  <Checkbox id="editar-varios" />
-                  Editar vários
-                </label>
+                <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
+                  <SquarePen className="h-5 w-5 text-cyan-400" />
+                  Editar variáveis
+                </button>
 
-                <div className="ml-auto">
-                  <CombineExercisesDialog
-                    exercises={workoutData}
-                    onUpdateWorkout={setWorkoutData}
-                    combinationTypes={combinationTypes}
-                    onUpdateCombinationTypes={setCombinationTypes}
-                  >
-                    <Button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg border-none shadow-none">
-                      Combinar
-                    </Button>
-                  </CombineExercisesDialog>
-                </div>
+                <CombineExercisesDialog
+                  exercises={workoutData}
+                  onUpdateWorkout={setWorkoutData}
+                  combinationTypes={combinationTypes}
+                  onUpdateCombinationTypes={setCombinationTypes}
+                >
+                  <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
+                    <Combine className="h-6 w-6 text-cyan-400" />
+                    Combinar
+                  </button>
+                </CombineExercisesDialog>
               </div>
               
               {/* Desktop View */}
@@ -233,7 +232,6 @@ export default function Home() {
           </Tabs>
         </main>
         
-        {/* Sidebar as separate section below or beside based on screen */}
         <aside className="w-full lg:w-[320px] space-y-6">
           <PageSidebar />
         </aside>
