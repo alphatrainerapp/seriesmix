@@ -136,12 +136,12 @@ export default function Home() {
               </div>
               
               {/* Desktop View */}
-              <div className="border rounded-xl bg-card shadow-sm hidden md:block overflow-hidden">
-                <Table>
+              <div className="border rounded-xl bg-card shadow-sm hidden md:block overflow-x-auto">
+                <Table className="min-w-[1000px]">
                   <TableHeader>
                     <TableRow className="hover:bg-transparent bg-muted/20 border-b-border">
                       <TableHead className="w-[50px] px-2"></TableHead>
-                      <TableHead className="min-w-[300px]">Exercício</TableHead>
+                      <TableHead className="min-w-[250px]">Exercício</TableHead>
                       <TableHead className="w-[180px]">Método</TableHead>
                       <TableHead className="w-[80px] text-center">Obs</TableHead>
                       <TableHead className="w-[100px] text-center">Série</TableHead>

@@ -1,3 +1,4 @@
+
 import {
   TableRow,
   TableCell,
@@ -102,16 +103,18 @@ export function ExerciseCard({
             <GripVertical className="text-muted-foreground" />
           </Button>
         </TableCell>
-        <TableCell className="font-medium p-2 min-w-[400px]">
-          {isFirstInGroup && (
-             <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 bg-primary/20 text-primary rounded-full">
-                <Link2 className="h-4 w-4"/>
-              </div>
-          )}
-          <Input 
-            className='bg-exercise-card border-border shadow-sm w-full rounded-full'
-            defaultValue={exercise.name}
-          />
+        <TableCell className="font-medium p-2 min-w-[200px]">
+          <div className="flex items-center gap-2">
+            {isFirstInGroup && (
+               <div className="flex items-center justify-center w-6 h-6 bg-primary/20 text-primary rounded-full shrink-0">
+                  <Link2 className="h-4 w-4"/>
+                </div>
+            )}
+            <Input 
+              className='bg-exercise-card border-border shadow-sm w-full rounded-full'
+              defaultValue={exercise.name}
+            />
+          </div>
         </TableCell>
         <TableCell className="p-2 pt-3">
           <div className="flex items-center gap-1">
@@ -119,8 +122,8 @@ export function ExerciseCard({
               <PlaySquare className="text-primary" />
             </Button>
             <Select>
-              <SelectTrigger className="w-[180px] bg-exercise-card border-border shadow-sm rounded-full">
-                <SelectValue placeholder="Selecione o método..." />
+              <SelectTrigger className="w-[140px] bg-exercise-card border-border shadow-sm rounded-full">
+                <SelectValue placeholder="Método..." />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="dropset">Dropset</SelectItem>
@@ -130,7 +133,7 @@ export function ExerciseCard({
             </Select>
           </div>
         </TableCell>
-        <TableCell className="w-[80px] text-center p-1 pt-3">
+        <TableCell className="w-[60px] text-center p-1 pt-3">
           <EditObservationDialog
             exercise={exercise}
             onUpdateExercise={onUpdateExercise}
@@ -140,7 +143,7 @@ export function ExerciseCard({
             </Button>
           </EditObservationDialog>
         </TableCell>
-        <TableCell className="w-[100px] p-1 pt-3 text-center">
+        <TableCell className="w-[90px] p-1 pt-3 text-center">
             <div className="flex items-center justify-center">
               <Input
                 className="w-10 text-center bg-[hsl(var(--chart-1))] text-black placeholder:text-black/80 font-bold border-none"
