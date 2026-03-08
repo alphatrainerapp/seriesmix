@@ -136,9 +136,9 @@ export default function Home() {
   };
 
   return (
-    <div className="container text-foreground">
-      <div className="flex flex-col gap-6">
-        <main className="space-y-6">
+    <div className="app-container text-foreground">
+      <div className="flex flex-col lg:flex-row gap-6">
+        <main className="flex-1 space-y-6">
           <TrainingPlanHeader />
           <TrainingSplit />
           <Tabs defaultValue="treino-a" className="w-full">
@@ -284,7 +284,7 @@ export default function Home() {
         </main>
         
         {/* Sidebar as separate section below or beside based on screen */}
-        <aside className="w-full space-y-6">
+        <aside className="w-full lg:w-[320px] space-y-6">
           <PageSidebar />
         </aside>
       </div>
