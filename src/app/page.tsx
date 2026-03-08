@@ -88,7 +88,7 @@ export default function Home() {
   };
 
   return (
-    <div className="w-full max-w-[700px] lg:max-w-[1100px] mx-auto px-4 text-foreground">
+    <div className="w-full max-w-[720px] lg:max-w-[1100px] mx-auto px-4 text-foreground">
       <div className="flex flex-col lg:flex-row gap-6">
         <main className="flex-1 space-y-6">
           <TrainingPlanHeader />
@@ -140,7 +140,7 @@ export default function Home() {
                   exercises={workoutData}
                   onUpdateWorkout={setWorkoutData}
                   combinationTypes={combinationTypes}
-                  onUpdateCombinationTypes={setCombinationTypes}
+                  onUpdateCombinationTypes={setWorkoutData}
                 >
                   <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
                     <Combine className="h-6 w-6 text-cyan-400" />
