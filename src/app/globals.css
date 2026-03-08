@@ -102,17 +102,18 @@ body {
   @apply w-full rounded-[14px] p-4 mb-3 box-border bg-card border shadow-sm;
 }
 
-/* Styled container provided by user, scoped to not break PC view globally */
+/* Styled container provided by user */
 .app-container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 16px;
-  box-sizing: border-box;
+  @apply w-full mx-auto p-4 box-border;
+  max-width: 36rem; /* Equivalent to max-w-xl for mobile */
 }
 
-@media (max-width: 768px) {
+@media (min-width: 1024px) {
   .app-container {
-    max-width: 700px;
+    max-width: 1200px; /* Wider for PC as requested */
   }
+}
+
+.header-treino {
+  @apply flex items-center justify-between mb-6 flex-wrap gap-4;
 }
