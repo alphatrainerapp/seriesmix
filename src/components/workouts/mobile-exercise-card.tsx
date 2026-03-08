@@ -78,7 +78,7 @@ export function MobileExerciseCard({
   return (
     <AccordionItem value={`item-${exercise.id}`} className="border-none mb-4">
       <div className={cn(
-        "bg-card rounded-3xl shadow-sm border overflow-hidden transition-all",
+        "bg-card rounded-xl shadow-sm border overflow-hidden transition-all",
         exercise.groupId ? "border-primary/30" : "border-border"
       )}>
         <AccordionTrigger className="flex items-center px-4 py-4 hover:no-underline hover:bg-muted/10 [&>svg]:ml-1">
@@ -107,7 +107,7 @@ export function MobileExerciseCard({
         <AccordionContent className="px-5 pb-5 pt-0">
           <div className="space-y-5">
             {videoThumbnail && (
-              <div className="relative aspect-video rounded-2xl overflow-hidden border border-border shadow-inner-sm">
+              <div className="relative aspect-video rounded-lg overflow-hidden border border-border shadow-inner-sm">
                 <Image
                   src={videoThumbnail.imageUrl}
                   alt={videoThumbnail.description}
@@ -146,7 +146,7 @@ export function MobileExerciseCard({
               <EditSetsDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
                 <div className="space-y-1.5 cursor-pointer group">
                   <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-widest pl-1">Séries</p>
-                  <div className="bg-[hsl(var(--chart-1))] text-black font-extrabold rounded-2xl py-2 text-sm flex items-center justify-center gap-2 h-12 shadow-sm transition-all active:scale-95 group-hover:brightness-105">
+                  <div className="bg-[hsl(var(--chart-1))] text-black font-extrabold rounded-lg py-2 text-sm flex items-center justify-center gap-2 h-12 shadow-sm transition-all active:scale-95 group-hover:brightness-105">
                     {exercise.sets.length}
                     <Hash className="h-3.5 w-3.5 opacity-40"/>
                   </div>
@@ -156,7 +156,7 @@ export function MobileExerciseCard({
               <div className="space-y-1.5">
                 <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-widest pl-1">Reps</p>
                 <Input 
-                  className="bg-[hsl(var(--chart-2))] text-black font-extrabold text-center h-12 border-none shadow-sm text-sm focus-visible:ring-2 focus-visible:ring-primary/40 rounded-2xl"
+                  className="bg-[hsl(var(--chart-2))] text-black font-extrabold text-center h-12 border-none shadow-sm text-sm focus-visible:ring-2 focus-visible:ring-primary/40 rounded-lg"
                   defaultValue={exercise.repsRange}
                 />
               </div>
@@ -164,7 +164,7 @@ export function MobileExerciseCard({
               <div className="space-y-1.5">
                 <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-widest pl-1">Intervalo</p>
                 <Input 
-                  className="bg-[hsl(var(--chart-3))] text-black font-extrabold text-center h-12 border-none shadow-sm text-sm focus-visible:ring-2 focus-visible:ring-primary/40 rounded-2xl"
+                  className="bg-[hsl(var(--chart-3))] text-black font-extrabold text-center h-12 border-none shadow-sm text-sm focus-visible:ring-2 focus-visible:ring-primary/40 rounded-lg"
                   defaultValue={exercise.sets[0]?.interval || '30'}
                 />
               </div>
@@ -172,7 +172,7 @@ export function MobileExerciseCard({
               <div className="space-y-1.5">
                 <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-widest pl-1">Cadência</p>
                 <Input 
-                  className="bg-[hsl(var(--chart-4))] text-black font-extrabold text-center h-12 border-none shadow-sm text-sm focus-visible:ring-2 focus-visible:ring-primary/40 rounded-2xl"
+                  className="bg-[hsl(var(--chart-4))] text-black font-extrabold text-center h-12 border-none shadow-sm text-sm focus-visible:ring-2 focus-visible:ring-primary/40 rounded-lg"
                   defaultValue="2.2"
                 />
               </div>
@@ -180,7 +180,7 @@ export function MobileExerciseCard({
               <EditObservationDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
                 <div className="space-y-1.5 cursor-pointer group">
                   <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-widest pl-1">Obs</p>
-                   <div className="bg-primary/5 text-primary border border-primary/20 rounded-2xl h-12 flex justify-center items-center shadow-sm transition-all active:scale-95 group-hover:bg-primary/10">
+                   <div className="bg-primary/5 text-primary border border-primary/20 rounded-lg h-12 flex justify-center items-center shadow-sm transition-all active:scale-95 group-hover:bg-primary/10">
                       <MessageSquare className="h-5 w-5"/>
                   </div>
                 </div>
@@ -189,7 +189,7 @@ export function MobileExerciseCard({
                <div className="space-y-1.5">
                   <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-widest pl-1">Método</p>
                   <Select defaultValue="padrao">
-                      <SelectTrigger className="rounded-2xl bg-muted/30 border-border h-12 text-xs font-bold shadow-sm focus:ring-primary/20">
+                      <SelectTrigger className="rounded-lg bg-muted/30 border-border h-12 text-xs font-bold shadow-sm focus:ring-primary/20">
                           <SelectValue placeholder="Padrão" />
                       </SelectTrigger>
                       <SelectContent>
