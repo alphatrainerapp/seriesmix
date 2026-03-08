@@ -86,7 +86,7 @@ export function MobileExerciseCard({
             {exercise.groupId && (
               <div className="w-1 h-5 bg-teal-500/40 rounded-full shrink-0" />
             )}
-            <span className="font-bold text-sm text-left truncate text-foreground">{exercise.name}</span>
+            <span className="font-bold text-sm text-left truncate text-foreground uppercase tracking-tight">{exercise.name}</span>
           </div>
           
           <div 
@@ -147,7 +147,7 @@ export function MobileExerciseCard({
               <EditSetsDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
                 <div className="space-y-1 cursor-pointer group">
                   <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Séries</p>
-                  <div className="bg-muted text-foreground font-bold rounded-lg h-10 flex items-center justify-center gap-2 border border-border/50 group-hover:border-primary/50 transition-colors">
+                  <div className="bg-[hsl(var(--chart-1))] text-black font-bold rounded-lg h-10 flex items-center justify-center gap-2 border-none transition-transform active:scale-95">
                     {exercise.sets.length}
                     <Hash className="h-3 w-3 opacity-30"/>
                   </div>
@@ -157,7 +157,7 @@ export function MobileExerciseCard({
               <div className="space-y-1">
                 <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Reps</p>
                 <Input 
-                  className="bg-muted text-foreground font-bold text-center h-10 border-border/50 rounded-lg focus-visible:ring-primary/40"
+                  className="bg-[hsl(var(--chart-2))] text-black font-bold text-center h-10 border-none rounded-lg focus-visible:ring-primary/40"
                   defaultValue={exercise.repsRange}
                 />
               </div>
@@ -165,7 +165,7 @@ export function MobileExerciseCard({
               <div className="space-y-1">
                 <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Intervalo</p>
                 <Input 
-                  className="bg-muted text-foreground font-bold text-center h-10 border-border/50 rounded-lg focus-visible:ring-primary/40"
+                  className="bg-[hsl(var(--chart-3))] text-black font-bold text-center h-10 border-none rounded-lg focus-visible:ring-primary/40"
                   defaultValue={exercise.sets[0]?.interval || '30'}
                 />
               </div>
@@ -173,7 +173,7 @@ export function MobileExerciseCard({
               <div className="space-y-1">
                 <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Cadência</p>
                 <Input 
-                  className="bg-muted text-foreground font-bold text-center h-10 border-border/50 rounded-lg focus-visible:ring-primary/40"
+                  className="bg-[hsl(var(--chart-4))] text-black font-bold text-center h-10 border-none rounded-lg focus-visible:ring-primary/40"
                   defaultValue="2.2"
                 />
               </div>
