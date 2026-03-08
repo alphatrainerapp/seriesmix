@@ -1,4 +1,3 @@
-
 'use client';
 import {
   Table,
@@ -137,7 +136,7 @@ export default function Home() {
   };
 
   return (
-    <div className="w-full max-w-xl lg:max-w-[1200px] mx-auto p-4 text-foreground">
+    <div className="w-full max-w-[700px] lg:max-w-[1100px] mx-auto p-4 text-foreground">
       <div className="flex flex-col lg:flex-row gap-6">
         <main className="flex-1 space-y-6">
           <TrainingPlanHeader />
@@ -226,7 +225,7 @@ export default function Home() {
 
               {/* Mobile View */}
               <div className="block md:hidden">
-                <Accordion type="single" collapsible className="w-full space-y-4">
+                <Accordion type="single" collapsible className="flex flex-col gap-3 w-full">
                   {workoutData.map((exercise) => (
                     <MobileExerciseCard
                       key={exercise.id}

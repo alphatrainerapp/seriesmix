@@ -26,17 +26,17 @@ const setTypeConfig: {
 } = {
   aquecimento: {
     icon: Flame,
-    className: 'bg-[#dd694d] hover:bg-[#dd694d]/90 text-white border-transparent',
+    className: 'bg-orange-600/20 text-orange-500 border-orange-500/20',
     label: 'Aquec'
   },
   preparatoria: {
     icon: SlidersHorizontal,
-    className: 'bg-[#4a80e3] hover:bg-[#4a80e3]/90 text-white border-transparent',
+    className: 'bg-blue-600/20 text-blue-500 border-blue-500/20',
     label: 'Prep'
   },
   trabalho: {
     icon: Dumbbell,
-    className: 'bg-[#56ac73] hover:bg-[#56ac73]/90 text-white border-transparent',
+    className: 'bg-emerald-600/20 text-emerald-500 border-emerald-500/20',
     label: 'Válidas'
   },
 };
@@ -49,7 +49,7 @@ const combinationIconConfig: {
 } = {
   biset: { icon: Dumbbell, className: 'text-blue-500' },
   triset: { icon: Dumbbell, className: 'text-blue-500' },
-  superserie: { icon: Link2, className: 'text-green-500' },
+  superserie: { icon: Link2, className: 'text-emerald-500' },
   hiit: { icon: Timer, className: 'text-orange-500' },
 };
 
@@ -76,17 +76,17 @@ export function MobileExerciseCard({
   const combinationIconClassName = combinationType ? combinationIconConfig[combinationType]?.className : '';
 
   return (
-    <AccordionItem value={`item-${exercise.id}`} className="border-none mb-4">
+    <AccordionItem value={`item-${exercise.id}`} className="border-none">
       <div className={cn(
-        "bg-card rounded-xl shadow-sm border overflow-hidden transition-all",
-        exercise.groupId ? "border-primary/30" : "border-border"
+        "w-full rounded-xl border border-teal-700/40 bg-zinc-900 p-4 transition-all shadow-lg",
+        exercise.groupId && "border-teal-500/60"
       )}>
-        <AccordionTrigger className="flex items-center px-4 py-4 hover:no-underline hover:bg-muted/10 [&>svg]:ml-1">
+        <AccordionTrigger className="flex items-center p-0 hover:no-underline [&>svg]:ml-2">
           <div className="flex items-center gap-3 flex-1 overflow-hidden">
             {exercise.groupId && (
-              <div className="w-1.5 h-6 bg-primary/40 rounded-full shrink-0" />
+              <div className="w-1 h-5 bg-teal-500/40 rounded-full shrink-0" />
             )}
-            <span className="font-bold text-sm text-left truncate">{exercise.name}</span>
+            <span className="font-bold text-sm text-left truncate text-zinc-100">{exercise.name}</span>
           </div>
           
           <div 
@@ -96,28 +96,28 @@ export function MobileExerciseCard({
             <div 
               className={cn(
                 buttonVariants({ variant: 'ghost', size: 'icon' }),
-                "h-9 w-9 text-destructive/80 hover:bg-destructive/10 rounded-full cursor-pointer"
+                "h-8 w-8 text-red-400/70 hover:bg-red-500/10 rounded-full cursor-pointer"
               )}
             >
-              <Trash2 className="h-5 w-5" />
+              <Trash2 className="h-4 w-4" />
             </div>
           </div>
         </AccordionTrigger>
 
-        <AccordionContent className="px-5 pb-5 pt-0">
-          <div className="space-y-5">
+        <AccordionContent className="pb-0 pt-4 px-0">
+          <div className="space-y-4">
             {videoThumbnail && (
-              <div className="relative aspect-video rounded-lg overflow-hidden border border-border shadow-inner-sm">
+              <div className="relative aspect-video rounded-lg overflow-hidden border border-zinc-800">
                 <Image
                   src={videoThumbnail.imageUrl}
                   alt={videoThumbnail.description}
                   fill
-                  className="object-cover"
+                  className="object-cover opacity-80"
                   data-ai-hint={videoThumbnail.imageHint}
                 />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/10">
-                  <div className="bg-white/95 p-3 rounded-full shadow-lg">
-                    <PlaySquare className="h-8 w-8 text-primary" />
+                <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                  <div className="bg-zinc-900/80 p-2 rounded-full border border-zinc-700">
+                    <PlaySquare className="h-6 w-6 text-teal-500" />
                   </div>
                 </div>
               </div>
@@ -133,7 +133,8 @@ export function MobileExerciseCard({
                   return (
                     <Badge
                       key={setType}
-                      className={cn("text-[10px] py-1 px-3 font-bold gap-1.5 rounded-full shadow-sm", config.className)}
+                      variant="outline"
+                      className={cn("text-[10px] py-0.5 px-2 font-bold gap-1 rounded-full", config.className)}
                     >
                       <Icon className="h-3 w-3" />
                       {config.label} ({count})
@@ -142,57 +143,57 @@ export function MobileExerciseCard({
                 })}
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 gap-3">
               <EditSetsDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
-                <div className="space-y-1.5 cursor-pointer group">
-                  <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-widest pl-1">Séries</p>
-                  <div className="bg-[hsl(var(--chart-1))] text-black font-extrabold rounded-lg py-2 text-sm flex items-center justify-center gap-2 h-12 shadow-sm transition-all active:scale-95 group-hover:brightness-105">
+                <div className="space-y-1 cursor-pointer group">
+                  <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Séries</p>
+                  <div className="bg-zinc-800 text-zinc-100 font-bold rounded-lg h-10 flex items-center justify-center gap-2 border border-zinc-700/50 group-hover:border-teal-500/50 transition-colors">
                     {exercise.sets.length}
-                    <Hash className="h-3.5 w-3.5 opacity-40"/>
+                    <Hash className="h-3 w-3 opacity-30"/>
                   </div>
                 </div>
               </EditSetsDialog>
 
-              <div className="space-y-1.5">
-                <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-widest pl-1">Reps</p>
+              <div className="space-y-1">
+                <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Reps</p>
                 <Input 
-                  className="bg-[hsl(var(--chart-2))] text-black font-extrabold text-center h-12 border-none shadow-sm text-sm focus-visible:ring-2 focus-visible:ring-primary/40 rounded-lg"
+                  className="bg-zinc-800 text-zinc-100 font-bold text-center h-10 border-zinc-700/50 rounded-lg focus-visible:ring-teal-500/40"
                   defaultValue={exercise.repsRange}
                 />
               </div>
 
-              <div className="space-y-1.5">
-                <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-widest pl-1">Intervalo</p>
+              <div className="space-y-1">
+                <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Intervalo</p>
                 <Input 
-                  className="bg-[hsl(var(--chart-3))] text-black font-extrabold text-center h-12 border-none shadow-sm text-sm focus-visible:ring-2 focus-visible:ring-primary/40 rounded-lg"
+                  className="bg-zinc-800 text-zinc-100 font-bold text-center h-10 border-zinc-700/50 rounded-lg focus-visible:ring-teal-500/40"
                   defaultValue={exercise.sets[0]?.interval || '30'}
                 />
               </div>
 
-              <div className="space-y-1.5">
-                <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-widest pl-1">Cadência</p>
+              <div className="space-y-1">
+                <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Cadência</p>
                 <Input 
-                  className="bg-[hsl(var(--chart-4))] text-black font-extrabold text-center h-12 border-none shadow-sm text-sm focus-visible:ring-2 focus-visible:ring-primary/40 rounded-lg"
+                  className="bg-zinc-800 text-zinc-100 font-bold text-center h-10 border-zinc-700/50 rounded-lg focus-visible:ring-teal-500/40"
                   defaultValue="2.2"
                 />
               </div>
 
               <EditObservationDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
-                <div className="space-y-1.5 cursor-pointer group">
-                  <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-widest pl-1">Obs</p>
-                   <div className="bg-primary/5 text-primary border border-primary/20 rounded-lg h-12 flex justify-center items-center shadow-sm transition-all active:scale-95 group-hover:bg-primary/10">
-                      <MessageSquare className="h-5 w-5"/>
+                <div className="space-y-1 cursor-pointer group">
+                  <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Obs</p>
+                   <div className="bg-zinc-800 text-teal-500 border border-zinc-700/50 rounded-lg h-10 flex justify-center items-center group-hover:border-teal-500/50 transition-colors">
+                      <MessageSquare className="h-4 w-4"/>
                   </div>
                 </div>
                </EditObservationDialog>
 
-               <div className="space-y-1.5">
-                  <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-widest pl-1">Método</p>
+               <div className="space-y-1">
+                  <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Método</p>
                   <Select defaultValue="padrao">
-                      <SelectTrigger className="rounded-lg bg-muted/30 border-border h-12 text-xs font-bold shadow-sm focus:ring-primary/20">
+                      <SelectTrigger className="rounded-lg bg-zinc-800 border-zinc-700/50 h-10 text-[10px] font-bold text-zinc-100 focus:ring-teal-500/20">
                           <SelectValue placeholder="Padrão" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-zinc-900 border-zinc-800">
                           <SelectItem value="padrao">Padrão</SelectItem>
                           <SelectItem value="biset">Biset</SelectItem>
                           <SelectItem value="dropset">Dropset</SelectItem>
@@ -201,20 +202,18 @@ export function MobileExerciseCard({
                </div>
             </div>
 
-            <div className="flex items-center justify-between pt-4 border-t border-border/40">
-              <div className="flex items-center gap-3">
-                <div className="h-9 w-9 rounded-full bg-muted/40 flex items-center justify-center border border-border/50">
-                   {CombinationIcon ? (
-                      <CombinationIcon className={cn("h-4 w-4", combinationIconClassName)} />
-                    ) : (
-                      <Dumbbell className="h-4 w-4 text-muted-foreground/30" />
+            {combinationType && (
+              <div className="flex items-center gap-2 pt-2 border-t border-zinc-800/50">
+                <div className="h-6 w-6 rounded-full bg-teal-500/10 flex items-center justify-center border border-teal-500/20">
+                   {CombinationIcon && (
+                      <CombinationIcon className={cn("h-3 w-3", combinationIconClassName)} />
                     )}
                 </div>
-                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
-                  {combinationType ? `Combinado (${combinationType})` : 'Individual'}
+                <span className="text-[9px] font-bold text-teal-500/80 uppercase tracking-widest">
+                  Combinado ({combinationType})
                 </span>
               </div>
-            </div>
+            )}
           </div>
         </AccordionContent>
       </div>
