@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -55,13 +54,15 @@ export function TrainingSplit() {
   ];
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between px-1">
-        <h2 className="text-xs font-black tracking-[0.2em] text-muted-foreground uppercase">
-          DIVISÃO DE TREINAMENTO
+    <div className="space-y-8 py-4">
+      <div className="px-1 space-y-6">
+        <h2 className="text-3xl font-bold tracking-tight text-slate-800 dark:text-slate-200">
+          DIVISÃO DE <br /> TREINAMENTO
         </h2>
-        <Button variant="link" className="text-primary text-xs font-bold p-0 h-auto">
-          EDITAR DIVISÃO
+        
+        <Button className="bg-[#00bfa5] hover:bg-[#00a894] text-white rounded-lg px-6 h-12 font-bold gap-2 shadow-[0_4px_14px_0_rgba(0,191,165,0.39)] border-none">
+          <Plus className="h-5 w-5" />
+          Selecionar Modelo
         </Button>
       </div>
 
