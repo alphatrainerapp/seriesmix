@@ -1,4 +1,3 @@
-
 'use client';
 import {
   Table,
@@ -89,7 +88,7 @@ export default function Home() {
   };
 
   return (
-    <div className="w-full mx-auto px-4 py-8 text-foreground max-w-[1600px] transition-all duration-300">
+    <div className="w-full mx-auto px-4 py-8 text-foreground max-w-[1800px] transition-all duration-300">
       <div className="flex flex-col lg:flex-row gap-8 items-start">
         <main className="flex-1 min-w-0 w-full space-y-8">
           <TrainingPlanHeader />
@@ -138,9 +137,9 @@ export default function Home() {
               {/* Desktop View with optimized overflow */}
               <div className="border rounded-xl bg-card shadow-sm hidden md:block overflow-hidden">
                 <div className="overflow-x-auto">
-                  <Table className="min-w-[950px] w-full">
+                  <Table className="min-w-full">
                     <TableHeader>
-                      <TableRow className="hover:bg-transparent bg-muted/20 border-b-border">
+                      <TableRow className="hover:bg-transparent bg-muted/20 border-b-border text-[11px] uppercase tracking-wider font-bold">
                         <TableHead className="w-[50px] px-2"></TableHead>
                         <TableHead className="min-w-[200px]">Exercício</TableHead>
                         <TableHead className="w-[160px]">Método</TableHead>
@@ -218,7 +217,7 @@ export default function Home() {
           </Tabs>
         </main>
         
-        <aside className="w-full lg:w-[320px] xl:w-[360px] space-y-8 shrink-0">
+        <aside className="w-full lg:w-[300px] xl:w-[340px] space-y-8 shrink-0">
           <PageSidebar />
         </aside>
       </div>
