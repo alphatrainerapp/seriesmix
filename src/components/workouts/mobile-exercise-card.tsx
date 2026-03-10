@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -92,12 +93,14 @@ export function MobileExerciseCard({
               <div className="w-1.5 h-6 bg-teal-500/40 rounded-full shrink-0" />
             )}
             <ExerciseSearchDialog onSelect={handleUpdateName}>
-              <button 
-                className="font-extrabold text-[15px] text-left leading-tight text-foreground uppercase tracking-tight truncate hover:text-primary transition-colors"
-                onClick={(e) => e.stopPropagation()}
+              <span 
+                className="font-extrabold text-[15px] text-left leading-tight text-foreground uppercase tracking-tight truncate hover:text-primary transition-colors cursor-pointer"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
               >
                 {exercise.name}
-              </button>
+              </span>
             </ExerciseSearchDialog>
           </div>
           
@@ -232,3 +235,4 @@ export function MobileExerciseCard({
     </AccordionItem>
   );
 }
+
