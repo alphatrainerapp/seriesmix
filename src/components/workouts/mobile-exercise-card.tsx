@@ -78,15 +78,15 @@ export function MobileExerciseCard({
   return (
     <AccordionItem value={`item-${exercise.id}`} className="border-none">
       <div className={cn(
-        "w-full rounded-xl border border-teal-700/40 bg-card p-4 transition-all shadow-lg",
-        exercise.groupId && "border-teal-500/60"
+        "w-full rounded-2xl border border-teal-700/20 bg-card p-4 transition-all shadow-md active:shadow-sm",
+        exercise.groupId && "border-teal-500/50"
       )}>
-        <AccordionTrigger className="flex items-center p-0 hover:no-underline [&>svg]:ml-2">
-          <div className="flex items-center gap-3 flex-1 overflow-hidden">
+        <AccordionTrigger className="flex items-center p-0 hover:no-underline [&>svg]:ml-auto">
+          <div className="flex items-center gap-3 flex-1 overflow-hidden pr-2">
             {exercise.groupId && (
-              <div className="w-1 h-5 bg-teal-500/40 rounded-full shrink-0" />
+              <div className="w-1.5 h-6 bg-teal-500/40 rounded-full shrink-0" />
             )}
-            <span className="font-bold text-sm text-left truncate text-foreground uppercase tracking-tight">{exercise.name}</span>
+            <span className="font-extrabold text-[15px] text-left leading-tight text-foreground uppercase tracking-tight truncate">{exercise.name}</span>
           </div>
           
           <div 
@@ -96,28 +96,28 @@ export function MobileExerciseCard({
             <div 
               className={cn(
                 buttonVariants({ variant: 'ghost', size: 'icon' }),
-                "h-8 w-8 text-destructive/70 hover:bg-destructive/10 rounded-full cursor-pointer"
+                "h-10 w-10 text-destructive/70 hover:bg-destructive/10 rounded-full cursor-pointer flex items-center justify-center"
               )}
             >
-              <Trash2 className="h-4 w-4" />
+              <Trash2 className="h-5 w-5" />
             </div>
           </div>
         </AccordionTrigger>
 
-        <AccordionContent className="pb-0 pt-4 px-0">
-          <div className="space-y-4">
+        <AccordionContent className="pb-0 pt-5 px-0">
+          <div className="space-y-5">
             {videoThumbnail && (
-              <div className="relative aspect-video rounded-lg overflow-hidden border border-border">
+              <div className="relative aspect-video rounded-xl overflow-hidden border border-border shadow-inner-sm">
                 <Image
                   src={videoThumbnail.imageUrl}
                   alt={videoThumbnail.description}
                   fill
-                  className="object-cover opacity-80"
+                  className="object-cover opacity-90"
                   data-ai-hint={videoThumbnail.imageHint}
                 />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                  <div className="bg-background/80 p-2 rounded-full border border-border">
-                    <PlaySquare className="h-6 w-6 text-primary" />
+                <div className="absolute inset-0 flex items-center justify-center bg-black/10">
+                  <div className="bg-background/90 p-3 rounded-full border border-border shadow-xl">
+                    <PlaySquare className="h-7 w-7 text-primary" />
                   </div>
                 </div>
               </div>
@@ -134,63 +134,63 @@ export function MobileExerciseCard({
                     <Badge
                       key={setType}
                       variant="outline"
-                      className={cn("text-[10px] py-0.5 px-2 font-bold gap-1 rounded-full", config.className)}
+                      className={cn("text-[11px] py-1 px-3 font-bold gap-1.5 rounded-full", config.className)}
                     >
-                      <Icon className="h-3 w-3" />
+                      <Icon className="h-3.5 w-3.5" />
                       {config.label} ({count})
                     </Badge>
                   );
                 })}
             </div>
 
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 xs:grid-cols-3 gap-4">
               <EditSetsDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
-                <div className="space-y-1 cursor-pointer group">
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Séries</p>
-                  <div className="bg-[hsl(var(--chart-1))] text-black font-bold rounded-lg h-10 flex items-center justify-center gap-2 border-none transition-transform active:scale-95">
+                <div className="space-y-1.5 cursor-pointer group">
+                  <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Séries</p>
+                  <div className="bg-[hsl(var(--chart-1))] text-black font-black rounded-xl h-12 flex items-center justify-center gap-2 border-none transition-transform active:scale-95 shadow-sm">
                     {exercise.sets.length}
-                    <Hash className="h-3 w-3 opacity-30"/>
+                    <Hash className="h-4 w-4 opacity-30"/>
                   </div>
                 </div>
               </EditSetsDialog>
 
-              <div className="space-y-1">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Reps</p>
+              <div className="space-y-1.5">
+                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Reps</p>
                 <Input 
-                  className="bg-[hsl(var(--chart-2))] text-black font-bold text-center h-10 border-none rounded-lg focus-visible:ring-primary/40"
+                  className="bg-[hsl(var(--chart-2))] text-black font-black text-center h-12 border-none rounded-xl focus-visible:ring-primary/40 shadow-sm text-base"
                   defaultValue={exercise.repsRange}
                 />
               </div>
 
-              <div className="space-y-1">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Intervalo</p>
+              <div className="space-y-1.5">
+                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Intervalo</p>
                 <Input 
-                  className="bg-[hsl(var(--chart-3))] text-black font-bold text-center h-10 border-none rounded-lg focus-visible:ring-primary/40"
+                  className="bg-[hsl(var(--chart-3))] text-black font-black text-center h-12 border-none rounded-xl focus-visible:ring-primary/40 shadow-sm text-base"
                   defaultValue={exercise.sets[0]?.interval || '30'}
                 />
               </div>
 
-              <div className="space-y-1">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Cadência</p>
+              <div className="space-y-1.5">
+                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Cadência</p>
                 <Input 
-                  className="bg-[hsl(var(--chart-4))] text-black font-bold text-center h-10 border-none rounded-lg focus-visible:ring-primary/40"
+                  className="bg-[hsl(var(--chart-4))] text-black font-black text-center h-12 border-none rounded-xl focus-visible:ring-primary/40 shadow-sm text-base"
                   defaultValue="2.2"
                 />
               </div>
 
               <EditObservationDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
-                <div className="space-y-1 cursor-pointer group">
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Obs</p>
-                   <div className="bg-muted text-primary border border-border/50 rounded-lg h-10 flex justify-center items-center group-hover:border-primary/50 transition-colors">
-                      <MessageSquare className="h-4 w-4"/>
+                <div className="space-y-1.5 cursor-pointer group">
+                  <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Obs</p>
+                   <div className="bg-muted text-primary border border-border/50 rounded-xl h-12 flex justify-center items-center group-hover:border-primary/50 transition-colors shadow-sm">
+                      <MessageSquare className="h-5 w-5"/>
                   </div>
                 </div>
                </EditObservationDialog>
 
-               <div className="space-y-1">
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Método</p>
+               <div className="space-y-1.5">
+                  <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Método</p>
                   <Select defaultValue="padrao">
-                      <SelectTrigger className="rounded-lg bg-muted border-border/50 h-10 text-[10px] font-bold text-foreground focus:ring-primary/20">
+                      <SelectTrigger className="rounded-xl bg-muted border-border/50 h-12 text-[11px] font-black text-foreground focus:ring-primary/20 shadow-sm">
                           <SelectValue placeholder="Padrão" />
                       </SelectTrigger>
                       <SelectContent className="bg-popover border-border">
@@ -203,13 +203,13 @@ export function MobileExerciseCard({
             </div>
 
             {combinationType && (
-              <div className="flex items-center gap-2 pt-2 border-t border-border/50">
-                <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
+              <div className="flex items-center gap-3 pt-4 border-t border-border/50">
+                <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
                    {CombinationIcon && (
-                      <CombinationIcon className={cn("h-3 w-3", combinationIconClassName)} />
+                      <CombinationIcon className={cn("h-4 w-4", combinationIconClassName)} />
                     )}
                 </div>
-                <span className="text-[9px] font-bold text-primary/80 uppercase tracking-widest">
+                <span className="text-[10px] font-black text-primary uppercase tracking-[0.15em]">
                   Combinado ({combinationType})
                 </span>
               </div>

@@ -88,7 +88,7 @@ export default function Home() {
   };
 
   return (
-    <div className="w-full mx-auto px-4 py-8 text-foreground max-w-[1800px] transition-all duration-300">
+    <div className="app-container py-8 text-foreground transition-all duration-300">
       <div className="flex flex-col lg:flex-row gap-8 items-start">
         <main className="flex-1 min-w-0 w-full space-y-8">
           <TrainingPlanHeader />
@@ -111,27 +111,29 @@ export default function Home() {
               <div className="flex flex-wrap items-center gap-6 mb-8">
                 <h2 className="text-2xl font-black tracking-tight uppercase">TREINO A</h2>
 
-                <label className="flex items-center gap-2 text-sm font-semibold text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
-                  <Checkbox id="presencial" className="rounded-sm border-muted-foreground/30" />
-                  Presencial
-                </label>
+                <div className="flex flex-wrap items-center gap-4 md:gap-6">
+                  <label className="flex items-center gap-2 text-sm font-semibold text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
+                    <Checkbox id="presencial" className="rounded-sm border-muted-foreground/30" />
+                    Presencial
+                  </label>
 
-                <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
-                  <SquarePen className="h-5 w-5 text-cyan-400" />
-                  Editar variáveis
-                </button>
-
-                <CombineExercisesDialog
-                  exercises={workoutData}
-                  onUpdateWorkout={setWorkoutData}
-                  combinationTypes={combinationTypes}
-                  onUpdateCombinationTypes={setWorkoutData}
-                >
                   <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
-                    <Combine className="h-6 w-6 text-cyan-400" />
-                    Combinar
+                    <SquarePen className="h-5 w-5 text-cyan-400" />
+                    Editar variáveis
                   </button>
-                </CombineExercisesDialog>
+
+                  <CombineExercisesDialog
+                    exercises={workoutData}
+                    onUpdateWorkout={setWorkoutData}
+                    combinationTypes={combinationTypes}
+                    onUpdateCombinationTypes={setWorkoutData}
+                  >
+                    <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
+                      <Combine className="h-6 w-6 text-cyan-400" />
+                      Combinar
+                    </button>
+                  </CombineExercisesDialog>
+                </div>
               </div>
               
               {/* Desktop View with optimized overflow */}
@@ -141,15 +143,15 @@ export default function Home() {
                     <TableHeader>
                       <TableRow className="hover:bg-transparent bg-muted/20 border-b-border text-[11px] uppercase tracking-wider font-bold">
                         <TableHead className="w-[50px] px-2"></TableHead>
-                        <TableHead className="min-w-[400px]">Exercício</TableHead>
-                        <TableHead className="w-[160px]">Método</TableHead>
-                        <TableHead className="w-[60px] text-center">Obs</TableHead>
-                        <TableHead className="w-[75px] text-center">Série</TableHead>
-                        <TableHead className="w-[75px] text-center">Reps</TableHead>
-                        <TableHead className="w-[75px] text-center">Intervalo</TableHead>
-                        <TableHead className="w-[75px] text-center">Cadência</TableHead>
-                        <TableHead className="w-[50px] text-center">Status</TableHead>
-                        <TableHead className="w-[50px]"></TableHead>
+                        <TableHead className="min-w-[200px] flex-1">Exercício</TableHead>
+                        <TableHead className="w-[140px]">Método</TableHead>
+                        <TableHead className="w-[50px] text-center">Obs</TableHead>
+                        <TableHead className="w-[60px] text-center">Série</TableHead>
+                        <TableHead className="w-[60px] text-center">Reps</TableHead>
+                        <TableHead className="w-[60px] text-center">Interv</TableHead>
+                        <TableHead className="w-[60px] text-center">Cadên</TableHead>
+                        <TableHead className="w-[45px] text-center">Status</TableHead>
+                        <TableHead className="w-[45px]"></TableHead>
                       </TableRow>
                     </TableHeader>
                     {processedExercises()}
@@ -173,7 +175,7 @@ export default function Home() {
 
               {/* Action Buttons and Observations */}
               <div className="mt-10 space-y-8">
-                <div className="flex flex-wrap items-center gap-4">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button className="bg-[#009688] hover:bg-[#00796b] text-white rounded-xl px-8 h-14 font-black gap-3 shadow-lg shadow-teal-500/10 border-none">
