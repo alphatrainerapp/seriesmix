@@ -13,6 +13,7 @@ import type { Exercise, SetType, CombinationType } from '@/lib/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { EditSetsDialog } from './edit-sets-dialog';
 import { EditObservationDialog } from './edit-observation-dialog';
+import { ExerciseSearchDialog } from './exercise-search-dialog';
 import { Badge } from '../ui/badge';
 import { cn } from '@/lib/utils';
 import { Input } from '../ui/input';
@@ -75,6 +76,10 @@ export function MobileExerciseCard({
   const CombinationIcon = combinationType ? combinationIconConfig[combinationType]?.icon : null;
   const combinationIconClassName = combinationType ? combinationIconConfig[combinationType]?.className : '';
 
+  const handleUpdateName = (newName: string) => {
+    onUpdateExercise({ ...exercise, name: newName });
+  };
+
   return (
     <AccordionItem value={`item-${exercise.id}`} className="border-none">
       <div className={cn(
@@ -86,7 +91,14 @@ export function MobileExerciseCard({
             {exercise.groupId && (
               <div className="w-1.5 h-6 bg-teal-500/40 rounded-full shrink-0" />
             )}
-            <span className="font-extrabold text-[15px] text-left leading-tight text-foreground uppercase tracking-tight truncate">{exercise.name}</span>
+            <ExerciseSearchDialog onSelect={handleUpdateName}>
+              <button 
+                className="font-extrabold text-[15px] text-left leading-tight text-foreground uppercase tracking-tight truncate hover:text-primary transition-colors"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {exercise.name}
+              </button>
+            </ExerciseSearchDialog>
           </div>
           
           <div 

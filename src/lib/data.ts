@@ -1,5 +1,34 @@
 import type { Exercise } from './types';
 
+export const systemExercises = [
+  'Agachamento Livre',
+  'Agachamento no Smith',
+  'Leg Press 45',
+  'Cadeira Extensora',
+  'Mesa Flexora',
+  'Cadeira Flexora',
+  'Stiff',
+  'Elevação Pélvica',
+  'Afundo',
+  'Passada',
+  'Supino Reto',
+  'Supino Inclinado',
+  'Crucifixo Reto',
+  'Desenvolvimento com Halteres',
+  'Elevação Lateral',
+  'Remada Curvada',
+  'Puxada na Frente',
+  'Remada Baixa',
+  'Rosca Direta',
+  'Rosca Alternada',
+  'Tríceps Pulley',
+  'Tríceps Testa',
+  'Abdominal Supra',
+  'Prancha Isométrica',
+  'Mobilidade de Quadril',
+  'Mobilidade de Tornozelo',
+];
+
 export const mockWorkout: Exercise[] = [
   {
     id: 1,

@@ -17,6 +17,7 @@ import { cn } from '@/lib/utils';
 import { Input } from '../ui/input';
 import { EditSetsDialog } from './edit-sets-dialog';
 import { EditObservationDialog } from './edit-observation-dialog';
+import { ExerciseSearchDialog } from './exercise-search-dialog';
 
 const setTypeConfig: {
   [key in SetType]: {
@@ -80,6 +81,9 @@ export function ExerciseCard({
   const combinationIconClassName = combinationType ? combinationIconConfig[combinationType]?.className : '';
   const firstInterval = exercise.sets[0]?.interval || '0';
 
+  const handleUpdateName = (newName: string) => {
+    onUpdateExercise({ ...exercise, name: newName });
+  };
 
   return (
     <>
@@ -102,20 +106,21 @@ export function ExerciseCard({
             <GripVertical className="text-muted-foreground w-4 h-4" />
           </Button>
         </TableCell>
-        <TableCell className="font-medium p-2 min-w-[400px]">
+        <TableCell className="font-medium p-2 min-w-[200px] flex-1">
           <div className="flex items-center gap-2">
             {isFirstInGroup && (
                <div className="flex items-center justify-center w-6 h-6 bg-primary/20 text-primary rounded-full shrink-0">
                   <Link2 className="h-4 w-4"/>
                 </div>
             )}
-            <Input 
-              className='bg-exercise-card border-border shadow-sm w-full rounded-full h-9 text-sm'
-              defaultValue={exercise.name}
-            />
+            <ExerciseSearchDialog onSelect={handleUpdateName}>
+              <button className="flex-1 text-left bg-exercise-card border border-border shadow-sm px-4 rounded-full h-9 text-sm font-bold truncate hover:border-primary/50 transition-colors">
+                {exercise.name}
+              </button>
+            </ExerciseSearchDialog>
           </div>
         </TableCell>
-        <TableCell className="p-2 pt-3 w-[160px]">
+        <TableCell className="p-2 pt-3 w-[140px]">
           <div className="flex items-center gap-1">
             <Button variant="ghost" size="icon" className="shrink-0 h-8 w-8">
               <PlaySquare className="text-primary w-4 h-4" />
@@ -132,7 +137,7 @@ export function ExerciseCard({
             </Select>
           </div>
         </TableCell>
-        <TableCell className="w-[60px] text-center p-1 pt-3">
+        <TableCell className="w-[50px] text-center p-1 pt-3">
           <EditObservationDialog
             exercise={exercise}
             onUpdateExercise={onUpdateExercise}
@@ -142,7 +147,7 @@ export function ExerciseCard({
             </Button>
           </EditObservationDialog>
         </TableCell>
-        <TableCell className="w-[75px] p-1 pt-3 text-center">
+        <TableCell className="w-[60px] p-1 pt-3 text-center">
             <div className="flex items-center justify-center">
               <Input
                 className="w-8 text-center bg-[hsl(var(--chart-1))] text-black placeholder:text-black/80 font-bold border-none h-8 text-xs rounded-sm"
@@ -159,25 +164,25 @@ export function ExerciseCard({
               </EditSetsDialog>
             </div>
         </TableCell>
-        <TableCell className="w-[75px] px-1 pt-3 text-center">
+        <TableCell className="w-[60px] px-1 pt-3 text-center">
           <Input
             className="w-full text-center bg-[hsl(var(--chart-2))] text-black placeholder:text-black/80 font-bold border-none h-8 text-xs rounded-sm"
             defaultValue={exercise.repsRange}
           />
         </TableCell>
-        <TableCell className="w-[75px] px-1 pt-3 text-center">
+        <TableCell className="w-[60px] px-1 pt-3 text-center">
           <Input
             className="w-full text-center bg-[hsl(var(--chart-3))] text-black placeholder:text-black/80 font-bold border-none h-8 text-xs rounded-sm"
             defaultValue={firstInterval}
           />
         </TableCell>
-        <TableCell className="w-[75px] px-1 pt-3 text-center">
+        <TableCell className="w-[60px] px-1 pt-3 text-center">
           <Input
             className="w-full text-center bg-[hsl(var(--chart-4))] text-black placeholder:text-black/80 font-bold border-none h-8 text-xs rounded-sm"
             defaultValue="2.2"
           />
         </TableCell>
-        <TableCell className="w-[40px] p-2 pt-3">
+        <TableCell className="w-[45px] p-2 pt-3">
           <Button variant="ghost" size="icon" className="h-8 w-8">
             {CombinationIcon ? (
               <CombinationIcon className={cn("h-4 w-4", combinationIconClassName)} />
@@ -186,7 +191,7 @@ export function ExerciseCard({
             )}
           </Button>
         </TableCell>
-        <TableCell className="w-[40px] p-2 pt-3">
+        <TableCell className="w-[45px] p-2 pt-3">
           <Button variant="ghost" size="icon" className="text-destructive/70 hover:text-destructive hover:bg-destructive/10 h-8 w-8">
             <Trash2 className="w-4 h-4" />
           </Button>
