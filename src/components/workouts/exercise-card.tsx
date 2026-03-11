@@ -1,3 +1,4 @@
+
 import {
   TableRow,
   TableCell,
@@ -92,41 +93,41 @@ export function ExerciseCard({
         isGrouped && !isLastInGroup ? "border-b-0" : "",
         isGrouped ? "bg-muted/30" : ""
       )}>
-        <TableCell className="w-[40px] pt-4 px-2 relative">
+        <TableCell className="w-[35px] pt-4 px-1.5 relative">
           {isGrouped && (
-             <div className="absolute left-[26px] top-0 h-full w-[2px] bg-primary/20">
+             <div className="absolute left-[20px] top-0 h-full w-[2px] bg-primary/20">
                 {isFirstInGroup && <div className="absolute -top-0 left-1/2 -translate-x-1/2 h-3 w-3 rounded-full bg-primary/20" />}
                 {isLastInGroup && <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 h-3 w-3 rounded-full bg-primary/20" />}
              </div>
           )}
            {isGrouped && (
-             <div className="absolute left-[34px] top-1/2 -translate-y-1/2 w-4 h-[2px] bg-primary/20" />
+             <div className="absolute left-[28px] top-1/2 -translate-y-1/2 w-3 h-[2px] bg-primary/20" />
            )}
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <GripVertical className="text-muted-foreground w-4 h-4" />
+          <Button variant="ghost" size="icon" className="h-7 w-7">
+            <GripVertical className="text-muted-foreground w-3.5 h-3.5" />
           </Button>
         </TableCell>
-        <TableCell className="font-medium p-2 min-w-[200px] flex-1">
+        <TableCell className="font-medium p-2 min-w-[200px]">
           <div className="flex items-center gap-2">
             {isFirstInGroup && (
-               <div className="flex items-center justify-center w-6 h-6 bg-primary/20 text-primary rounded-full shrink-0">
-                  <Link2 className="h-4 w-4"/>
+               <div className="flex items-center justify-center w-5 h-5 bg-primary/20 text-primary rounded-full shrink-0">
+                  <Link2 className="h-3.5 w-3.5"/>
                 </div>
             )}
             <ExerciseSearchDialog onSelect={handleUpdateName}>
-              <button className="flex-1 text-left bg-exercise-card border border-border shadow-sm px-4 rounded-full h-9 text-sm font-bold truncate hover:border-primary/50 transition-colors">
+              <button className="flex-1 text-left bg-exercise-card border border-border shadow-sm px-3 rounded-full h-8 text-[13px] font-bold truncate hover:border-primary/50 transition-colors">
                 {exercise.name}
               </button>
             </ExerciseSearchDialog>
           </div>
         </TableCell>
-        <TableCell className="p-2 pt-3 w-[140px]">
+        <TableCell className="p-1 pt-3 w-[120px]">
           <div className="flex items-center gap-1">
-            <Button variant="ghost" size="icon" className="shrink-0 h-8 w-8">
-              <PlaySquare className="text-primary w-4 h-4" />
+            <Button variant="ghost" size="icon" className="shrink-0 h-7 w-7">
+              <PlaySquare className="text-primary w-3.5 h-3.5" />
             </Button>
             <Select>
-              <SelectTrigger className="w-full bg-exercise-card border-border shadow-sm rounded-full h-8 text-xs">
+              <SelectTrigger className="w-full bg-exercise-card border-border shadow-sm rounded-full h-7 text-[10px] px-2">
                 <SelectValue placeholder="Método..." />
               </SelectTrigger>
               <SelectContent>
@@ -137,20 +138,20 @@ export function ExerciseCard({
             </Select>
           </div>
         </TableCell>
-        <TableCell className="w-[50px] text-center p-1 pt-3">
+        <TableCell className="w-[45px] text-center p-0.5 pt-3">
           <EditObservationDialog
             exercise={exercise}
             onUpdateExercise={onUpdateExercise}
           >
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <MessageSquare className="text-primary w-4 h-4" />
+            <Button variant="ghost" size="icon" className="h-7 w-7">
+              <MessageSquare className="text-primary w-3.5 h-3.5" />
             </Button>
           </EditObservationDialog>
         </TableCell>
-        <TableCell className="w-[60px] p-1 pt-3 text-center">
+        <TableCell className="w-[50px] p-0.5 pt-3 text-center">
             <div className="flex items-center justify-center">
               <Input
-                className="w-8 text-center bg-[hsl(var(--chart-1))] text-black placeholder:text-black/80 font-bold border-none h-8 text-xs rounded-sm"
+                className="w-7 text-center bg-[hsl(var(--chart-1))] text-black placeholder:text-black/80 font-bold border-none h-7 text-[10px] rounded-sm px-0"
                 value={exercise.sets.length}
                 readOnly
               />
@@ -158,42 +159,42 @@ export function ExerciseCard({
                 exercise={exercise}
                 onUpdateExercise={onUpdateExercise}
               >
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-primary shrink-0">
-                  <Pencil className="h-4 w-4" />
+                <Button variant="ghost" size="icon" className="h-6 w-6 text-primary shrink-0 ml-0.5">
+                  <Pencil className="h-3.5 w-3.5" />
                 </Button>
               </EditSetsDialog>
             </div>
         </TableCell>
-        <TableCell className="w-[60px] px-1 pt-3 text-center">
+        <TableCell className="w-[50px] px-0.5 pt-3 text-center">
           <Input
-            className="w-full text-center bg-[hsl(var(--chart-2))] text-black placeholder:text-black/80 font-bold border-none h-8 text-xs rounded-sm"
+            className="w-full text-center bg-[hsl(var(--chart-2))] text-black placeholder:text-black/80 font-bold border-none h-7 text-[10px] rounded-sm px-0"
             defaultValue={exercise.repsRange}
           />
         </TableCell>
-        <TableCell className="w-[60px] px-1 pt-3 text-center">
+        <TableCell className="w-[50px] px-0.5 pt-3 text-center">
           <Input
-            className="w-full text-center bg-[hsl(var(--chart-3))] text-black placeholder:text-black/80 font-bold border-none h-8 text-xs rounded-sm"
+            className="w-full text-center bg-[hsl(var(--chart-3))] text-black placeholder:text-black/80 font-bold border-none h-7 text-[10px] rounded-sm px-0"
             defaultValue={firstInterval}
           />
         </TableCell>
-        <TableCell className="w-[60px] px-1 pt-3 text-center">
+        <TableCell className="w-[50px] px-0.5 pt-3 text-center">
           <Input
-            className="w-full text-center bg-[hsl(var(--chart-4))] text-black placeholder:text-black/80 font-bold border-none h-8 text-xs rounded-sm"
+            className="w-full text-center bg-[hsl(var(--chart-4))] text-black placeholder:text-black/80 font-bold border-none h-7 text-[10px] rounded-sm px-0"
             defaultValue="2.2"
           />
         </TableCell>
-        <TableCell className="w-[45px] p-2 pt-3">
-          <Button variant="ghost" size="icon" className="h-8 w-8">
+        <TableCell className="w-[45px] p-1 pt-3 text-center">
+          <Button variant="ghost" size="icon" className="h-7 w-7">
             {CombinationIcon ? (
-              <CombinationIcon className={cn("h-4 w-4", combinationIconClassName)} />
+              <CombinationIcon className={cn("h-3.5 w-3.5", combinationIconClassName)} />
             ) : (
-               <div className="w-4 h-4 bg-gray-300 border-2 border-white rounded-sm shadow-inner" style={{ "backgroundImage": "url(\"data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23333' stroke-width='4' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e\")" }}></div>
+               <div className="w-3.5 h-3.5 bg-gray-300 border border-white rounded-sm shadow-inner" style={{ "backgroundImage": "url(\"data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23333' stroke-width='4' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e\")" }}></div>
             )}
           </Button>
         </TableCell>
-        <TableCell className="w-[45px] p-2 pt-3">
-          <Button variant="ghost" size="icon" className="text-destructive/70 hover:text-destructive hover:bg-destructive/10 h-8 w-8">
-            <Trash2 className="w-4 h-4" />
+        <TableCell className="w-[40px] p-1 pt-3 text-center">
+          <Button variant="ghost" size="icon" className="text-destructive/70 hover:text-destructive hover:bg-destructive/10 h-7 w-7">
+            <Trash2 className="w-3.5 h-3.5" />
           </Button>
         </TableCell>
       </TableRow>
@@ -210,9 +211,9 @@ export function ExerciseCard({
                   return (
                     <Badge
                       key={setType}
-                      className={cn("text-[10px] font-semibold gap-1 px-2 py-0.5", config.className)}
+                      className={cn("text-[9px] font-black gap-1 px-1.5 py-0.5 uppercase tracking-tighter", config.className)}
                     >
-                      <Icon className="h-3 w-3" />
+                      <Icon className="h-2.5 w-2.5" />
                       {config.label} ({count})
                     </Badge>
                   );

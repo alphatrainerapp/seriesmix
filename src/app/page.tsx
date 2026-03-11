@@ -1,3 +1,4 @@
+
 'use client';
 import {
   Table,
@@ -136,22 +137,22 @@ export default function Home() {
                 </div>
               </div>
               
-              {/* Desktop View with optimized overflow */}
+              {/* Desktop View with optimized overflow and fixed layout */}
               <div className="border rounded-xl bg-card shadow-sm hidden md:block overflow-hidden">
-                <div className="overflow-x-auto">
-                  <Table className="min-w-full">
+                <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-muted-foreground/20">
+                  <Table className="min-w-[800px] w-full table-fixed">
                     <TableHeader>
-                      <TableRow className="hover:bg-transparent bg-muted/20 border-b-border text-[11px] uppercase tracking-wider font-bold">
-                        <TableHead className="w-[50px] px-2"></TableHead>
-                        <TableHead className="min-w-[200px] flex-1">Exercício</TableHead>
-                        <TableHead className="w-[140px]">Método</TableHead>
-                        <TableHead className="w-[50px] text-center">Obs</TableHead>
-                        <TableHead className="w-[60px] text-center">Série</TableHead>
-                        <TableHead className="w-[60px] text-center">Reps</TableHead>
-                        <TableHead className="w-[60px] text-center">Interv</TableHead>
-                        <TableHead className="w-[60px] text-center">Cadên</TableHead>
+                      <TableRow className="hover:bg-transparent bg-muted/20 border-b-border text-[10px] uppercase tracking-wider font-black">
+                        <TableHead className="w-[35px] px-2"></TableHead>
+                        <TableHead className="min-w-[200px]">Exercício</TableHead>
+                        <TableHead className="w-[120px]">Método</TableHead>
+                        <TableHead className="w-[45px] text-center">Obs</TableHead>
+                        <TableHead className="w-[50px] text-center">Série</TableHead>
+                        <TableHead className="w-[50px] text-center">Reps</TableHead>
+                        <TableHead className="w-[50px] text-center">Inter</TableHead>
+                        <TableHead className="w-[50px] text-center">Cadê</TableHead>
                         <TableHead className="w-[45px] text-center">Status</TableHead>
-                        <TableHead className="w-[45px]"></TableHead>
+                        <TableHead className="w-[40px]"></TableHead>
                       </TableRow>
                     </TableHeader>
                     {processedExercises()}
