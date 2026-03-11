@@ -17,7 +17,7 @@ import { TrainingPlanHeader } from '@/components/plan/training-plan-header';
 import { TrainingSplit } from '@/components/plan/training-split';
 import { PageSidebar } from '@/components/sidebar/page-sidebar';
 import { useState } from 'react';
-import type { CombinationType, Exercise } from '@/lib/types';
+import type { CombinationType, Exercise, Set } from '@/lib/types';
 import { MobileExerciseCard } from '@/components/workouts/mobile-exercise-card';
 import { Accordion } from '@/components/ui/accordion';
 import { CombineExercisesDialog } from '@/components/workouts/combine-exercises-dialog';
@@ -29,8 +29,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Plus, ListOrdered, SquarePen, Combine } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 
 export default function Home() {
+  const { toast } = useToast();
   const [workoutData, setWorkoutData] = useState<Exercise[]>(initialWorkoutData);
   const [combinationTypes, setCombinationTypes] = useState<Record<string, CombinationType>>({
     'warmup': 'biset'
@@ -43,6 +45,20 @@ export default function Home() {
         ex.id === updatedExercise.id ? updatedExercise : ex
       )
     );
+  };
+
+  const handleApplySetsToAll = (updatedSets: Set[]) => {
+    setWorkoutData((prevData) =>
+      prevData.map((ex) => ({
+        ...ex,
+        sets: updatedSets,
+        repsRange: updatedSets.find(s => s.type === 'trabalho')?.reps || ex.repsRange
+      }))
+    );
+    toast({
+      title: "Configuração aplicada",
+      description: "As séries foram replicadas para todos os exercícios do treino.",
+    });
   };
   
   const processedExercises = () => {
@@ -64,6 +80,7 @@ export default function Home() {
                   key={exercise.id}
                   exercise={exercise}
                   onUpdateExercise={handleUpdateExercise}
+                  onApplySetsToAll={handleApplySetsToAll}
                   isFirstInGroup={idx === 0}
                   isLastInGroup={idx === group.length - 1}
                   isGrouped={group.length > 1}
@@ -79,6 +96,7 @@ export default function Home() {
             <ExerciseCard
               exercise={currentExercise}
               onUpdateExercise={handleUpdateExercise}
+              onApplySetsToAll={handleApplySetsToAll}
             />
           </tbody>
         );
@@ -136,21 +154,21 @@ export default function Home() {
                 </div>
               </div>
               
-              {/* Desktop View with full width and better column management */}
+              {/* Desktop View */}
               <div className="border rounded-2xl bg-card shadow-sm hidden md:block overflow-hidden w-full">
                 <Table className="w-full">
                   <TableHeader>
                     <TableRow className="hover:bg-transparent bg-muted/20 border-b-border text-[10px] uppercase tracking-wider font-black">
                       <TableHead className="w-[40px] px-2"></TableHead>
                       <TableHead className="min-w-[200px]">Exercício</TableHead>
-                      <TableHead className="w-[140px]">Método</TableHead>
-                      <TableHead className="w-[45px] text-center">Obs</TableHead>
-                      <TableHead className="w-[50px] text-center">Série</TableHead>
-                      <TableHead className="w-[50px] text-center">Reps</TableHead>
-                      <TableHead className="w-[50px] text-center">Inter</TableHead>
-                      <TableHead className="w-[50px] text-center">Cadê</TableHead>
-                      <TableHead className="w-[45px] text-center">Status</TableHead>
-                      <TableHead className="w-[45px]"></TableHead>
+                      <TableHead className="w-[110px]">Método</TableHead>
+                      <TableHead className="w-[40px] text-center">Obs</TableHead>
+                      <TableHead className="w-[45px] text-center">Série</TableHead>
+                      <TableHead className="w-[45px] text-center">Reps</TableHead>
+                      <TableHead className="w-[45px] text-center">Inter</TableHead>
+                      <TableHead className="w-[45px] text-center">Cadê</TableHead>
+                      <TableHead className="w-[40px] text-center">Status</TableHead>
+                      <TableHead className="w-[40px]"></TableHead>
                     </TableRow>
                   </TableHeader>
                   {processedExercises()}

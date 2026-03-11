@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogFooter,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,6 +27,7 @@ import {
   Plus,
   X,
   Hash,
+  CopyCheck,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Exercise, Set, SetType } from '@/lib/types';
@@ -77,10 +79,12 @@ export function EditSetsDialog({
   children,
   exercise,
   onUpdateExercise,
+  onApplyToAll,
 }: {
   children: React.ReactNode;
   exercise: Exercise;
   onUpdateExercise: (exercise: Exercise) => void;
+  onApplyToAll?: (sets: Set[]) => void;
 }) {
   const [open, setOpen] = useState(false);
   const [sets, setSets] = useState<Set[]>(exercise.sets);
@@ -121,6 +125,13 @@ export function EditSetsDialog({
   const handleSave = () => {
     onUpdateExercise({ ...exercise, sets });
     setOpen(false);
+  };
+
+  const handleBulkApply = () => {
+    if (onApplyToAll) {
+      onApplyToAll(sets);
+      setOpen(false);
+    }
   };
   
   React.useEffect(() => {
@@ -266,9 +277,19 @@ export function EditSetsDialog({
           </div>
         </div>
 
-        <div className="p-6 bg-muted/50 border-t">
+        <div className="p-6 bg-muted/50 border-t flex flex-col gap-3">
+          {onApplyToAll && (
+            <Button
+              variant="outline"
+              className="w-full border-primary text-primary hover:bg-primary/5 h-12 md:h-11 font-black uppercase tracking-widest"
+              onClick={handleBulkApply}
+            >
+              <CopyCheck className="h-5 w-5 mr-2" />
+              Aplicar a todos os exercícios
+            </Button>
+          )}
           <Button
-            className="w-full bg-[#01bfa5] hover:bg-[#01bfa5]/90 text-white h-12 md:h-11 font-black uppercase tracking-widest italic"
+            className="w-full bg-[#01bfa5] hover:bg-[#01bfa5]/90 text-white h-12 md:h-11 font-black uppercase tracking-widest"
             size="lg"
             onClick={handleSave}
           >

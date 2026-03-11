@@ -58,6 +58,7 @@ const combinationIconConfig: {
 export function ExerciseCard({
   exercise,
   onUpdateExercise,
+  onApplySetsToAll,
   isGrouped = false,
   isFirstInGroup = false,
   isLastInGroup = false,
@@ -65,6 +66,7 @@ export function ExerciseCard({
 }: {
   exercise: Exercise;
   onUpdateExercise: (exercise: Exercise) => void;
+  onApplySetsToAll?: (sets: Set[]) => void;
   isGrouped?: boolean;
   isFirstInGroup?: boolean;
   isLastInGroup?: boolean;
@@ -157,6 +159,7 @@ export function ExerciseCard({
               <EditSetsDialog
                 exercise={exercise}
                 onUpdateExercise={onUpdateExercise}
+                onApplyToAll={onApplySetsToAll}
               >
                 <Button variant="ghost" size="icon" className="h-6 w-6 text-primary shrink-0 ml-0.5">
                   <Pencil className="h-3.5 w-3.5" />
