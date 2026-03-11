@@ -1,4 +1,3 @@
-
 'use client';
 
 import {
@@ -141,7 +140,7 @@ export function MobileExerciseCard({
             <div className="flex flex-wrap items-center gap-2">
               {setTypesInOrder.map((setType) => {
                   const count = setCounts[setType];
-                  if (!count) return null;
+                  if (!count || count === 0) return null;
 
                   const config = setTypeConfig[setType];
                   const Icon = config.icon;
@@ -235,4 +234,3 @@ export function MobileExerciseCard({
     </AccordionItem>
   );
 }
-

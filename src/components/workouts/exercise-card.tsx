@@ -207,7 +207,7 @@ export function ExerciseCard({
             <div className="flex items-center gap-2">
               {setTypesInOrder.map((setType) => {
                   const count = setCounts[setType];
-                  if (count === 0) return null;
+                  if (!count || count === 0) return null;
                   
                   const config = setTypeConfig[setType];
                   const Icon = config.icon;
