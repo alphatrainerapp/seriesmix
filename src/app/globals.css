@@ -121,7 +121,7 @@ body {
 
 @media (min-width: 1440px) {
   .app-container {
-    max-width: 1800px; /* Limite generoso para telas ultra-wide */
+    max-width: 100%; /* Aproveita 100% em telas ultra-wide */
   }
 }
 

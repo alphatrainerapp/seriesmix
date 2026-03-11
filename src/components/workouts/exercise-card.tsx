@@ -198,25 +198,28 @@ export function ExerciseCard({
         </TableCell>
       </TableRow>
        <TableRow className={cn("hover:bg-transparent", isGrouped ? "bg-muted/30" : "")}>
-        <TableCell className={cn(isGrouped ? "border-b-0" : "")}></TableCell>
+        <TableCell className={cn("w-[35px] pt-0 relative", isGrouped ? "border-b-0" : "")}>
+           {isGrouped && (
+             <div className="absolute left-[20px] top-0 h-full w-[2px] bg-primary/20" />
+           )}
+        </TableCell>
         <TableCell className="pt-0 pb-4 pl-2" colSpan={9}>
             <div className="flex items-center gap-2">
               {setTypesInOrder.map((setType) => {
                   const count = setCounts[setType];
+                  if (count === 0) return null;
+                  
                   const config = setTypeConfig[setType];
                   const Icon = config.icon;
                   
                   return (
-                    <div key={setType} className="w-[85px] flex shrink-0 h-5">
-                      {count > 0 ? (
-                        <Badge
-                          className={cn("w-full text-[9px] font-black gap-1 px-1.5 py-0.5 uppercase tracking-tighter justify-center border-none shadow-none", config.className)}
-                        >
-                          <Icon className="h-2.5 w-2.5" />
-                          {config.label} ({count})
-                        </Badge>
-                      ) : null}
-                    </div>
+                    <Badge
+                      key={setType}
+                      className={cn("text-[9px] font-black gap-1 px-1.5 py-0.5 uppercase tracking-tighter justify-center border-none shadow-none h-5", config.className)}
+                    >
+                      <Icon className="h-2.5 w-2.5" />
+                      {config.label} ({count})
+                    </Badge>
                   );
                 })}
             </div>
