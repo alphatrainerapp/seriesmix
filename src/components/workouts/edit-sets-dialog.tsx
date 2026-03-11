@@ -7,7 +7,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -27,11 +26,11 @@ import {
   Plus,
   X,
   Hash,
-  CopyCheck,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Exercise, Set, SetType } from '@/lib/types';
 import { useState } from 'react';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const setTypeOptions: {
   value: SetType;
@@ -88,6 +87,7 @@ export function EditSetsDialog({
 }) {
   const [open, setOpen] = useState(false);
   const [sets, setSets] = useState<Set[]>(exercise.sets);
+  const [shouldApplyToAll, setShouldApplyToAll] = useState(false);
 
   const handleSetChange = (id: number, field: keyof Set, value: string) => {
     setSets((prevSets) =>
@@ -124,27 +124,22 @@ export function EditSetsDialog({
 
   const handleSave = () => {
     onUpdateExercise({ ...exercise, sets });
-    setOpen(false);
-  };
-
-  const handleBulkApply = () => {
-    if (onApplyToAll) {
+    if (shouldApplyToAll && onApplyToAll) {
       onApplyToAll(sets);
-      setOpen(false);
     }
+    setOpen(false);
   };
   
   React.useEffect(() => {
     setSets(exercise.sets);
   }, [exercise.sets]);
 
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-2xl bg-card p-0 gap-0 overflow-hidden">
         <DialogHeader className="p-6 pb-2">
-          <DialogTitle className="text-xl">Editar Séries do Exercício</DialogTitle>
+          <DialogTitle className="text-xl font-black uppercase tracking-tighter italic">Editar Séries do Exercício</DialogTitle>
         </DialogHeader>
         
         <div className="px-6 pb-4 max-h-[70vh] overflow-y-auto">
@@ -167,7 +162,6 @@ export function EditSetsDialog({
               
               return (
                 <div key={set.id} className={cn("relative md:grid items-center md:gap-x-4 gap-y-3 p-4 md:p-0 rounded-lg border md:border-none bg-muted/30 md:bg-transparent transition-colors", GRID_COLS_CLASS)}>
-                  {/* Série Number Label (Mobile: Badge Style) */}
                   <div className="flex items-center justify-between md:block mb-2 md:mb-0">
                     <span className="text-xs font-bold text-muted-foreground md:text-foreground uppercase tracking-wider md:hidden">Série {index + 1}</span>
                     <div className="hidden md:flex font-black text-foreground h-10 items-center justify-center w-8 text-sm">{index + 1}</div>
@@ -182,9 +176,7 @@ export function EditSetsDialog({
                     </Button>
                   </div>
 
-                  {/* Grid for Mobile Inputs */}
                   <div className="grid grid-cols-2 gap-3 md:contents">
-                    {/* Tipo */}
                     <div className="space-y-1 md:space-y-0">
                       <label className="text-[10px] font-black text-muted-foreground uppercase md:hidden tracking-wider">Tipo</label>
                       <Select
@@ -209,7 +201,6 @@ export function EditSetsDialog({
                       </Select>
                     </div>
 
-                    {/* Reps/Time */}
                     <div className="space-y-1 md:space-y-0">
                       <label className="text-[10px] font-black text-muted-foreground uppercase md:hidden tracking-wider text-center">Reps/Tempo</label>
                       <div className='flex items-center gap-1.5'>
@@ -232,7 +223,6 @@ export function EditSetsDialog({
                       </div>
                     </div>
 
-                    {/* Interval */}
                     <div className="space-y-1 md:space-y-0">
                       <label className="text-[10px] font-black text-muted-foreground uppercase md:hidden tracking-wider text-center">Intervalo</label>
                       <Input
@@ -244,7 +234,6 @@ export function EditSetsDialog({
                       />
                     </div>
 
-                    {/* RIR */}
                     <div className="space-y-1 md:space-y-0">
                       <label className="text-[10px] font-black text-muted-foreground uppercase md:hidden tracking-wider text-center">RIR</label>
                       <Input
@@ -258,7 +247,6 @@ export function EditSetsDialog({
                     </div>
                   </div>
 
-                  {/* Desktop Delete Button */}
                   <div className="hidden md:flex items-center justify-center">
                     <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/70 hover:text-destructive hover:bg-destructive/10 rounded-full" onClick={() => removeSet(set.id)}>
                         <X className='h-4 w-4' />
@@ -277,17 +265,7 @@ export function EditSetsDialog({
           </div>
         </div>
 
-        <div className="p-6 bg-muted/50 border-t flex flex-col gap-3">
-          {onApplyToAll && (
-            <Button
-              variant="outline"
-              className="w-full border-primary text-primary hover:bg-primary/5 h-12 md:h-11 font-black uppercase tracking-widest"
-              onClick={handleBulkApply}
-            >
-              <CopyCheck className="h-5 w-5 mr-2" />
-              Aplicar a todos os exercícios
-            </Button>
-          )}
+        <div className="p-6 bg-muted/50 border-t flex flex-col gap-4">
           <Button
             className="w-full bg-[#01bfa5] hover:bg-[#01bfa5]/90 text-white h-12 md:h-11 font-black uppercase tracking-widest"
             size="lg"
@@ -295,6 +273,23 @@ export function EditSetsDialog({
           >
             Salvar Alterações
           </Button>
+          
+          {onApplyToAll && (
+            <div className="flex items-center justify-center gap-2 py-1">
+              <Checkbox 
+                id="apply-to-all" 
+                checked={shouldApplyToAll} 
+                onCheckedChange={(checked) => setShouldApplyToAll(checked as boolean)}
+                className="border-primary data-[state=checked]:bg-primary h-5 w-5 rounded-md"
+              />
+              <label 
+                htmlFor="apply-to-all" 
+                className="text-xs font-bold uppercase tracking-widest text-muted-foreground cursor-pointer select-none hover:text-foreground transition-colors"
+              >
+                Replicar para todos os exercícios deste treino
+              </label>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>
