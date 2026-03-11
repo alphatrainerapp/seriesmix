@@ -28,7 +28,6 @@ import {
   Hash,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Separator } from '../ui/separator';
 import type { Exercise, Set, SetType } from '@/lib/types';
 import { useState } from 'react';
 
@@ -71,6 +70,8 @@ const SetTypeSelectItem = ({
     </div>
   </SelectItem>
 );
+
+const GRID_COLS_CLASS = "md:grid-cols-[40px_160px_1fr_90px_90px_40px]";
 
 export function EditSetsDialog({
   children,
@@ -137,13 +138,13 @@ export function EditSetsDialog({
         
         <div className="px-6 pb-4 max-h-[70vh] overflow-y-auto">
           {/* Desktop Header */}
-          <div className="hidden md:grid grid-cols-[auto_1fr_1fr_1fr_1fr_auto] items-center gap-x-4 gap-y-2 text-xs text-muted-foreground mb-2 sticky top-0 bg-card py-2 z-10">
-            <div className="font-medium">Série</div>
-            <div className="font-medium">Tipo</div>
-            <div className="font-medium">Repetições/Tempo</div>
-            <div className="font-medium">Intervalo (s)</div>
-            <div className="flex items-center gap-1 font-medium">
-              RIR <HelpCircle className="h-4 w-4" />
+          <div className={cn("hidden md:grid items-center gap-x-4 gap-y-2 text-[10px] text-muted-foreground mb-2 sticky top-0 bg-card py-2 z-10 uppercase font-black tracking-wider", GRID_COLS_CLASS)}>
+            <div className="text-center">Série</div>
+            <div>Tipo</div>
+            <div className="text-center">Repetições/Tempo</div>
+            <div className="text-center">Intervalo (s)</div>
+            <div className="flex items-center justify-center gap-1">
+              RIR <HelpCircle className="h-3 w-3" />
             </div>
             <div></div>
           </div>
@@ -154,11 +155,11 @@ export function EditSetsDialog({
               const Icon = setType?.icon;
               
               return (
-                <div key={set.id} className="relative md:grid md:grid-cols-[auto_1fr_1fr_1fr_1fr_auto] items-center md:gap-x-4 gap-y-3 p-4 md:p-0 rounded-lg border md:border-none bg-muted/30 md:bg-transparent">
+                <div key={set.id} className={cn("relative md:grid items-center md:gap-x-4 gap-y-3 p-4 md:p-0 rounded-lg border md:border-none bg-muted/30 md:bg-transparent transition-colors", GRID_COLS_CLASS)}>
                   {/* Série Number Label (Mobile: Badge Style) */}
                   <div className="flex items-center justify-between md:block mb-2 md:mb-0">
                     <span className="text-xs font-bold text-muted-foreground md:text-foreground uppercase tracking-wider md:hidden">Série {index + 1}</span>
-                    <div className="hidden md:flex font-semibold text-foreground h-10 items-center justify-center w-8">{index + 1}</div>
+                    <div className="hidden md:flex font-black text-foreground h-10 items-center justify-center w-8 text-sm">{index + 1}</div>
                     
                     <Button 
                       variant="ghost" 
@@ -174,18 +175,18 @@ export function EditSetsDialog({
                   <div className="grid grid-cols-2 gap-3 md:contents">
                     {/* Tipo */}
                     <div className="space-y-1 md:space-y-0">
-                      <label className="text-[10px] font-medium text-muted-foreground uppercase md:hidden">Tipo</label>
+                      <label className="text-[10px] font-black text-muted-foreground uppercase md:hidden tracking-wider">Tipo</label>
                       <Select
                         value={set.type}
                         onValueChange={(value) =>
                           handleSetChange(set.id, 'type', value)
                         }
                       >
-                        <SelectTrigger className="bg-background h-10">
+                        <SelectTrigger className="bg-background h-10 px-2 rounded-xl text-xs font-bold">
                           <SelectValue>
                             <div className="flex items-center gap-2">
                               {Icon && <Icon className={cn('h-4 w-4', setType?.color)} />}
-                              <span>{setType?.label}</span>
+                              <span className="truncate">{setType?.label}</span>
                             </div>
                           </SelectValue>
                         </SelectTrigger>
@@ -199,12 +200,12 @@ export function EditSetsDialog({
 
                     {/* Reps/Time */}
                     <div className="space-y-1 md:space-y-0">
-                      <label className="text-[10px] font-medium text-muted-foreground uppercase md:hidden">Reps/Tempo</label>
+                      <label className="text-[10px] font-black text-muted-foreground uppercase md:hidden tracking-wider text-center">Reps/Tempo</label>
                       <div className='flex items-center gap-1.5'>
                         <Button 
                           variant="outline" 
                           size="icon" 
-                          className="h-10 w-10 shrink-0 text-primary bg-background" 
+                          className="h-10 w-10 shrink-0 text-primary bg-background rounded-xl border-border/50" 
                           onClick={() => toggleSetUnit(set.id)}
                           type="button"
                         >
@@ -215,40 +216,40 @@ export function EditSetsDialog({
                           onChange={(e) =>
                             handleSetChange(set.id, 'reps', e.target.value)
                           }
-                          className="bg-background h-10"
+                          className="bg-background h-10 rounded-xl font-bold text-center"
                         />
                       </div>
                     </div>
 
                     {/* Interval */}
                     <div className="space-y-1 md:space-y-0">
-                      <label className="text-[10px] font-medium text-muted-foreground uppercase md:hidden">Intervalo (s)</label>
+                      <label className="text-[10px] font-black text-muted-foreground uppercase md:hidden tracking-wider text-center">Intervalo</label>
                       <Input
                         value={set.interval}
                         onChange={(e) =>
                           handleSetChange(set.id, 'interval', e.target.value)
                         }
-                        className="bg-background h-10"
+                        className="bg-background h-10 rounded-xl font-bold text-center"
                       />
                     </div>
 
                     {/* RIR */}
                     <div className="space-y-1 md:space-y-0">
-                      <label className="text-[10px] font-medium text-muted-foreground uppercase md:hidden flex items-center gap-1">RIR <HelpCircle className="h-3 w-3"/></label>
+                      <label className="text-[10px] font-black text-muted-foreground uppercase md:hidden tracking-wider text-center">RIR</label>
                       <Input
                         placeholder="Ex: 2"
                         value={set.rir}
                         onChange={(e) =>
                           handleSetChange(set.id, 'rir', e.target.value)
                         }
-                        className="bg-background h-10"
+                        className="bg-background h-10 rounded-xl font-bold text-center"
                       />
                     </div>
                   </div>
 
                   {/* Desktop Delete Button */}
-                  <div className="hidden md:block">
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/70" onClick={() => removeSet(set.id)}>
+                  <div className="hidden md:flex items-center justify-center">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/70 hover:text-destructive hover:bg-destructive/10 rounded-full" onClick={() => removeSet(set.id)}>
                         <X className='h-4 w-4' />
                     </Button>
                   </div>
@@ -258,7 +259,7 @@ export function EditSetsDialog({
           </div>
 
           <div className='mt-6 mb-2'>
-            <Button variant="outline" className="w-full md:w-auto text-primary border-primary/20 hover:bg-primary/5 h-12 md:h-9" onClick={addNewSet}>
+            <Button variant="outline" className="w-full md:w-auto text-primary border-primary/20 hover:bg-primary/5 h-12 md:h-9 rounded-xl font-bold" onClick={addNewSet}>
                 <Plus className="h-4 w-4 mr-2" />
                 Adicionar nova série
             </Button>
@@ -267,7 +268,7 @@ export function EditSetsDialog({
 
         <div className="p-6 bg-muted/50 border-t">
           <Button
-            className="w-full bg-[#01bfa5] hover:bg-[#01bfa5]/90 text-white h-12 md:h-11 font-semibold"
+            className="w-full bg-[#01bfa5] hover:bg-[#01bfa5]/90 text-white h-12 md:h-11 font-black uppercase tracking-widest italic"
             size="lg"
             onClick={handleSave}
           >

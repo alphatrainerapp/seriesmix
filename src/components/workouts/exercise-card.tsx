@@ -207,10 +207,10 @@ export function ExerciseCard({
                   const Icon = config.icon;
                   
                   return (
-                    <div key={setType} className="w-[85px] flex shrink-0">
+                    <div key={setType} className="w-[85px] flex shrink-0 h-5">
                       {count > 0 ? (
                         <Badge
-                          className={cn("w-full text-[9px] font-black gap-1 px-1.5 py-0.5 uppercase tracking-tighter justify-center", config.className)}
+                          className={cn("w-full text-[9px] font-black gap-1 px-1.5 py-0.5 uppercase tracking-tighter justify-center border-none shadow-none", config.className)}
                         >
                           <Icon className="h-2.5 w-2.5" />
                           {config.label} ({count})
