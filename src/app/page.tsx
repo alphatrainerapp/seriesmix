@@ -1,4 +1,3 @@
-
 'use client';
 import {
   Table,
@@ -110,7 +109,7 @@ export default function Home() {
             </div>
             <TabsContent value="treino-a" className="mt-8">
               <div className="flex flex-wrap items-center gap-6 mb-8">
-                <h2 className="text-2xl font-black tracking-tight uppercase">TREINO A</h2>
+                <h2 className="text-2xl font-black tracking-tight uppercase italic">TREINO A</h2>
 
                 <div className="flex flex-wrap items-center gap-4 md:gap-6">
                   <label className="flex items-center gap-2 text-sm font-semibold text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
@@ -119,7 +118,7 @@ export default function Home() {
                   </label>
 
                   <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
-                    <SquarePen className="h-5 w-5 text-cyan-400" />
+                    <SquarePen className="h-5 w-5 text-primary" />
                     Editar variáveis
                   </button>
 
@@ -130,34 +129,32 @@ export default function Home() {
                     onUpdateCombinationTypes={setWorkoutData}
                   >
                     <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
-                      <Combine className="h-6 w-6 text-cyan-400" />
+                      <Combine className="h-6 w-6 text-primary" />
                       Combinar
                     </button>
                   </CombineExercisesDialog>
                 </div>
               </div>
               
-              {/* Desktop View with optimized overflow and fixed layout */}
-              <div className="border rounded-xl bg-card shadow-sm hidden md:block overflow-hidden">
-                <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-muted-foreground/20">
-                  <Table className="min-w-[800px] w-full table-fixed">
-                    <TableHeader>
-                      <TableRow className="hover:bg-transparent bg-muted/20 border-b-border text-[10px] uppercase tracking-wider font-black">
-                        <TableHead className="w-[35px] px-2"></TableHead>
-                        <TableHead className="min-w-[200px]">Exercício</TableHead>
-                        <TableHead className="w-[120px]">Método</TableHead>
-                        <TableHead className="w-[45px] text-center">Obs</TableHead>
-                        <TableHead className="w-[50px] text-center">Série</TableHead>
-                        <TableHead className="w-[50px] text-center">Reps</TableHead>
-                        <TableHead className="w-[50px] text-center">Inter</TableHead>
-                        <TableHead className="w-[50px] text-center">Cadê</TableHead>
-                        <TableHead className="w-[45px] text-center">Status</TableHead>
-                        <TableHead className="w-[40px]"></TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    {processedExercises()}
-                  </Table>
-                </div>
+              {/* Desktop View with optimized overflow */}
+              <div className="border rounded-2xl bg-card shadow-sm hidden md:block overflow-hidden">
+                <Table className="w-full table-fixed">
+                  <TableHeader>
+                    <TableRow className="hover:bg-transparent bg-muted/20 border-b-border text-[10px] uppercase tracking-wider font-black">
+                      <TableHead className="w-[40px] px-2"></TableHead>
+                      <TableHead className="min-w-[200px]">Exercício</TableHead>
+                      <TableHead className="w-[120px]">Método</TableHead>
+                      <TableHead className="w-[45px] text-center">Obs</TableHead>
+                      <TableHead className="w-[50px] text-center">Série</TableHead>
+                      <TableHead className="w-[50px] text-center">Reps</TableHead>
+                      <TableHead className="w-[50px] text-center">Inter</TableHead>
+                      <TableHead className="w-[50px] text-center">Cadê</TableHead>
+                      <TableHead className="w-[45px] text-center">Status</TableHead>
+                      <TableHead className="w-[45px]"></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  {processedExercises()}
+                </Table>
               </div>
 
               {/* Mobile View */}
