@@ -109,37 +109,19 @@ body {
 }
 
 .app-container {
-  @apply w-full mx-auto px-4 box-border transition-all duration-300;
+  @apply w-full mx-auto px-4 md:px-8 box-border transition-all duration-300;
   max-width: 100%;
-}
-
-@media (min-width: 768px) {
-  .app-container {
-    max-width: 740px;
-  }
 }
 
 @media (min-width: 1024px) {
   .app-container {
-    max-width: 980px;
+    max-width: 98%; /* Layout quase total para aproveitar cada pixel */
   }
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1920px) {
   .app-container {
-    max-width: 1240px;
-  }
-}
-
-@media (min-width: 1440px) {
-  .app-container {
-    max-width: 1400px;
-  }
-}
-
-@media (min-width: 1800px) {
-  .app-container {
-    max-width: 1720px;
+    max-width: 1800px; /* Limite generoso para telas ultra-wide */
   }
 }
 

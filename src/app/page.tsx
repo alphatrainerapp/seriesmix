@@ -89,7 +89,7 @@ export default function Home() {
 
   return (
     <div className="app-container py-8 text-foreground transition-all duration-300">
-      <div className="flex flex-col lg:flex-row gap-8 items-start">
+      <div className="flex flex-col lg:flex-row gap-8 items-start w-full">
         <main className="flex-1 min-w-0 w-full space-y-8">
           <TrainingPlanHeader />
           <TrainingSplit />
@@ -136,14 +136,14 @@ export default function Home() {
                 </div>
               </div>
               
-              {/* Desktop View with optimized overflow */}
-              <div className="border rounded-2xl bg-card shadow-sm hidden md:block overflow-hidden">
-                <Table className="w-full table-fixed">
+              {/* Desktop View with full width and better column management */}
+              <div className="border rounded-2xl bg-card shadow-sm hidden md:block overflow-hidden w-full">
+                <Table className="w-full">
                   <TableHeader>
                     <TableRow className="hover:bg-transparent bg-muted/20 border-b-border text-[10px] uppercase tracking-wider font-black">
                       <TableHead className="w-[40px] px-2"></TableHead>
                       <TableHead className="min-w-[200px]">Exercício</TableHead>
-                      <TableHead className="w-[120px]">Método</TableHead>
+                      <TableHead className="w-[140px]">Método</TableHead>
                       <TableHead className="w-[45px] text-center">Obs</TableHead>
                       <TableHead className="w-[50px] text-center">Série</TableHead>
                       <TableHead className="w-[50px] text-center">Reps</TableHead>
@@ -172,7 +172,7 @@ export default function Home() {
               </div>
 
               {/* Action Buttons and Observations */}
-              <div className="mt-10 space-y-8">
+              <div className="mt-10 space-y-8 w-full">
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -217,7 +217,7 @@ export default function Home() {
           </Tabs>
         </main>
         
-        <aside className="w-full lg:w-[300px] xl:w-[340px] space-y-8 shrink-0">
+        <aside className="w-full lg:w-[320px] xl:w-[380px] space-y-8 shrink-0">
           <PageSidebar />
         </aside>
       </div>
