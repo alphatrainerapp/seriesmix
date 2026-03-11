@@ -31,9 +31,9 @@ body {
     --ring: 180 96% 34%;
     --radius: 0.5rem;
 
-    --chart-1: 35 97% 58%; /* #fca726 - Laranja para Repetições */
-    --chart-2: 118 89% 85%; /* #b7fdb4 - Verde claro para Intervalo */
-    --chart-3: 122 71% 54%; /* #38de3e - Verde vivo para Cadência */
+    --chart-1: 35 97% 58%; /* #fca726 - Laranja */
+    --chart-2: 118 89% 85%; /* #b7fdb4 - Verde claro */
+    --chart-3: 122 71% 54%; /* #38de3e - Verde vivo */
     --chart-4: 182 93% 34%;
     --chart-5: 217 91% 60%;
 
@@ -70,7 +70,7 @@ body {
     --input: 240 3.7% 15.9%;
     --ring: 180 96% 34%;
 
-    --chart-1: 35 97% 58%; /* #fca726 */
+    --chart-1: 35 97% 58%;
     --chart-2: 217 91% 60%;
     --chart-3: 147 62% 46%;
     --chart-4: 280 65% 60%;
@@ -109,22 +109,24 @@ body {
 }
 
 .app-container {
-  @apply w-full mx-auto px-4 md:px-6 box-border transition-all duration-300;
+  @apply w-full mx-auto px-4 md:px-8 box-border transition-all duration-300;
   max-width: 100%;
 }
 
 @media (min-width: 1024px) {
   .app-container {
-    max-width: 100%; /* Layout total para aproveitar cada pixel no SidebarInset */
-  }
-}
-
-@media (min-width: 1440px) {
-  .app-container {
-    max-width: 100%; /* Aproveita 100% em telas ultra-wide */
+    max-width: 1800px; /* Expansão total no PC */
   }
 }
 
 .header-treino {
   @apply flex items-center justify-between mb-6 flex-wrap gap-4;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

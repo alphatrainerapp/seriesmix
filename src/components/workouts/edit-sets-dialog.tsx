@@ -132,18 +132,17 @@ export function EditSetsDialog({
   
   React.useEffect(() => {
     setSets(exercise.sets);
-  }, [exercise.sets]);
+  }, [exercise.sets, open]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-2xl bg-card p-0 gap-0 overflow-hidden">
         <DialogHeader className="p-6 pb-2">
-          <DialogTitle className="text-xl font-black uppercase tracking-tighter italic">Editar Séries do Exercício</DialogTitle>
+          <DialogTitle className="text-xl font-black uppercase tracking-tighter">Editar Séries do Exercício</DialogTitle>
         </DialogHeader>
         
         <div className="px-6 pb-4 max-h-[70vh] overflow-y-auto">
-          {/* Desktop Header */}
           <div className={cn("hidden md:grid items-center gap-x-4 gap-y-2 text-[10px] text-muted-foreground mb-2 sticky top-0 bg-card py-2 z-10 uppercase font-black tracking-wider", GRID_COLS_CLASS)}>
             <div className="text-center">Série</div>
             <div>Tipo</div>
@@ -275,7 +274,7 @@ export function EditSetsDialog({
           </Button>
           
           {onApplyToAll && (
-            <div className="flex items-center justify-center gap-2 py-1">
+            <div className="flex items-center justify-center gap-3 py-1">
               <Checkbox 
                 id="apply-to-all" 
                 checked={shouldApplyToAll} 
@@ -284,7 +283,7 @@ export function EditSetsDialog({
               />
               <label 
                 htmlFor="apply-to-all" 
-                className="text-xs font-bold uppercase tracking-widest text-muted-foreground cursor-pointer select-none hover:text-foreground transition-colors"
+                className="text-xs font-black uppercase tracking-widest text-muted-foreground cursor-pointer select-none hover:text-foreground transition-colors"
               >
                 Replicar para todos os exercícios deste treino
               </label>
