@@ -1,4 +1,3 @@
-
 import {
   TableRow,
   TableCell,
@@ -107,7 +106,7 @@ export function ExerciseCard({
             <GripVertical className="text-muted-foreground w-3.5 h-3.5" />
           </Button>
         </TableCell>
-        <TableCell className="font-medium p-2 min-w-[200px]">
+        <TableCell className="font-medium p-2 min-w-[200px] lg:min-w-[400px]">
           <div className="flex items-center gap-2">
             {isFirstInGroup && (
                <div className="flex items-center justify-center w-5 h-5 bg-primary/20 text-primary rounded-full shrink-0">
@@ -121,7 +120,7 @@ export function ExerciseCard({
             </ExerciseSearchDialog>
           </div>
         </TableCell>
-        <TableCell className="p-1 pt-3 w-[120px]">
+        <TableCell className="p-1 pt-3 w-[110px]">
           <div className="flex items-center gap-1">
             <Button variant="ghost" size="icon" className="shrink-0 h-7 w-7">
               <PlaySquare className="text-primary w-3.5 h-3.5" />
@@ -138,7 +137,7 @@ export function ExerciseCard({
             </Select>
           </div>
         </TableCell>
-        <TableCell className="w-[45px] text-center p-0.5 pt-3">
+        <TableCell className="w-[40px] text-center p-0.5 pt-3">
           <EditObservationDialog
             exercise={exercise}
             onUpdateExercise={onUpdateExercise}
@@ -148,7 +147,7 @@ export function ExerciseCard({
             </Button>
           </EditObservationDialog>
         </TableCell>
-        <TableCell className="w-[50px] p-0.5 pt-3 text-center">
+        <TableCell className="w-[45px] p-0.5 pt-3 text-center">
             <div className="flex items-center justify-center">
               <Input
                 className="w-7 text-center bg-[hsl(var(--chart-1))] text-black placeholder:text-black/80 font-bold border-none h-7 text-[10px] rounded-sm px-0"
@@ -165,25 +164,25 @@ export function ExerciseCard({
               </EditSetsDialog>
             </div>
         </TableCell>
-        <TableCell className="w-[50px] px-0.5 pt-3 text-center">
+        <TableCell className="w-[45px] px-0.5 pt-3 text-center">
           <Input
             className="w-full text-center bg-[hsl(var(--chart-2))] text-black placeholder:text-black/80 font-bold border-none h-7 text-[10px] rounded-sm px-0"
             defaultValue={exercise.repsRange}
           />
         </TableCell>
-        <TableCell className="w-[50px] px-0.5 pt-3 text-center">
+        <TableCell className="w-[45px] px-0.5 pt-3 text-center">
           <Input
             className="w-full text-center bg-[hsl(var(--chart-3))] text-black placeholder:text-black/80 font-bold border-none h-7 text-[10px] rounded-sm px-0"
             defaultValue={firstInterval}
           />
         </TableCell>
-        <TableCell className="w-[50px] px-0.5 pt-3 text-center">
+        <TableCell className="w-[45px] px-0.5 pt-3 text-center">
           <Input
             className="w-full text-center bg-[hsl(var(--chart-4))] text-black placeholder:text-black/80 font-bold border-none h-7 text-[10px] rounded-sm px-0"
             defaultValue="2.2"
           />
         </TableCell>
-        <TableCell className="w-[45px] p-1 pt-3 text-center">
+        <TableCell className="w-[40px] p-1 pt-3 text-center">
           <Button variant="ghost" size="icon" className="h-7 w-7">
             {CombinationIcon ? (
               <CombinationIcon className={cn("h-3.5 w-3.5", combinationIconClassName)} />
@@ -204,18 +203,20 @@ export function ExerciseCard({
             <div className="flex items-center gap-2">
               {setTypesInOrder.map((setType) => {
                   const count = setCounts[setType];
-                  if (!count) return null;
-
                   const config = setTypeConfig[setType];
                   const Icon = config.icon;
+                  
                   return (
-                    <Badge
-                      key={setType}
-                      className={cn("text-[9px] font-black gap-1 px-1.5 py-0.5 uppercase tracking-tighter", config.className)}
-                    >
-                      <Icon className="h-2.5 w-2.5" />
-                      {config.label} ({count})
-                    </Badge>
+                    <div key={setType} className="w-[85px] flex shrink-0">
+                      {count > 0 ? (
+                        <Badge
+                          className={cn("w-full text-[9px] font-black gap-1 px-1.5 py-0.5 uppercase tracking-tighter justify-center", config.className)}
+                        >
+                          <Icon className="h-2.5 w-2.5" />
+                          {config.label} ({count})
+                        </Badge>
+                      ) : null}
+                    </div>
                   );
                 })}
             </div>

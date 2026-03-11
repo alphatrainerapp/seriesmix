@@ -13,7 +13,7 @@ body {
     --card: 0 0% 95%;
     --card-foreground: 240 10% 3.9%;
     --workout-card: 0 0% 95%;
-    --exercise-card: 0 0% 74%;
+    --exercise-card: 0 0% 90%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
     --primary: 180 96% 34%;
@@ -48,26 +48,26 @@ body {
     --tag-soft-blue-fg: 210 90% 40%;
   }
   .dark {
-    --background: 20 10% 5%;
-    --foreground: 20 5% 98%;
-    --card: 20 10% 10%;
-    --card-foreground: 20 5% 98%;
-    --workout-card: 0 0% 95%;
-    --exercise-card: 0 0% 74%;
-    --popover: 20 10% 10%;
-    --popover-foreground: 20 5% 98%;
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 7%;
+    --card-foreground: 0 0% 98%;
+    --workout-card: 240 10% 10%;
+    --exercise-card: 240 10% 15%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
     --primary: 180 96% 34%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 20 10% 15%;
-    --secondary-foreground: 20 5% 98%;
-    --muted: 20 10% 20%;
-    --muted-foreground: 20 5% 65%;
-    --accent: 10 100% 60%;
-    --accent-foreground: 0 0% 100%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 20 10% 20%;
-    --input: 20 10% 20%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
     --ring: 180 96% 34%;
 
     --chart-1: 35 97% 58%; /* #fca726 */
@@ -76,11 +76,11 @@ body {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
 
-    --sidebar-background: 20 10% 10%;
-    --sidebar-foreground: 20 5% 95%;
-    --sidebar-border: 20 10% 20%;
-    --sidebar-accent: 20 10% 22%;
-    --sidebar-accent-foreground: 20 5% 98%;
+    --sidebar-background: 240 10% 7%;
+    --sidebar-foreground: 240 5% 95%;
+    --sidebar-border: 240 10% 15%;
+    --sidebar-accent: 240 10% 12%;
+    --sidebar-accent-foreground: 240 5% 98%;
     --sidebar-ring: 175 75% 40%;
 
     --tag-soft-blue-bg: 210 30% 15%;
@@ -109,17 +109,17 @@ body {
 }
 
 .app-container {
-  @apply w-full mx-auto px-4 md:px-8 box-border transition-all duration-300;
+  @apply w-full mx-auto px-4 md:px-6 box-border transition-all duration-300;
   max-width: 100%;
 }
 
 @media (min-width: 1024px) {
   .app-container {
-    max-width: 98%; /* Layout quase total para aproveitar cada pixel */
+    max-width: 100%; /* Layout total para aproveitar cada pixel no SidebarInset */
   }
 }
 
-@media (min-width: 1920px) {
+@media (min-width: 1440px) {
   .app-container {
     max-width: 1800px; /* Limite generoso para telas ultra-wide */
   }
