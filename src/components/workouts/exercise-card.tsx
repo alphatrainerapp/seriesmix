@@ -29,17 +29,17 @@ const setTypeConfig: {
   aquecimento: {
     icon: Flame,
     className: 'bg-[#dd694d] hover:bg-[#dd694d]/90 text-white border-transparent',
-    label: 'Aquec'
+    label: 'AQUEC'
   },
   preparatoria: {
     icon: SlidersHorizontal,
     className: 'bg-[#4a80e3] hover:bg-[#4a80e3]/90 text-white border-transparent',
-    label: 'Prep'
+    label: 'PREP'
   },
   trabalho: {
     icon: Check,
     className: 'bg-[#56ac73] hover:bg-[#56ac73]/90 text-white border-transparent',
-    label: 'Válidas'
+    label: 'VÁLIDAS'
   },
 };
 
@@ -90,11 +90,11 @@ export function ExerciseCard({
   return (
     <>
       <TableRow className={cn(
-        "align-top hover:bg-muted/50",
+        "align-top hover:bg-muted/50 border-b-border/30",
         isGrouped && !isLastInGroup ? "border-b-0" : "",
-        isGrouped ? "bg-muted/30" : ""
+        isGrouped ? "bg-muted/10" : ""
       )}>
-        <TableCell className="w-[35px] pt-4 px-1.5 relative">
+        <TableCell className="w-[40px] pt-4 px-1.5 relative">
           {isGrouped && (
              <div className="absolute left-[20px] top-0 h-full w-[2px] bg-primary/20">
                 {isFirstInGroup && <div className="absolute -top-0 left-1/2 -translate-x-1/2 h-3 w-3 rounded-full bg-primary/20" />}
@@ -104,55 +104,55 @@ export function ExerciseCard({
            {isGrouped && (
              <div className="absolute left-[28px] top-1/2 -translate-y-1/2 w-3 h-[2px] bg-primary/20" />
            )}
-          <Button variant="ghost" size="icon" className="h-7 w-7">
-            <GripVertical className="text-muted-foreground w-3.5 h-3.5" />
+          <Button variant="ghost" size="icon" className="h-7 w-7 opacity-30 hover:opacity-100">
+            <GripVertical className="text-muted-foreground w-4 h-4" />
           </Button>
         </TableCell>
         <TableCell className="font-medium p-2 min-w-[200px]">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             {isFirstInGroup && (
-               <div className="flex items-center justify-center w-5 h-5 bg-primary/20 text-primary rounded-full shrink-0">
+               <div className="flex items-center justify-center w-6 h-6 bg-primary/20 text-primary rounded-full shrink-0">
                   <Link2 className="h-3.5 w-3.5"/>
                 </div>
             )}
             <ExerciseSearchDialog onSelect={handleUpdateName}>
-              <button className="flex-1 text-left bg-exercise-card border border-border shadow-sm px-4 rounded-full h-9 text-[13px] font-black uppercase tracking-tight truncate hover:border-primary/50 transition-colors">
+              <button className="flex-1 text-left bg-exercise-card border border-border shadow-sm px-5 rounded-full h-10 text-[13px] font-black uppercase tracking-tight truncate hover:border-primary/50 transition-colors">
                 {exercise.name}
               </button>
             </ExerciseSearchDialog>
           </div>
         </TableCell>
-        <TableCell className="p-1 pt-3 w-[110px]">
-          <div className="flex items-center gap-1">
-            <Button variant="ghost" size="icon" className="shrink-0 h-7 w-7">
-              <PlaySquare className="text-primary w-3.5 h-3.5" />
+        <TableCell className="p-1 pt-3 w-[120px]">
+          <div className="flex items-center gap-1.5">
+            <Button variant="ghost" size="icon" className="shrink-0 h-8 w-8 text-primary/70">
+              <PlaySquare className="w-4 h-4" />
             </Button>
             <Select>
-              <SelectTrigger className="w-full bg-exercise-card border-border shadow-sm rounded-full h-8 text-[10px] px-2 font-black uppercase">
-                <SelectValue placeholder="Método..." />
+              <SelectTrigger className="w-full bg-exercise-card border-border shadow-sm rounded-xl h-9 text-[10px] px-3 font-black uppercase tracking-wider">
+                <SelectValue placeholder="MÉTODO" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="dropset">Dropset</SelectItem>
-                <SelectItem value="rest-pause">Rest-pause</SelectItem>
-                <SelectItem value="pyramid">Pyramid</SelectItem>
+              <SelectContent className="rounded-xl">
+                <SelectItem value="dropset">DROPSET</SelectItem>
+                <SelectItem value="rest-pause">REST-PAUSE</SelectItem>
+                <SelectItem value="pyramid">PYRAMID</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </TableCell>
-        <TableCell className="w-[40px] text-center p-0.5 pt-3">
+        <TableCell className="w-[45px] text-center p-0.5 pt-3">
           <EditObservationDialog
             exercise={exercise}
             onUpdateExercise={onUpdateExercise}
           >
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <MessageSquare className="text-primary w-4 h-4" />
+            <Button variant="ghost" size="icon" className="h-9 w-9 text-primary hover:bg-primary/5 rounded-xl">
+              <MessageSquare className="w-4.5 h-4.5" />
             </Button>
           </EditObservationDialog>
         </TableCell>
-        <TableCell className="w-[50px] p-0.5 pt-3 text-center">
-            <div className="flex items-center justify-center">
+        <TableCell className="w-[55px] p-0.5 pt-3 text-center">
+            <div className="flex items-center justify-center gap-1">
               <Input
-                className="w-8 text-center bg-[hsl(var(--chart-1))] text-black font-black border-none h-8 text-[11px] rounded-sm px-0 shadow-sm"
+                className="w-10 text-center bg-[hsl(var(--chart-1))] text-black font-black border-none h-9 text-[12px] rounded-lg px-0 shadow-sm"
                 value={exercise.sets.length}
                 readOnly
               />
@@ -161,53 +161,53 @@ export function ExerciseCard({
                 onUpdateExercise={onUpdateExercise}
                 onApplyToAll={onApplySetsToAll}
               >
-                <Button variant="ghost" size="icon" className="h-6 w-6 text-primary shrink-0 ml-1">
+                <Button variant="ghost" size="icon" className="h-7 w-7 text-primary shrink-0 opacity-40 hover:opacity-100">
                   <Pencil className="h-3.5 w-3.5" />
                 </Button>
               </EditSetsDialog>
             </div>
         </TableCell>
-        <TableCell className="w-[50px] px-0.5 pt-3 text-center">
+        <TableCell className="w-[55px] px-0.5 pt-3 text-center">
           <Input
-            className="w-full text-center bg-[hsl(var(--chart-2))] text-black font-black border-none h-8 text-[11px] rounded-sm px-0 shadow-sm"
+            className="w-full text-center bg-[hsl(var(--chart-2))] text-black font-black border-none h-9 text-[12px] rounded-lg px-0 shadow-sm"
             defaultValue={exercise.repsRange}
           />
         </TableCell>
-        <TableCell className="w-[50px] px-0.5 pt-3 text-center">
+        <TableCell className="w-[55px] px-0.5 pt-3 text-center">
           <Input
-            className="w-full text-center bg-[hsl(var(--chart-3))] text-black font-black border-none h-8 text-[11px] rounded-sm px-0 shadow-sm"
+            className="w-full text-center bg-[hsl(var(--chart-3))] text-black font-black border-none h-9 text-[12px] rounded-lg px-0 shadow-sm"
             defaultValue={firstInterval}
           />
         </TableCell>
-        <TableCell className="w-[50px] px-0.5 pt-3 text-center">
+        <TableCell className="w-[55px] px-0.5 pt-3 text-center">
           <Input
-            className="w-full text-center bg-[hsl(var(--chart-4))] text-black font-black border-none h-8 text-[11px] rounded-sm px-0 shadow-sm"
+            className="w-full text-center bg-[hsl(var(--chart-4))] text-black font-black border-none h-9 text-[12px] rounded-lg px-0 shadow-sm"
             defaultValue="2.2"
           />
         </TableCell>
-        <TableCell className="w-[40px] p-1 pt-3 text-center">
-          <Button variant="ghost" size="icon" className="h-8 w-8">
+        <TableCell className="w-[45px] p-1 pt-3 text-center">
+          <Button variant="ghost" size="icon" className="h-9 w-9">
             {CombinationIcon ? (
-              <CombinationIcon className={cn("h-4 w-4", combinationIconClassName)} />
+              <CombinationIcon className={cn("h-4.5 w-4.5", combinationIconClassName)} />
             ) : (
-               <div className="w-4 h-4 bg-muted border-2 border-dashed border-muted-foreground/30 rounded-sm"></div>
+               <div className="w-5 h-5 bg-muted border-2 border-dashed border-muted-foreground/20 rounded-lg"></div>
             )}
           </Button>
         </TableCell>
-        <TableCell className="w-[40px] p-1 pt-3 text-center">
-          <Button variant="ghost" size="icon" className="text-destructive/70 hover:text-destructive hover:bg-destructive/10 h-8 w-8">
-            <Trash2 className="w-4 h-4" />
+        <TableCell className="w-[45px] p-1 pt-3 text-center">
+          <Button variant="ghost" size="icon" className="text-destructive/40 hover:text-destructive hover:bg-destructive/10 h-9 w-9 rounded-xl">
+            <Trash2 className="w-4.5 h-4.5" />
           </Button>
         </TableCell>
       </TableRow>
-       <TableRow className={cn("hover:bg-transparent", isGrouped ? "bg-muted/30" : "")}>
-        <TableCell className={cn("w-[35px] pt-0 relative", isGrouped ? "border-b-0" : "")}>
+       <TableRow className={cn("hover:bg-transparent", isGrouped ? "bg-muted/10" : "")}>
+        <TableCell className={cn("w-[40px] pt-0 relative", isGrouped ? "border-b-0" : "")}>
            {isGrouped && (
              <div className="absolute left-[20px] top-0 h-full w-[2px] bg-primary/20" />
            )}
         </TableCell>
-        <TableCell className="pt-0 pb-4 pl-2" colSpan={9}>
-            <div className="flex items-center gap-2 ml-4">
+        <TableCell className="pt-0 pb-5 pl-2" colSpan={9}>
+            <div className="flex items-center gap-2 ml-3">
               {setTypesInOrder.map((setType) => {
                   const count = setCounts[setType];
                   if (!count || count === 0) return null;
@@ -218,7 +218,7 @@ export function ExerciseCard({
                   return (
                     <Badge
                       key={setType}
-                      className={cn("text-[10px] font-black gap-1.5 px-2 py-1 uppercase tracking-tighter justify-center border-none shadow-sm h-6", config.className)}
+                      className={cn("text-[10px] font-black gap-1.5 px-3 py-1 uppercase tracking-tighter justify-center border-none shadow-sm h-7 rounded-full", config.className)}
                     >
                       <Icon className="h-3 w-3" />
                       {config.label} ({count})
