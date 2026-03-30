@@ -65,6 +65,8 @@ export default function Home() {
     const elements: React.ReactNode[] = [];
     const renderedGroupIds = new Set<string>();
 
+    if (!Array.isArray(workoutData)) return elements;
+
     workoutData.forEach((currentExercise) => {
       if (currentExercise.groupId && renderedGroupIds.has(currentExercise.groupId)) {
         return;
@@ -144,7 +146,7 @@ export default function Home() {
                     exercises={workoutData}
                     onUpdateWorkout={setWorkoutData}
                     combinationTypes={combinationTypes}
-                    onUpdateCombinationTypes={setWorkoutData}
+                    onUpdateCombinationTypes={setCombinationTypes}
                   >
                     <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
                       <Combine className="h-6 w-6 text-primary" />
@@ -178,7 +180,7 @@ export default function Home() {
               {/* Mobile View */}
               <div className="block md:hidden">
                 <Accordion type="single" collapsible className="flex flex-col gap-3 w-full">
-                  {workoutData.map((exercise) => (
+                  {Array.isArray(workoutData) && workoutData.map((exercise) => (
                     <MobileExerciseCard
                       key={exercise.id}
                       exercise={exercise}

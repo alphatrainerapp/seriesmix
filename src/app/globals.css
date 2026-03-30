@@ -29,7 +29,7 @@ body {
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
     --ring: 180 96% 34%;
-    --radius: 0.5rem;
+    --radius: 0.75rem; /* 12px base */
 
     --chart-1: 35 97% 58%; /* #fca726 - Laranja */
     --chart-2: 118 89% 85%; /* #b7fdb4 - Verde claro */
@@ -105,7 +105,7 @@ body {
 }
 
 .treino-card {
-  @apply w-full rounded-[14px] p-4 mb-3 box-border bg-card border shadow-sm;
+  @apply w-full rounded-[16px] p-4 mb-3 box-border bg-card border shadow-sm;
 }
 
 .app-container {
@@ -129,4 +129,14 @@ body {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.rounded-3xl {
+  border-radius: 24px;
+}
+.rounded-2xl {
+  border-radius: 16px;
+}
+.rounded-xl {
+  border-radius: 12px;
 }
