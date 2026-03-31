@@ -128,7 +128,7 @@ export function ExerciseCard({
               <PlaySquare className="w-4 h-4" />
             </Button>
             <Select>
-              <SelectTrigger className="w-full bg-exercise-card border-border shadow-sm rounded-xl h-9 text-[10px] px-3 font-black uppercase tracking-wider">
+              <SelectTrigger className="w-full bg-exercise-card border-border shadow-sm rounded-lg h-9 text-[10px] px-3 font-black uppercase tracking-wider">
                 <SelectValue placeholder="MÉTODO" />
               </SelectTrigger>
               <SelectContent className="rounded-xl">
@@ -144,7 +144,7 @@ export function ExerciseCard({
             exercise={exercise}
             onUpdateExercise={onUpdateExercise}
           >
-            <Button variant="ghost" size="icon" className="h-9 w-9 text-primary hover:bg-primary/5 rounded-xl">
+            <Button variant="ghost" size="icon" className="h-9 w-9 text-primary hover:bg-primary/5 rounded-lg">
               <MessageSquare className="w-4.5 h-4.5" />
             </Button>
           </EditObservationDialog>
@@ -195,7 +195,7 @@ export function ExerciseCard({
           </Button>
         </TableCell>
         <TableCell className="w-[45px] p-1 pt-3 text-center">
-          <Button variant="ghost" size="icon" className="text-destructive/40 hover:text-destructive hover:bg-destructive/10 h-9 w-9 rounded-xl">
+          <Button variant="ghost" size="icon" className="text-destructive/40 hover:text-destructive hover:bg-destructive/10 h-9 w-9 rounded-lg">
             <Trash2 className="w-4.5 h-4.5" />
           </Button>
         </TableCell>
@@ -220,7 +220,7 @@ export function ExerciseCard({
                       key={setType}
                       className={cn("text-[10px] font-black gap-1.5 px-3 py-1 uppercase tracking-tighter justify-center border-none shadow-sm h-7 rounded-full", config.className)}
                     >
-                      <Icon className="h-3 w-3" />
+                      <Icon className="h-3.5 w-3.5" />
                       {config.label} ({count})
                     </Badge>
                   );

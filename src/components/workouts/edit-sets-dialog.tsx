@@ -72,7 +72,6 @@ const SetTypeSelectItem = ({
   </SelectItem>
 );
 
-// Proporções exatas do grid no Desktop
 const GRID_COLS_CLASS = "md:grid-cols-[40px_160px_1fr_90px_90px_40px]";
 
 export function EditSetsDialog({
@@ -144,7 +143,6 @@ export function EditSetsDialog({
         </DialogHeader>
         
         <div className="px-6 pb-4 max-h-[70vh] overflow-y-auto no-scrollbar">
-          {/* Cabeçalho do Grid - Font 10px Black */}
           <div className={cn("hidden md:grid items-center gap-x-4 gap-y-2 text-[10px] text-muted-foreground/60 mb-2 sticky top-0 bg-card py-2 z-10 uppercase font-black tracking-[0.15em]", GRID_COLS_CLASS)}>
             <div className="text-center">Série</div>
             <div>Tipo</div>
@@ -165,7 +163,7 @@ export function EditSetsDialog({
                 <div key={set.id} className={cn("relative md:grid items-center md:gap-x-4 gap-y-3 p-4 md:p-0 rounded-2xl border md:border-none bg-muted/20 md:bg-transparent transition-all", GRID_COLS_CLASS)}>
                   <div className="flex items-center justify-between md:block mb-2 md:mb-0">
                     <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest md:hidden">Série {index + 1}</span>
-                    <div className="hidden md:flex font-black text-foreground h-10 items-center justify-center w-10 text-sm bg-muted/40 rounded-xl">{index + 1}</div>
+                    <div className="hidden md:flex font-black text-foreground h-10 items-center justify-center w-10 text-sm bg-muted/40 rounded-lg">{index + 1}</div>
                     
                     <Button 
                       variant="ghost" 
@@ -178,7 +176,6 @@ export function EditSetsDialog({
                   </div>
 
                   <div className="grid grid-cols-2 gap-3 md:contents">
-                    {/* Tipo - Font 14px Bold */}
                     <div className="space-y-1 md:space-y-0">
                       <label className="text-[10px] font-black text-muted-foreground uppercase md:hidden tracking-wider">Tipo</label>
                       <Select
@@ -187,7 +184,7 @@ export function EditSetsDialog({
                           handleSetChange(set.id, 'type', value)
                         }
                       >
-                        <SelectTrigger className="bg-background h-10 px-3 rounded-xl text-sm font-bold border-border/40 focus:ring-primary/20">
+                        <SelectTrigger className="bg-background h-10 px-3 rounded-lg text-sm font-bold border-border/40 focus:ring-primary/20">
                           <SelectValue>
                             <div className="flex items-center gap-2">
                               {Icon && <Icon className={cn('h-4 w-4', setType?.color)} />}
@@ -203,14 +200,13 @@ export function EditSetsDialog({
                       </Select>
                     </div>
 
-                    {/* Reps/Tempo - Font 14px Bold */}
                     <div className="space-y-1 md:space-y-0">
                       <label className="text-[10px] font-black text-muted-foreground uppercase md:hidden tracking-wider text-center">Reps/Tempo</label>
                       <div className='flex items-center gap-1.5'>
                         <Button 
                           variant="outline" 
                           size="icon" 
-                          className="h-10 w-10 shrink-0 text-primary bg-background rounded-xl border-border/40 hover:bg-primary/5" 
+                          className="h-10 w-10 shrink-0 text-primary bg-background rounded-lg border-border/40 hover:bg-primary/5" 
                           onClick={() => toggleSetUnit(set.id)}
                           type="button"
                         >
@@ -221,12 +217,11 @@ export function EditSetsDialog({
                           onChange={(e) =>
                             handleSetChange(set.id, 'reps', e.target.value)
                           }
-                          className="bg-background h-10 rounded-xl font-bold text-center border-border/40 text-sm md:text-[14px]"
+                          className="bg-background h-10 rounded-lg font-bold text-center border-border/40 text-sm md:text-[14px]"
                         />
                       </div>
                     </div>
 
-                    {/* Intervalo - Font 14px Bold */}
                     <div className="space-y-1 md:space-y-0">
                       <label className="text-[10px] font-black text-muted-foreground uppercase md:hidden tracking-wider text-center">Intervalo</label>
                       <Input
@@ -234,11 +229,10 @@ export function EditSetsDialog({
                         onChange={(e) =>
                           handleSetChange(set.id, 'interval', e.target.value)
                         }
-                        className="bg-background h-10 rounded-xl font-bold text-center border-border/40 text-sm md:text-[14px]"
+                        className="bg-background h-10 rounded-lg font-bold text-center border-border/40 text-sm md:text-[14px]"
                       />
                     </div>
 
-                    {/* RIR - Font 14px Bold */}
                     <div className="space-y-1 md:space-y-0">
                       <label className="text-[10px] font-black text-muted-foreground uppercase md:hidden tracking-wider text-center">RIR</label>
                       <Input
@@ -247,7 +241,7 @@ export function EditSetsDialog({
                         onChange={(e) =>
                           handleSetChange(set.id, 'rir', e.target.value)
                         }
-                        className="bg-background h-10 rounded-xl font-bold text-center border-border/40 text-sm md:text-[14px]"
+                        className="bg-background h-10 rounded-lg font-bold text-center border-border/40 text-sm md:text-[14px]"
                       />
                     </div>
                   </div>
@@ -263,7 +257,7 @@ export function EditSetsDialog({
           </div>
 
           <div className='mt-6 mb-2'>
-            <Button variant="outline" className="w-full md:w-auto text-primary border-primary/20 hover:bg-primary/5 h-12 md:h-10 rounded-xl font-black text-[11px] uppercase tracking-widest" onClick={addNewSet}>
+            <Button variant="outline" className="w-full md:w-auto text-primary border-primary/20 hover:bg-primary/5 h-12 md:h-10 rounded-lg font-black text-[11px] uppercase tracking-widest" onClick={addNewSet}>
                 <Plus className="h-4 w-4 mr-2" />
                 Adicionar Série
             </Button>
@@ -272,7 +266,7 @@ export function EditSetsDialog({
 
         <div className="p-6 bg-muted/50 border-t flex flex-col gap-4">
           <Button
-            className="w-full bg-primary hover:bg-primary/90 text-white h-12 md:h-14 font-black uppercase tracking-[0.2em] text-sm shadow-lg shadow-primary/20 rounded-xl"
+            className="w-full bg-primary hover:bg-primary/90 text-white h-12 md:h-14 font-black uppercase tracking-[0.2em] text-sm shadow-lg shadow-primary/20 rounded-lg"
             size="lg"
             onClick={handleSave}
           >
