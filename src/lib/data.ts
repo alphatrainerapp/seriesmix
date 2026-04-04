@@ -1,4 +1,4 @@
-import type { Exercise } from './types';
+import type { Exercise, SavedSession } from './types';
 
 export const systemExercises = [
   'Agachamento Livre',
@@ -21,6 +21,7 @@ export const systemExercises = [
   'Remada Baixa',
   'Rosca Direta',
   'Rosca Alternada',
+  'Rosca Concentrada',
   'Tríceps Pulley',
   'Tríceps Testa',
   'Abdominal Supra',
@@ -87,26 +88,58 @@ export const mockWorkout: Exercise[] = [
     ],
     repsRange: '12-15',
   },
+];
+
+const createSets = (count: number, reps: string) => Array.from({ length: count }, (_, i) => ({
+  id: i + 1,
+  type: 'trabalho' as const,
+  unit: 'reps' as const,
+  reps,
+  interval: '60',
+  rir: ''
+}));
+
+export const exampleSessions: SavedSession[] = [
   {
-    id: 6,
-    name: 'Mesa flexora',
-    preExhaustion: false,
-    sets: [
-        { id: 1, type: 'trabalho', unit: 'reps', reps: '10-12', interval: '60', rir: '' },
-        { id: 2, type: 'trabalho', unit: 'reps', reps: '10-12', interval: '60', rir: '' },
-        { id: 3, type: 'trabalho', unit: 'reps', reps: '10-12', interval: '60', rir: '' },
-    ],
-    repsRange: '10-12',
+    id: 'ex-1',
+    name: 'Costas e Bíceps - Foco Remada',
+    folder: 'Costa e Triceps', // Using existing matching folders or Geral
+    date: 'Exemplo',
+    combinationTypes: {},
+    workoutData: [
+      { id: 101, name: 'Puxada na Frente', preExhaustion: false, sets: createSets(3, '10-12'), repsRange: '10-12' },
+      { id: 102, name: 'Remada Curvada', preExhaustion: false, sets: createSets(3, '8-10'), repsRange: '8-10' },
+      { id: 103, name: 'Remada Baixa', preExhaustion: false, sets: createSets(3, '12-15'), repsRange: '12-15' },
+      { id: 104, name: 'Rosca Direta', preExhaustion: false, sets: createSets(3, '10-12'), repsRange: '10-12' },
+      { id: 105, name: 'Rosca Alternada', preExhaustion: false, sets: createSets(3, '12'), repsRange: '12' },
+    ]
   },
   {
-    id: 7,
-    name: 'Elevação pélvica',
-    preExhaustion: false,
-    sets: [
-        { id: 1, type: 'trabalho', unit: 'reps', reps: '12-15', interval: '60', rir: '' },
-        { id: 2, type: 'trabalho', unit: 'reps', reps: '12-15', interval: '60', rir: '' },
-        { id: 3, type: 'trabalho', unit: 'reps', reps: '12-15', interval: '60', rir: '' },
-    ],
-    repsRange: '12-15',
+    id: 'ex-2',
+    name: 'Peito e Tríceps - Força',
+    folder: 'Peito e Biceps',
+    date: 'Exemplo',
+    combinationTypes: {},
+    workoutData: [
+      { id: 201, name: 'Supino Reto', preExhaustion: false, sets: createSets(3, '8-10'), repsRange: '8-10' },
+      { id: 202, name: 'Supino Inclinado', preExhaustion: false, sets: createSets(3, '10-12'), repsRange: '10-12' },
+      { id: 203, name: 'Crucifixo Reto', preExhaustion: false, sets: createSets(3, '12-15'), repsRange: '12-15' },
+      { id: 204, name: 'Tríceps Pulley', preExhaustion: false, sets: createSets(3, '12-15'), repsRange: '12-15' },
+      { id: 205, name: 'Tríceps Testa', preExhaustion: false, sets: createSets(3, '10-12'), repsRange: '10-12' },
+    ]
   },
+  {
+    id: 'ex-3',
+    name: 'Bíceps e Tríceps - Pump Absurdo',
+    folder: 'Geral',
+    date: 'Exemplo',
+    combinationTypes: {},
+    workoutData: [
+      { id: 301, name: 'Rosca Direta', preExhaustion: false, sets: createSets(3, '10-12'), repsRange: '10-12' },
+      { id: 302, name: 'Rosca Alternada', preExhaustion: false, sets: createSets(3, '12'), repsRange: '12' },
+      { id: 303, name: 'Tríceps Pulley', preExhaustion: false, sets: createSets(3, '12-15'), repsRange: '12-15' },
+      { id: 304, name: 'Tríceps Testa', preExhaustion: false, sets: createSets(3, '10-12'), repsRange: '10-12' },
+      { id: 305, name: 'Rosca Concentrada', preExhaustion: false, sets: createSets(3, '12'), repsRange: '12' },
+    ]
+  }
 ];
