@@ -29,34 +29,55 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Plus, ListOrdered, SquarePen, Combine, Save, History } from 'lucide-react';
+import { Plus, ListOrdered, SquarePen, Combine, Save, History, Dumbbell } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 
+type WorkoutState = {
+  data: Exercise[];
+  combinationTypes: Record<string, CombinationType>;
+};
+
 export default function Home() {
   const { toast } = useToast();
-  const [workoutData, setWorkoutData] = useState<Exercise[]>(initialWorkoutData);
-  const [combinationTypes, setCombinationTypes] = useState<Record<string, CombinationType>>({
-    'warmup': 'biset'
+  const [activeTab, setActiveTab] = useState('treino-a');
+  
+  // Estado inicial: Treino A com dados, demais vazios
+  const [workouts, setWorkouts] = useState<Record<string, WorkoutState>>({
+    'treino-a': { data: initialWorkoutData, combinationTypes: { 'warmup': 'biset' } },
+    'treino-b': { data: [], combinationTypes: {} },
+    'treino-c': { data: [], combinationTypes: {} },
+    'treino-d': { data: [], combinationTypes: {} },
   });
+
   const [isSorting, setIsSorting] = useState(false);
 
+  const currentWorkout = workouts[activeTab] || { data: [], combinationTypes: {} };
+
   const handleUpdateExercise = (updatedExercise: Exercise) => {
-    setWorkoutData((prevData) =>
-      prevData.map((ex) =>
-        ex.id === updatedExercise.id ? updatedExercise : ex
-      )
-    );
+    setWorkouts((prev) => ({
+      ...prev,
+      [activeTab]: {
+        ...prev[activeTab],
+        data: prev[activeTab].data.map((ex) =>
+          ex.id === updatedExercise.id ? updatedExercise : ex
+        ),
+      },
+    }));
   };
 
   const handleApplySetsToAll = (updatedSets: Set[]) => {
-    setWorkoutData((prevData) =>
-      prevData.map((ex) => ({
-        ...ex,
-        sets: updatedSets,
-        repsRange: updatedSets.find(s => s.type === 'trabalho')?.reps || ex.repsRange
-      }))
-    );
+    setWorkouts((prev) => ({
+      ...prev,
+      [activeTab]: {
+        ...prev[activeTab],
+        data: prev[activeTab].data.map((ex) => ({
+          ...ex,
+          sets: updatedSets,
+          repsRange: updatedSets.find(s => s.type === 'trabalho')?.reps || ex.repsRange
+        })),
+      },
+    }));
     toast({
       title: "Configuração aplicada",
       description: "As séries foram replicadas para todos os exercícios do treino.",
@@ -64,23 +85,53 @@ export default function Home() {
   };
 
   const handleApplySavedSession = (newData: Exercise[], newTypes: Record<string, CombinationType>) => {
-    setWorkoutData(newData);
-    setCombinationTypes(newTypes);
+    setWorkouts((prev) => ({
+      ...prev,
+      [activeTab]: { data: newData, combinationTypes: newTypes },
+    }));
+  };
+
+  const handleUpdateWorkoutData = (newData: Exercise[]) => {
+    setWorkouts((prev) => ({
+      ...prev,
+      [activeTab]: { ...prev[activeTab], data: newData },
+    }));
+  };
+
+  const handleUpdateCombinationTypes = (newTypes: Record<string, CombinationType>) => {
+    setWorkouts((prev) => ({
+      ...prev,
+      [activeTab]: { ...prev[activeTab], combinationTypes: newTypes },
+    }));
   };
   
   const processedExercises = () => {
     const elements: React.ReactNode[] = [];
     const renderedGroupIds = new Set<string>();
+    const { data, combinationTypes } = currentWorkout;
 
-    if (!Array.isArray(workoutData)) return elements;
+    if (!Array.isArray(data) || data.length === 0) {
+      return (
+        <TableBody>
+          <TableRow>
+            <TableCell colSpan={10} className="h-48 text-center text-muted-foreground">
+              <div className="flex flex-col items-center gap-3">
+                <Dumbbell className="h-8 w-8 opacity-20" />
+                <p className="font-medium">Nenhum exercício neste treino.<br/><span className="text-xs">Use as opções acima para adicionar ou carregar uma sessão.</span></p>
+              </div>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      );
+    }
 
-    workoutData.forEach((currentExercise) => {
+    data.forEach((currentExercise) => {
       if (currentExercise.groupId && renderedGroupIds.has(currentExercise.groupId)) {
         return;
       }
       
       if (currentExercise.groupId) {
-        const group = workoutData.filter(e => e.groupId === currentExercise.groupId);
+        const group = data.filter(e => e.groupId === currentExercise.groupId);
         const combinationType = combinationTypes[currentExercise.groupId];
         elements.push(
           <tbody key={`group-${currentExercise.groupId}`} className="relative border-b-0">
@@ -114,13 +165,152 @@ export default function Home() {
     return elements;
   };
 
+  const renderWorkoutContent = (tabId: string) => {
+    return (
+      <TabsContent value={tabId} className="mt-8 animate-in fade-in-50 duration-300">
+        <div className="flex flex-wrap items-center justify-between gap-6 mb-8">
+          <div className="flex flex-wrap items-center gap-6">
+            <h2 className="text-2xl font-black tracking-tight uppercase italic">{tabId.replace('-', ' ')}</h2>
+
+            <div className="flex flex-wrap items-center gap-4 md:gap-6">
+              <label className="flex items-center gap-2 text-sm font-semibold text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
+                <Checkbox id={`presencial-${tabId}`} className="rounded-sm border-muted-foreground/30" />
+                Presencial
+              </label>
+
+              <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
+                <SquarePen className="h-5 w-5 text-primary" />
+                Editar variáveis
+              </button>
+
+              <CombineExercisesDialog
+                exercises={currentWorkout.data}
+                onUpdateWorkout={handleUpdateWorkoutData}
+                combinationTypes={currentWorkout.combinationTypes}
+                onUpdateCombinationTypes={handleUpdateCombinationTypes}
+              >
+                <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
+                  <Combine className="h-6 w-6 text-primary" />
+                  Combinar
+                </button>
+              </CombineExercisesDialog>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-4 md:gap-8">
+            <SaveSessionDialog 
+              workoutData={currentWorkout.data} 
+              combinationTypes={currentWorkout.combinationTypes}
+            >
+              <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
+                <Save className="h-5 w-5 text-primary" />
+                Salvar sessão
+              </button>
+            </SaveSessionDialog>
+
+            <UseSavedSessionDialog onApplySession={handleApplySavedSession}>
+              <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
+                <History className="h-5 w-5 text-primary" />
+                Usar sessão salva
+              </button>
+            </UseSavedSessionDialog>
+          </div>
+        </div>
+        
+        {/* Desktop View */}
+        <div className="border rounded-2xl bg-card shadow-sm hidden md:block overflow-hidden w-full">
+          <Table className="w-full">
+            <TableHeader>
+              <TableRow className="hover:bg-transparent bg-muted/20 border-b-border text-[10px] uppercase tracking-wider font-black">
+                <TableHead className="w-[40px] px-2"></TableHead>
+                <TableHead className="min-w-[200px]">Exercício</TableHead>
+                <TableHead className="w-[110px]">Método</TableHead>
+                <TableHead className="w-[40px] text-center">Obs</TableHead>
+                <TableHead className="w-[45px] text-center">Série</TableHead>
+                <TableHead className="w-[45px] text-center">Reps</TableHead>
+                <TableHead className="w-[45px] text-center">Inter</TableHead>
+                <TableHead className="w-[45px] text-center">Cadê</TableHead>
+                <TableHead className="w-[40px] text-center">Status</TableHead>
+                <TableHead className="w-[40px]"></TableHead>
+              </TableRow>
+            </TableHeader>
+            {processedExercises()}
+          </Table>
+        </div>
+
+        {/* Mobile View */}
+        <div className="block md:hidden">
+          {currentWorkout.data.length > 0 ? (
+            <Accordion type="single" collapsible className="flex flex-col gap-3 w-full">
+              {currentWorkout.data.map((exercise) => (
+                <MobileExerciseCard
+                  key={exercise.id}
+                  exercise={exercise}
+                  onUpdateExercise={handleUpdateExercise}
+                  combinationType={exercise.groupId ? currentWorkout.combinationTypes[exercise.groupId] : undefined}
+                />
+              ))}
+            </Accordion>
+          ) : (
+            <div className="py-20 text-center border-2 border-dashed rounded-3xl opacity-40">
+              <Dumbbell className="h-10 w-10 mx-auto mb-3" />
+              <p className="text-sm font-bold uppercase tracking-widest">Treino Vazio</p>
+            </div>
+          )}
+        </div>
+
+        {/* Action Buttons and Observations */}
+        <div className="mt-10 space-y-8 w-full">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button className="bg-[#009688] hover:bg-[#00796b] text-white rounded-xl px-8 h-14 font-black gap-3 shadow-lg shadow-teal-500/10 border-none">
+                  <Plus className="h-6 w-6" />
+                  ADICIONAR EXERCÍCIO
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-64 rounded-xl p-2 shadow-xl border-border/40">
+                <DropdownMenuItem className="rounded-lg p-4 cursor-pointer font-medium">Protocolo aeróbico</DropdownMenuItem>
+                <DropdownMenuItem className="rounded-lg p-4 cursor-pointer font-medium">Hiit</DropdownMenuItem>
+                <DropdownMenuItem className="rounded-lg p-4 cursor-pointer font-medium">Exercício</DropdownMenuItem>
+                <DropdownMenuItem className="rounded-lg p-4 cursor-pointer font-medium">Aquecimento</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <Button 
+              variant="outline" 
+              className={cn(
+                "rounded-xl px-8 h-14 font-black gap-3 shadow-sm border-border bg-card transition-all active:scale-95",
+                isSorting && "border-primary text-primary bg-primary/5"
+              )}
+              onClick={() => setIsSorting(!isSorting)}
+            >
+              <ListOrdered className="h-6 w-6" />
+              ORDENAR LISTA
+            </Button>
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="text-xl font-black tracking-tight text-foreground ml-1 uppercase italic">Observações {tabId.replace('treino-', 'Treino ').toUpperCase()}:</h2>
+            <div className="rounded-2xl border bg-card shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-primary/20 transition-all border-border/40">
+              <Textarea 
+                placeholder="Ao final do treino escreva a duração no campo de feedback..." 
+                className="min-h-[160px] border-none shadow-none resize-none focus-visible:ring-0 p-6 text-base font-medium leading-relaxed bg-transparent"
+              />
+            </div>
+          </div>
+        </div>
+      </TabsContent>
+    );
+  };
+
   return (
     <div className="app-container py-8 text-foreground transition-all duration-300">
       <div className="flex flex-col lg:flex-row gap-8 items-start w-full">
         <main className="flex-1 min-w-0 w-full space-y-8">
           <TrainingPlanHeader />
           <TrainingSplit />
-          <Tabs defaultValue="treino-a" className="w-full">
+          <Tabs defaultValue="treino-a" onValueChange={setActiveTab} className="w-full">
             <div className="flex justify-between items-center border-b border-border/40 overflow-x-auto no-scrollbar">
               <TabsList className="bg-transparent p-0 h-auto gap-2 min-w-max">
                 {['A', 'B', 'C', 'D'].map((letter) => (
@@ -134,131 +324,7 @@ export default function Home() {
                 ))}
               </TabsList>
             </div>
-            <TabsContent value="treino-a" className="mt-8">
-              <div className="flex flex-wrap items-center justify-between gap-6 mb-8">
-                <div className="flex flex-wrap items-center gap-6">
-                  <h2 className="text-2xl font-black tracking-tight uppercase italic">TREINO A</h2>
-
-                  <div className="flex flex-wrap items-center gap-4 md:gap-6">
-                    <label className="flex items-center gap-2 text-sm font-semibold text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
-                      <Checkbox id="presencial" className="rounded-sm border-muted-foreground/30" />
-                      Presencial
-                    </label>
-
-                    <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
-                      <SquarePen className="h-5 w-5 text-primary" />
-                      Editar variáveis
-                    </button>
-
-                    <CombineExercisesDialog
-                      exercises={workoutData}
-                      onUpdateWorkout={setWorkoutData}
-                      combinationTypes={combinationTypes}
-                      onUpdateCombinationTypes={setCombinationTypes}
-                    >
-                      <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
-                        <Combine className="h-6 w-6 text-primary" />
-                        Combinar
-                      </button>
-                    </CombineExercisesDialog>
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-4 md:gap-8">
-                  <SaveSessionDialog workoutData={workoutData} combinationTypes={combinationTypes}>
-                    <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
-                      <Save className="h-5 w-5 text-primary" />
-                      Salvar sessão
-                    </button>
-                  </SaveSessionDialog>
-
-                  <UseSavedSessionDialog onApplySession={handleApplySavedSession}>
-                    <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
-                      <History className="h-5 w-5 text-primary" />
-                      Usar sessão salva
-                    </button>
-                  </UseSavedSessionDialog>
-                </div>
-              </div>
-              
-              {/* Desktop View */}
-              <div className="border rounded-2xl bg-card shadow-sm hidden md:block overflow-hidden w-full">
-                <Table className="w-full">
-                  <TableHeader>
-                    <TableRow className="hover:bg-transparent bg-muted/20 border-b-border text-[10px] uppercase tracking-wider font-black">
-                      <TableHead className="w-[40px] px-2"></TableHead>
-                      <TableHead className="min-w-[200px]">Exercício</TableHead>
-                      <TableHead className="w-[110px]">Método</TableHead>
-                      <TableHead className="w-[40px] text-center">Obs</TableHead>
-                      <TableHead className="w-[45px] text-center">Série</TableHead>
-                      <TableHead className="w-[45px] text-center">Reps</TableHead>
-                      <TableHead className="w-[45px] text-center">Inter</TableHead>
-                      <TableHead className="w-[45px] text-center">Cadê</TableHead>
-                      <TableHead className="w-[40px] text-center">Status</TableHead>
-                      <TableHead className="w-[40px]"></TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  {processedExercises()}
-                </Table>
-              </div>
-
-              {/* Mobile View */}
-              <div className="block md:hidden">
-                <Accordion type="single" collapsible className="flex flex-col gap-3 w-full">
-                  {Array.isArray(workoutData) && workoutData.map((exercise) => (
-                    <MobileExerciseCard
-                      key={exercise.id}
-                      exercise={exercise}
-                      onUpdateExercise={handleUpdateExercise}
-                      combinationType={exercise.groupId ? combinationTypes[exercise.groupId] : undefined}
-                    />
-                  ))}
-                </Accordion>
-              </div>
-
-              {/* Action Buttons and Observations */}
-              <div className="mt-10 space-y-8 w-full">
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button className="bg-[#009688] hover:bg-[#00796b] text-white rounded-xl px-8 h-14 font-black gap-3 shadow-lg shadow-teal-500/10 border-none">
-                        <Plus className="h-6 w-6" />
-                        ADICIONAR EXERCÍCIO
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start" className="w-64 rounded-xl p-2 shadow-xl border-border/40">
-                      <DropdownMenuItem className="rounded-lg p-4 cursor-pointer font-medium">Protocolo aeróbico</DropdownMenuItem>
-                      <DropdownMenuItem className="rounded-lg p-4 cursor-pointer font-medium">Hiit</DropdownMenuItem>
-                      <DropdownMenuItem className="rounded-lg p-4 cursor-pointer font-medium">Exercício</DropdownMenuItem>
-                      <DropdownMenuItem className="rounded-lg p-4 cursor-pointer font-medium">Aquecimento</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-
-                  <Button 
-                    variant="outline" 
-                    className={cn(
-                      "rounded-xl px-8 h-14 font-black gap-3 shadow-sm border-border bg-card transition-all active:scale-95",
-                      isSorting && "border-primary text-primary bg-primary/5"
-                    )}
-                    onClick={() => setIsSorting(!isSorting)}
-                  >
-                    <ListOrdered className="h-6 w-6" />
-                    ORDENAR LISTA
-                  </Button>
-                </div>
-
-                <div className="space-y-4">
-                  <h2 className="text-xl font-black tracking-tight text-foreground ml-1 uppercase italic">Observações Treino A:</h2>
-                  <div className="rounded-2xl border bg-card shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-primary/20 transition-all border-border/40">
-                    <Textarea 
-                      placeholder="Ao final do treino escreva a duração no campo de feedback..." 
-                      className="min-h-[160px] border-none shadow-none resize-none focus-visible:ring-0 p-6 text-base font-medium leading-relaxed bg-transparent"
-                    />
-                  </div>
-                </div>
-              </div>
-
-            </TabsContent>
+            {['a', 'b', 'c', 'd'].map(l => renderWorkoutContent(`treino-${l}`))}
           </Tabs>
         </main>
         
