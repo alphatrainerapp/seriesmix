@@ -10,6 +10,13 @@ import {
   DialogFooter,
   DialogDescription,
 } from '@/components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Save, Folder } from 'lucide-react';
@@ -96,32 +103,31 @@ export function SaveSessionDialog({
               placeholder="Ex: Treino A - Hipertrofia"
               value={sessionName}
               onChange={(e) => setSessionName(e.target.value)}
-              className="h-12 rounded-xl bg-muted/30 border-none font-bold focus-visible:ring-primary/30"
+              className="h-12 rounded-xl bg-muted/30 border-none font-bold focus-visible:ring-primary/30 text-sm"
               autoFocus
             />
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-1.5">
             <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">
               Selecionar Pasta
             </label>
-            <div className="grid grid-cols-2 gap-2">
-              {['Geral', ...PREDEFINED_FOLDERS].map((folder) => (
-                <button
-                  key={folder}
-                  onClick={() => setSelectedFolder(folder)}
-                  className={cn(
-                    "h-10 px-4 rounded-xl text-[11px] font-bold uppercase tracking-tight border transition-all flex items-center justify-center gap-2",
-                    selectedFolder === folder
-                      ? "bg-primary text-white border-primary shadow-lg shadow-primary/20"
-                      : "bg-muted/30 text-muted-foreground border-transparent hover:bg-muted/50"
-                  )}
-                >
-                  <Folder className={cn("h-3.5 w-3.5", selectedFolder === folder ? "text-white" : "text-primary")} />
-                  {folder}
-                </button>
-              ))}
-            </div>
+            <Select value={selectedFolder} onValueChange={setSelectedFolder}>
+              <SelectTrigger className="h-12 rounded-xl bg-muted/30 border-none font-bold focus:ring-primary/30 text-[11px] uppercase tracking-widest px-4">
+                <div className="flex items-center gap-2">
+                  <Folder className="h-4 w-4 text-primary" />
+                  <SelectValue placeholder="Escolha uma pasta" />
+                </div>
+              </SelectTrigger>
+              <SelectContent className="rounded-xl border-border/40">
+                <SelectItem value="Geral" className="font-black uppercase text-[10px] tracking-widest p-3">Geral</SelectItem>
+                {PREDEFINED_FOLDERS.map((folder) => (
+                  <SelectItem key={folder} value={folder} className="font-black uppercase text-[10px] tracking-widest p-3">
+                    {folder}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
