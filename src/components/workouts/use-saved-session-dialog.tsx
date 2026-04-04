@@ -86,7 +86,7 @@ export function UseSavedSessionDialog({
             Minhas Sessões Salvas
           </DialogTitle>
           <DialogDescription>
-            Busque por nome ou filtre por pasta para carregar seu treino.
+            Busque por nome ou filtre por categoria para carregar seu treino.
           </DialogDescription>
         </DialogHeader>
 
@@ -94,7 +94,7 @@ export function UseSavedSessionDialog({
           <div className="relative group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
             <Input
-              placeholder="Digite o nome do treino..."
+              placeholder="Buscar treino salvo..."
               className="h-12 pl-10 rounded-xl bg-muted/30 border-none font-bold focus-visible:ring-primary/30"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -120,7 +120,7 @@ export function UseSavedSessionDialog({
                 className={cn(
                   "px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all flex items-center gap-2",
                   selectedFolder === folder 
-                    ? "bg-primary text-white border-primary" 
+                    ? "bg-primary text-white border-primary shadow-md shadow-primary/10" 
                     : "bg-muted/50 text-muted-foreground border-transparent hover:bg-muted"
                 )}
               >
@@ -138,11 +138,11 @@ export function UseSavedSessionDialog({
                 <div
                   key={session.id}
                   onClick={() => handleApply(session)}
-                  className="group relative flex items-center justify-between p-4 rounded-2xl border bg-muted/10 hover:bg-primary/5 hover:border-primary/30 transition-all cursor-pointer shadow-sm active:scale-[0.98]"
+                  className="group relative flex items-center justify-between p-4 rounded-2xl border border-border/40 bg-muted/10 hover:bg-primary/5 hover:border-primary/30 transition-all cursor-pointer shadow-sm active:scale-[0.98]"
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[10px] font-black text-primary uppercase tracking-widest bg-primary/10 px-2 py-0.5 rounded-md">
+                      <span className="text-[9px] font-black text-primary uppercase tracking-widest bg-primary/10 px-2 py-0.5 rounded-md border border-primary/10">
                         {session.folder || 'Geral'}
                       </span>
                     </div>
