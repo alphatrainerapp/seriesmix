@@ -27,7 +27,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Plus, ListOrdered, SquarePen, Combine } from 'lucide-react';
+import { Plus, ListOrdered, SquarePen, Combine, Save, History } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 
@@ -128,31 +128,45 @@ export default function Home() {
               </TabsList>
             </div>
             <TabsContent value="treino-a" className="mt-8">
-              <div className="flex flex-wrap items-center gap-6 mb-8">
-                <h2 className="text-2xl font-black tracking-tight uppercase italic">TREINO A</h2>
+              <div className="flex flex-wrap items-center justify-between gap-6 mb-8">
+                <div className="flex flex-wrap items-center gap-6">
+                  <h2 className="text-2xl font-black tracking-tight uppercase italic">TREINO A</h2>
 
-                <div className="flex flex-wrap items-center gap-4 md:gap-6">
-                  <label className="flex items-center gap-2 text-sm font-semibold text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
-                    <Checkbox id="presencial" className="rounded-sm border-muted-foreground/30" />
-                    Presencial
-                  </label>
+                  <div className="flex flex-wrap items-center gap-4 md:gap-6">
+                    <label className="flex items-center gap-2 text-sm font-semibold text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
+                      <Checkbox id="presencial" className="rounded-sm border-muted-foreground/30" />
+                      Presencial
+                    </label>
 
+                    <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
+                      <SquarePen className="h-5 w-5 text-primary" />
+                      Editar variáveis
+                    </button>
+
+                    <CombineExercisesDialog
+                      exercises={workoutData}
+                      onUpdateWorkout={setWorkoutData}
+                      combinationTypes={combinationTypes}
+                      onUpdateCombinationTypes={setCombinationTypes}
+                    >
+                      <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
+                        <Combine className="h-6 w-6 text-primary" />
+                        Combinar
+                      </button>
+                    </CombineExercisesDialog>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-4 md:gap-8">
                   <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
-                    <SquarePen className="h-5 w-5 text-primary" />
-                    Editar variáveis
+                    <Save className="h-5 w-5 text-primary" />
+                    Salvar sessão
                   </button>
 
-                  <CombineExercisesDialog
-                    exercises={workoutData}
-                    onUpdateWorkout={setWorkoutData}
-                    combinationTypes={combinationTypes}
-                    onUpdateCombinationTypes={setCombinationTypes}
-                  >
-                    <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
-                      <Combine className="h-6 w-6 text-primary" />
-                      Combinar
-                    </button>
-                  </CombineExercisesDialog>
+                  <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
+                    <History className="h-5 w-5 text-primary" />
+                    Usar sessão salva
+                  </button>
                 </div>
               </div>
               
@@ -237,7 +251,7 @@ export default function Home() {
           </Tabs>
         </main>
         
-        <aside className="w-full lg:w-[320px] xl:w-[380px] space-y-8 shrink-0">
+        <aside className="w-full lg:w-[320px] xl:w-[380px] space-y-6 shrink-0">
           <PageSidebar />
         </aside>
       </div>
