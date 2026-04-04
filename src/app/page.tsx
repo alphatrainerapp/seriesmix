@@ -21,6 +21,8 @@ import type { CombinationType, Exercise, Set } from '@/lib/types';
 import { MobileExerciseCard } from '@/components/workouts/mobile-exercise-card';
 import { Accordion } from '@/components/ui/accordion';
 import { CombineExercisesDialog } from '@/components/workouts/combine-exercises-dialog';
+import { SaveSessionDialog } from '@/components/workouts/save-session-dialog';
+import { UseSavedSessionDialog } from '@/components/workouts/use-saved-session-dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -59,6 +61,11 @@ export default function Home() {
       title: "Configuração aplicada",
       description: "As séries foram replicadas para todos os exercícios do treino.",
     });
+  };
+
+  const handleApplySavedSession = (newData: Exercise[], newTypes: Record<string, CombinationType>) => {
+    setWorkoutData(newData);
+    setCombinationTypes(newTypes);
   };
   
   const processedExercises = () => {
@@ -158,15 +165,19 @@ export default function Home() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-4 md:gap-8">
-                  <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
-                    <Save className="h-5 w-5 text-primary" />
-                    Salvar sessão
-                  </button>
+                  <SaveSessionDialog workoutData={workoutData} combinationTypes={combinationTypes}>
+                    <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
+                      <Save className="h-5 w-5 text-primary" />
+                      Salvar sessão
+                    </button>
+                  </SaveSessionDialog>
 
-                  <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
-                    <History className="h-5 w-5 text-primary" />
-                    Usar sessão salva
-                  </button>
+                  <UseSavedSessionDialog onApplySession={handleApplySavedSession}>
+                    <button className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
+                      <History className="h-5 w-5 text-primary" />
+                      Usar sessão salva
+                    </button>
+                  </UseSavedSessionDialog>
                 </div>
               </div>
               
