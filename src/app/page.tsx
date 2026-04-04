@@ -52,26 +52,27 @@ export default function Home() {
 
   const [isSorting, setIsSorting] = useState(false);
 
+  // Deriva o treino atual baseado na aba ativa para uso em handlers genéricos
   const currentWorkout = workouts[activeTab] || { data: [], combinationTypes: {} };
 
-  const handleUpdateExercise = (updatedExercise: Exercise) => {
+  const handleUpdateExercise = (updatedExercise: Exercise, tabId: string) => {
     setWorkouts((prev) => ({
       ...prev,
-      [activeTab]: {
-        ...prev[activeTab],
-        data: prev[activeTab].data.map((ex) =>
+      [tabId]: {
+        ...prev[tabId],
+        data: prev[tabId].data.map((ex) =>
           ex.id === updatedExercise.id ? updatedExercise : ex
         ),
       },
     }));
   };
 
-  const handleApplySetsToAll = (updatedSets: Set[]) => {
+  const handleApplySetsToAll = (updatedSets: Set[], tabId: string) => {
     setWorkouts((prev) => ({
       ...prev,
-      [activeTab]: {
-        ...prev[activeTab],
-        data: prev[activeTab].data.map((ex) => ({
+      [tabId]: {
+        ...prev[tabId],
+        data: prev[tabId].data.map((ex) => ({
           ...ex,
           sets: updatedSets,
           repsRange: updatedSets.find(s => s.type === 'trabalho')?.reps || ex.repsRange
@@ -91,24 +92,24 @@ export default function Home() {
     }));
   };
 
-  const handleUpdateWorkoutData = (newData: Exercise[]) => {
+  const handleUpdateWorkoutData = (newData: Exercise[], tabId: string) => {
     setWorkouts((prev) => ({
       ...prev,
-      [activeTab]: { ...prev[activeTab], data: newData },
+      [tabId]: { ...prev[tabId], data: newData },
     }));
   };
 
-  const handleUpdateCombinationTypes = (newTypes: Record<string, CombinationType>) => {
+  const handleUpdateCombinationTypes = (newTypes: Record<string, CombinationType>, tabId: string) => {
     setWorkouts((prev) => ({
       ...prev,
-      [activeTab]: { ...prev[activeTab], combinationTypes: newTypes },
+      [tabId]: { ...prev[tabId], combinationTypes: newTypes },
     }));
   };
   
-  const processedExercises = () => {
+  const processedExercises = (tabId: string) => {
     const elements: React.ReactNode[] = [];
     const renderedGroupIds = new Set<string>();
-    const { data, combinationTypes } = currentWorkout;
+    const { data, combinationTypes } = workouts[tabId] || { data: [], combinationTypes: {} };
 
     if (!Array.isArray(data) || data.length === 0) {
       return (
@@ -140,8 +141,8 @@ export default function Home() {
                 <ExerciseCard
                   key={exercise.id}
                   exercise={exercise}
-                  onUpdateExercise={handleUpdateExercise}
-                  onApplySetsToAll={handleApplySetsToAll}
+                  onUpdateExercise={(ex) => handleUpdateExercise(ex, tabId)}
+                  onApplySetsToAll={(sets) => handleApplySetsToAll(sets, tabId)}
                   isFirstInGroup={idx === 0}
                   isLastInGroup={idx === group.length - 1}
                   isGrouped={group.length > 1}
@@ -156,8 +157,8 @@ export default function Home() {
           <tbody key={currentExercise.id}>
             <ExerciseCard
               exercise={currentExercise}
-              onUpdateExercise={handleUpdateExercise}
-              onApplySetsToAll={handleApplySetsToAll}
+              onUpdateExercise={(ex) => handleUpdateExercise(ex, tabId)}
+              onApplySetsToAll={(sets) => handleApplySetsToAll(sets, tabId)}
             />
           </tbody>
         );
@@ -167,8 +168,10 @@ export default function Home() {
   };
 
   const renderWorkoutContent = (tabId: string) => {
+    const workout = workouts[tabId] || { data: [], combinationTypes: {} };
+    
     return (
-      <TabsContent value={tabId} className="mt-8 animate-in fade-in-50 duration-500">
+      <TabsContent value={tabId} key={tabId} className="mt-8 animate-in fade-in-50 duration-500">
         <div className="flex flex-wrap items-center justify-between gap-6 mb-8">
           <div className="flex flex-wrap items-center gap-6">
             <h2 className="text-2xl font-black tracking-tighter uppercase italic">{tabId.replace('-', ' ')}</h2>
@@ -185,10 +188,10 @@ export default function Home() {
               </button>
 
               <CombineExercisesDialog
-                exercises={currentWorkout.data}
-                onUpdateWorkout={handleUpdateWorkoutData}
-                combinationTypes={currentWorkout.combinationTypes}
-                onUpdateCombinationTypes={handleUpdateCombinationTypes}
+                exercises={workout.data}
+                onUpdateWorkout={(newData) => handleUpdateWorkoutData(newData, tabId)}
+                combinationTypes={workout.combinationTypes}
+                onUpdateCombinationTypes={(newTypes) => handleUpdateCombinationTypes(newTypes, tabId)}
               >
                 <button className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">
                   <Combine className="h-5 w-5 text-primary" />
@@ -200,8 +203,8 @@ export default function Home() {
 
           <div className="flex flex-wrap items-center gap-4 md:gap-8">
             <SaveSessionDialog 
-              workoutData={currentWorkout.data} 
-              combinationTypes={currentWorkout.combinationTypes}
+              workoutData={workout.data} 
+              combinationTypes={workout.combinationTypes}
             >
               <button className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">
                 <Save className="h-5 w-5 text-primary" />
@@ -235,20 +238,20 @@ export default function Home() {
                 <TableHead className="w-[45px]"></TableHead>
               </TableRow>
             </TableHeader>
-            {processedExercises()}
+            {processedExercises(tabId)}
           </Table>
         </div>
 
         {/* Mobile View */}
         <div className="block md:hidden">
-          {currentWorkout.data.length > 0 ? (
+          {workout.data.length > 0 ? (
             <Accordion type="single" collapsible className="flex flex-col gap-3 w-full">
-              {currentWorkout.data.map((exercise) => (
+              {workout.data.map((exercise) => (
                 <MobileExerciseCard
                   key={exercise.id}
                   exercise={exercise}
-                  onUpdateExercise={handleUpdateExercise}
-                  combinationType={exercise.groupId ? currentWorkout.combinationTypes[exercise.groupId] : undefined}
+                  onUpdateExercise={(ex) => handleUpdateExercise(ex, tabId)}
+                  combinationType={exercise.groupId ? workout.combinationTypes[exercise.groupId] : undefined}
                 />
               ))}
             </Accordion>
@@ -311,7 +314,7 @@ export default function Home() {
         <main className="flex-1 min-w-0 w-full space-y-8">
           <TrainingPlanHeader />
           <TrainingSplit />
-          <Tabs defaultValue="treino-a" onValueChange={setActiveTab} className="w-full">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <div className="flex justify-between items-center border-b border-border/40 overflow-x-auto no-scrollbar">
               <TabsList className="bg-transparent p-0 h-auto gap-2 min-w-max">
                 {['A', 'B', 'C', 'D', 'E'].map((letter) => (
