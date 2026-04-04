@@ -1,3 +1,4 @@
+
 'use client';
 import {
   Table,
@@ -16,7 +17,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { TrainingPlanHeader } from '@/components/plan/training-plan-header';
 import { TrainingSplit } from '@/components/plan/training-split';
 import { PageSidebar } from '@/components/sidebar/page-sidebar';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import type { CombinationType, Exercise, Set } from '@/lib/types';
 import { MobileExerciseCard } from '@/components/workouts/mobile-exercise-card';
 import { Accordion } from '@/components/ui/accordion';
@@ -52,9 +53,6 @@ export default function Home() {
 
   const [isSorting, setIsSorting] = useState(false);
 
-  // Deriva o treino atual baseado na aba ativa para uso em handlers genéricos
-  const currentWorkout = workouts[activeTab] || { data: [], combinationTypes: {} };
-
   const handleUpdateExercise = (updatedExercise: Exercise, tabId: string) => {
     setWorkouts((prev) => ({
       ...prev,
@@ -85,10 +83,10 @@ export default function Home() {
     });
   };
 
-  const handleApplySavedSession = (newData: Exercise[], newTypes: Record<string, CombinationType>) => {
+  const handleApplySavedSession = (newData: Exercise[], newTypes: Record<string, CombinationType>, tabId: string) => {
     setWorkouts((prev) => ({
       ...prev,
-      [activeTab]: { data: newData, combinationTypes: newTypes },
+      [tabId]: { data: newData, combinationTypes: newTypes },
     }));
   };
 
@@ -136,10 +134,10 @@ export default function Home() {
         const group = data.filter(e => e.groupId === currentExercise.groupId);
         const combinationType = combinationTypes[currentExercise.groupId];
         elements.push(
-          <tbody key={`group-${currentExercise.groupId}`} className="relative border-b-0">
+          <tbody key={`group-${currentExercise.groupId}-${tabId}`} className="relative border-b-0">
              {group.map((exercise, idx) => (
                 <ExerciseCard
-                  key={exercise.id}
+                  key={`${exercise.id}-${tabId}`}
                   exercise={exercise}
                   onUpdateExercise={(ex) => handleUpdateExercise(ex, tabId)}
                   onApplySetsToAll={(sets) => handleApplySetsToAll(sets, tabId)}
@@ -154,7 +152,7 @@ export default function Home() {
         renderedGroupIds.add(currentExercise.groupId);
       } else {
         elements.push(
-          <tbody key={currentExercise.id}>
+          <tbody key={`${currentExercise.id}-${tabId}`}>
             <ExerciseCard
               exercise={currentExercise}
               onUpdateExercise={(ex) => handleUpdateExercise(ex, tabId)}
@@ -171,7 +169,7 @@ export default function Home() {
     const workout = workouts[tabId] || { data: [], combinationTypes: {} };
     
     return (
-      <TabsContent value={tabId} key={tabId} className="mt-8 animate-in fade-in-50 duration-500">
+      <TabsContent value={tabId} key={`content-${tabId}`} className="mt-8 animate-in fade-in-50 duration-500">
         <div className="flex flex-wrap items-center justify-between gap-6 mb-8">
           <div className="flex flex-wrap items-center gap-6">
             <h2 className="text-2xl font-black tracking-tighter uppercase italic">{tabId.replace('-', ' ')}</h2>
@@ -212,7 +210,7 @@ export default function Home() {
               </button>
             </SaveSessionDialog>
 
-            <UseSavedSessionDialog onApplySession={handleApplySavedSession}>
+            <UseSavedSessionDialog onApplySession={(data, types) => handleApplySavedSession(data, types, tabId)}>
               <button className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">
                 <History className="h-5 w-5 text-primary" />
                 Usar sessão salva
@@ -248,7 +246,7 @@ export default function Home() {
             <Accordion type="single" collapsible className="flex flex-col gap-3 w-full">
               {workout.data.map((exercise) => (
                 <MobileExerciseCard
-                  key={exercise.id}
+                  key={`${exercise.id}-mobile-${tabId}`}
                   exercise={exercise}
                   onUpdateExercise={(ex) => handleUpdateExercise(ex, tabId)}
                   combinationType={exercise.groupId ? workout.combinationTypes[exercise.groupId] : undefined}
@@ -319,7 +317,7 @@ export default function Home() {
               <TabsList className="bg-transparent p-0 h-auto gap-2 min-w-max">
                 {['A', 'B', 'C', 'D', 'E'].map((letter) => (
                   <TabsTrigger
-                    key={letter}
+                    key={`trigger-${letter}`}
                     value={`treino-${letter.toLowerCase()}`}
                     className="data-[state=active]:border-primary data-[state=active]:text-primary border-b-2 border-transparent rounded-none px-8 py-4 font-black text-xs uppercase tracking-[0.2em] transition-all bg-transparent shadow-none"
                   >
