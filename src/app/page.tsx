@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { mockWorkout as initialWorkoutData } from '@/lib/data';
 import { ExerciseCard } from '@/components/workouts/exercise-card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -17,7 +17,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { TrainingPlanHeader } from '@/components/plan/training-plan-header';
 import { TrainingSplit } from '@/components/plan/training-split';
-import { useState, useCallback, memo } from 'react';
+import { useState, useCallback, memo, useMemo } from 'react';
 import type { CombinationType, Exercise, Set } from '@/lib/types';
 import { MobileExerciseCard } from '@/components/workouts/mobile-exercise-card';
 import { Accordion } from '@/components/ui/accordion';
@@ -40,8 +40,8 @@ type WorkoutState = {
   combinationTypes: Record<string, CombinationType>;
 };
 
-// Componente isolado para o conteúdo de cada aba de treino
-// Isso evita que o re-render de uma aba trave a aplicação inteira
+// Componente isolado para o conteúdo do treino
+// Fora do Home para evitar re-criação da definição do componente
 const WorkoutTabContent = memo(({ 
   tabId, 
   workout, 
@@ -354,22 +354,18 @@ export default function Home() {
               </TabsList>
             </div>
 
-            {['a', 'b', 'c', 'd', 'e'].map((letter) => {
-              const tabId = `treino-${letter}`;
-              return (
-                <TabsContent key={tabId} value={tabId}>
-                  <WorkoutTabContent 
-                    tabId={tabId}
-                    workout={workouts[tabId]}
-                    onUpdateExercise={handleUpdateExercise}
-                    onApplySetsToAll={handleApplySetsToAll}
-                    onApplySavedSession={handleApplySavedSession}
-                    onUpdateWorkoutData={handleUpdateWorkoutData}
-                    onUpdateCombinationTypes={handleUpdateCombinationTypes}
-                  />
-                </TabsContent>
-              );
-            })}
+            {/* Renderiza apenas o conteúdo da aba ATIVA para evitar travamentos e loops de estado */}
+            <div className="w-full">
+              <WorkoutTabContent 
+                tabId={activeTab}
+                workout={workouts[activeTab]}
+                onUpdateExercise={handleUpdateExercise}
+                onApplySetsToAll={handleApplySetsToAll}
+                onApplySavedSession={handleApplySavedSession}
+                onUpdateWorkoutData={handleUpdateWorkoutData}
+                onUpdateCombinationTypes={handleUpdateCombinationTypes}
+              />
+            </div>
           </Tabs>
         </main>
         
