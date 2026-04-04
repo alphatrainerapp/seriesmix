@@ -10,7 +10,8 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { History, Calendar, Trash2, ChevronRight, Dumbbell } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { History, Calendar, Trash2, ChevronRight, Dumbbell, Folder, Search } from 'lucide-react';
 import type { SavedSession, Exercise, CombinationType } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -25,6 +26,8 @@ export function UseSavedSessionDialog({
 }) {
   const [open, setOpen] = React.useState(false);
   const [sessions, setSessions] = React.useState<SavedSession[]>([]);
+  const [search, setSearch] = React.useState('');
+  const [selectedFolder, setSelectedFolder] = React.useState<string | null>(null);
   const { toast } = useToast();
 
   const loadSessions = React.useCallback(() => {
@@ -39,6 +42,19 @@ export function UseSavedSessionDialog({
       loadSessions();
     }
   }, [open, loadSessions]);
+
+  const folders = React.useMemo(() => {
+    const uniqueFolders = Array.from(new Set(sessions.map(s => s.folder || 'Geral')));
+    return uniqueFolders.sort();
+  }, [sessions]);
+
+  const filteredSessions = React.useMemo(() => {
+    return sessions.filter((session) => {
+      const matchesSearch = session.name.toLowerCase().includes(search.toLowerCase());
+      const matchesFolder = !selectedFolder || (session.folder || 'Geral') === selectedFolder;
+      return matchesSearch && matchesFolder;
+    });
+  }, [sessions, search, selectedFolder]);
 
   const handleApply = (session: SavedSession) => {
     onApplySession(session.workoutData, session.combinationTypes);
@@ -63,28 +79,74 @@ export function UseSavedSessionDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-lg bg-card rounded-2xl border-none shadow-2xl p-0 gap-0 overflow-hidden">
+      <DialogContent className="sm:max-w-xl bg-card rounded-2xl border-none shadow-2xl p-0 gap-0 overflow-hidden">
         <DialogHeader className="p-6 pb-2">
           <DialogTitle className="text-xl font-black uppercase tracking-tighter italic flex items-center gap-2">
             <History className="h-5 w-5 text-primary" />
             Minhas Sessões Salvas
           </DialogTitle>
           <DialogDescription>
-            Escolha um treino salvo para aplicar na sessão atual.
+            Busque por nome ou filtre por pasta para carregar seu treino.
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="h-[400px] px-6 pb-6 mt-4">
-          <div className="space-y-3">
-            {sessions.length > 0 ? (
-              sessions.map((session) => (
+        <div className="px-6 py-4 space-y-4">
+          <div className="relative group">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            <Input
+              placeholder="Digite o nome do treino..."
+              className="h-12 pl-10 rounded-xl bg-muted/30 border-none font-bold focus-visible:ring-primary/30"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={() => setSelectedFolder(null)}
+              className={cn(
+                "px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all",
+                !selectedFolder 
+                  ? "bg-primary text-white border-primary" 
+                  : "bg-muted/50 text-muted-foreground border-transparent hover:bg-muted"
+              )}
+            >
+              Todas
+            </button>
+            {folders.map(folder => (
+              <button
+                key={folder}
+                onClick={() => setSelectedFolder(folder)}
+                className={cn(
+                  "px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all flex items-center gap-2",
+                  selectedFolder === folder 
+                    ? "bg-primary text-white border-primary" 
+                    : "bg-muted/50 text-muted-foreground border-transparent hover:bg-muted"
+                )}
+              >
+                <Folder className="h-3 w-3" />
+                {folder}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <ScrollArea className="h-[350px] px-6 pb-6">
+          <div className="space-y-3 pb-4">
+            {filteredSessions.length > 0 ? (
+              filteredSessions.map((session) => (
                 <div
                   key={session.id}
                   onClick={() => handleApply(session)}
-                  className="group relative flex items-center justify-between p-4 rounded-2xl border bg-muted/20 hover:bg-primary/5 hover:border-primary/30 transition-all cursor-pointer shadow-sm active:scale-[0.98]"
+                  className="group relative flex items-center justify-between p-4 rounded-2xl border bg-muted/10 hover:bg-primary/5 hover:border-primary/30 transition-all cursor-pointer shadow-sm active:scale-[0.98]"
                 >
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-black text-foreground truncate uppercase italic tracking-tight mb-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-[10px] font-black text-primary uppercase tracking-widest bg-primary/10 px-2 py-0.5 rounded-md">
+                        {session.folder || 'Geral'}
+                      </span>
+                    </div>
+                    <h4 className="font-black text-foreground truncate uppercase italic tracking-tight mb-1 text-base">
                       {session.name}
                     </h4>
                     <div className="flex items-center gap-3 text-muted-foreground">
@@ -103,10 +165,10 @@ export function UseSavedSessionDialog({
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-8 w-8 text-destructive/40 hover:text-destructive hover:bg-destructive/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="h-9 w-9 text-destructive/40 hover:text-destructive hover:bg-destructive/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
                       onClick={(e) => handleDelete(e, session.id)}
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 className="h-5 w-5" />
                     </Button>
                     <ChevronRight className="h-5 w-5 text-muted-foreground/30 group-hover:text-primary transition-colors" />
                   </div>
@@ -114,8 +176,10 @@ export function UseSavedSessionDialog({
               ))
             ) : (
               <div className="py-12 text-center space-y-3">
-                <History className="h-12 w-12 text-muted-foreground/20 mx-auto" />
-                <p className="text-sm text-muted-foreground font-medium">Você ainda não salvou nenhuma sessão.</p>
+                <Search className="h-12 w-12 text-muted-foreground/20 mx-auto" />
+                <p className="text-sm text-muted-foreground font-medium">
+                  {search || selectedFolder ? "Nenhuma sessão corresponde aos filtros." : "Você ainda não possui sessões salvas."}
+                </p>
               </div>
             )}
           </div>

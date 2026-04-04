@@ -24,6 +24,7 @@ export type CombinationType = 'biset' | 'triset' | 'superserie' | 'hiit';
 export type SavedSession = {
   id: string;
   name: string;
+  folder?: string;
   date: string;
   workoutData: Exercise[];
   combinationTypes: Record<string, CombinationType>;
