@@ -19,6 +19,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { History, Calendar, Trash2, ChevronRight, Dumbbell, Folder, Search, Star, AlertTriangle } from 'lucide-react';
@@ -127,33 +134,29 @@ export function UseSavedSessionDialog({
               />
             </div>
 
-            <div className="flex flex-wrap items-center gap-2">
-              <button
-                onClick={() => setSelectedFolder(null)}
-                className={cn(
-                  "px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all",
-                  !selectedFolder 
-                    ? "bg-primary text-white border-primary" 
-                    : "bg-muted/50 text-muted-foreground border-transparent hover:bg-muted"
-                )}
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">
+                Filtrar por Pasta
+              </label>
+              <Select 
+                value={selectedFolder || "all"} 
+                onValueChange={(val) => setSelectedFolder(val === "all" ? null : val)}
               >
-                Todas
-              </button>
-              {folders.map(folder => (
-                <button
-                  key={folder}
-                  onClick={() => setSelectedFolder(folder)}
-                  className={cn(
-                    "px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all flex items-center gap-2",
-                    selectedFolder === folder 
-                      ? "bg-primary text-white border-primary shadow-md shadow-primary/10" 
-                      : "bg-muted/50 text-muted-foreground border-transparent hover:bg-muted"
-                  )}
-                >
-                  <Folder className="h-3 w-3" />
-                  {folder}
-                </button>
-              ))}
+                <SelectTrigger className="h-12 rounded-xl bg-muted/30 border-none font-bold focus:ring-primary/30 text-[11px] uppercase tracking-widest px-4">
+                  <div className="flex items-center gap-2">
+                    <Folder className="h-4 w-4 text-primary" />
+                    <SelectValue placeholder="Todas as pastas" />
+                  </div>
+                </SelectTrigger>
+                <SelectContent className="rounded-xl border-border/40">
+                  <SelectItem value="all" className="font-black uppercase text-[10px] tracking-widest p-3">Todas as pastas</SelectItem>
+                  {folders.map((folder) => (
+                    <SelectItem key={folder} value={folder} className="font-black uppercase text-[10px] tracking-widest p-3">
+                      {folder}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
