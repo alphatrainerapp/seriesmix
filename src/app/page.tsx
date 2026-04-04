@@ -1,5 +1,6 @@
 
 'use client';
+
 import {
   Table,
   TableBody,
@@ -16,8 +17,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { TrainingPlanHeader } from '@/components/plan/training-plan-header';
 import { TrainingSplit } from '@/components/plan/training-split';
-import { PageSidebar } from '@/components/sidebar/page-sidebar';
-import { useState, useMemo } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import type { CombinationType, Exercise, Set } from '@/lib/types';
 import { MobileExerciseCard } from '@/components/workouts/mobile-exercise-card';
 import { Accordion } from '@/components/ui/accordion';
@@ -33,6 +33,7 @@ import {
 import { Plus, ListOrdered, SquarePen, Combine, Save, History, Dumbbell } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { PageSidebar } from '@/components/sidebar/page-sidebar';
 
 type WorkoutState = {
   data: Exercise[];
@@ -44,7 +45,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState('treino-a');
   
   const [workouts, setWorkouts] = useState<Record<string, WorkoutState>>({
-    'treino-a': { data: initialWorkoutData, combinationTypes: { 'warmup': 'biset' } },
+    'treino-a': { data: JSON.parse(JSON.stringify(initialWorkoutData)), combinationTypes: { 'warmup': 'biset' } },
     'treino-b': { data: [], combinationTypes: {} },
     'treino-c': { data: [], combinationTypes: {} },
     'treino-d': { data: [], combinationTypes: {} },
@@ -53,7 +54,7 @@ export default function Home() {
 
   const [isSorting, setIsSorting] = useState(false);
 
-  const handleUpdateExercise = (updatedExercise: Exercise, tabId: string) => {
+  const handleUpdateExercise = useCallback((updatedExercise: Exercise, tabId: string) => {
     setWorkouts((prev) => ({
       ...prev,
       [tabId]: {
@@ -63,16 +64,16 @@ export default function Home() {
         ),
       },
     }));
-  };
+  }, []);
 
-  const handleApplySetsToAll = (updatedSets: Set[], tabId: string) => {
+  const handleApplySetsToAll = useCallback((updatedSets: Set[], tabId: string) => {
     setWorkouts((prev) => ({
       ...prev,
       [tabId]: {
         ...prev[tabId],
         data: prev[tabId].data.map((ex) => ({
           ...ex,
-          sets: updatedSets,
+          sets: JSON.parse(JSON.stringify(updatedSets)),
           repsRange: updatedSets.find(s => s.type === 'trabalho')?.reps || ex.repsRange
         })),
       },
@@ -81,35 +82,35 @@ export default function Home() {
       title: "Configuração aplicada",
       description: "As séries foram replicadas para todos os exercícios do treino.",
     });
-  };
+  }, [toast]);
 
-  const handleApplySavedSession = (newData: Exercise[], newTypes: Record<string, CombinationType>, tabId: string) => {
+  const handleApplySavedSession = useCallback((newData: Exercise[], newTypes: Record<string, CombinationType>, tabId: string) => {
     setWorkouts((prev) => ({
       ...prev,
-      [tabId]: { data: newData, combinationTypes: newTypes },
+      [tabId]: { 
+        data: Array.isArray(newData) ? JSON.parse(JSON.stringify(newData)) : [], 
+        combinationTypes: newTypes || {} 
+      },
     }));
-  };
+  }, []);
 
-  const handleUpdateWorkoutData = (newData: Exercise[], tabId: string) => {
+  const handleUpdateWorkoutData = useCallback((newData: Exercise[], tabId: string) => {
     setWorkouts((prev) => ({
       ...prev,
-      [tabId]: { ...prev[tabId], data: newData },
+      [tabId]: { ...prev[tabId], data: Array.isArray(newData) ? newData : [] },
     }));
-  };
+  }, []);
 
-  const handleUpdateCombinationTypes = (newTypes: Record<string, CombinationType>, tabId: string) => {
+  const handleUpdateCombinationTypes = useCallback((newTypes: Record<string, CombinationType>, tabId: string) => {
     setWorkouts((prev) => ({
       ...prev,
-      [tabId]: { ...prev[tabId], combinationTypes: newTypes },
+      [tabId]: { ...prev[tabId], combinationTypes: newTypes || {} },
     }));
-  };
-  
-  const processedExercises = (tabId: string) => {
-    const elements: React.ReactNode[] = [];
-    const renderedGroupIds = new Set<string>();
-    const { data, combinationTypes } = workouts[tabId] || { data: [], combinationTypes: {} };
+  }, []);
 
-    if (!Array.isArray(data) || data.length === 0) {
+  const renderExerciseList = (tabId: string) => {
+    const workout = workouts[tabId];
+    if (!workout || !Array.isArray(workout.data) || workout.data.length === 0) {
       return (
         <TableBody>
           <TableRow className="hover:bg-transparent">
@@ -125,14 +126,17 @@ export default function Home() {
       );
     }
 
-    data.forEach((currentExercise) => {
+    const elements: React.ReactNode[] = [];
+    const renderedGroupIds = new Set<string>();
+
+    workout.data.forEach((currentExercise) => {
       if (currentExercise.groupId && renderedGroupIds.has(currentExercise.groupId)) {
         return;
       }
       
       if (currentExercise.groupId) {
-        const group = data.filter(e => e.groupId === currentExercise.groupId);
-        const combinationType = combinationTypes[currentExercise.groupId];
+        const group = workout.data.filter(e => e.groupId === currentExercise.groupId);
+        const combinationType = workout.combinationTypes[currentExercise.groupId];
         elements.push(
           <tbody key={`group-${currentExercise.groupId}-${tabId}`} className="relative border-b-0">
              {group.map((exercise, idx) => (
@@ -162,14 +166,19 @@ export default function Home() {
         );
       }
     });
+
     return elements;
   };
 
-  const renderWorkoutContent = (tabId: string) => {
+  const WorkoutTabContent = ({ tabId }: { tabId: string }) => {
+    const isActive = activeTab === tabId;
     const workout = workouts[tabId] || { data: [], combinationTypes: {} };
-    
+
+    // Só renderiza o conteúdo pesado se a aba estiver ativa para economizar recursos
+    if (!isActive) return <TabsContent value={tabId} className="hidden" />;
+
     return (
-      <TabsContent value={tabId} key={`content-${tabId}`} className="mt-8 animate-in fade-in-50 duration-500">
+      <TabsContent value={tabId} className="mt-8 animate-in fade-in-50 duration-500 block">
         <div className="flex flex-wrap items-center justify-between gap-6 mb-8">
           <div className="flex flex-wrap items-center gap-6">
             <h2 className="text-2xl font-black tracking-tighter uppercase italic">{tabId.replace('-', ' ')}</h2>
@@ -236,7 +245,7 @@ export default function Home() {
                 <TableHead className="w-[45px]"></TableHead>
               </TableRow>
             </TableHeader>
-            {processedExercises(tabId)}
+            {renderExerciseList(tabId)}
           </Table>
         </div>
 
@@ -261,7 +270,6 @@ export default function Home() {
           )}
         </div>
 
-        {/* Action Buttons and Observations */}
         <div className="mt-10 space-y-8 w-full">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
             <DropdownMenu>
@@ -326,7 +334,9 @@ export default function Home() {
                 ))}
               </TabsList>
             </div>
-            {['a', 'b', 'c', 'd', 'e'].map(l => renderWorkoutContent(`treino-${l}`))}
+            {['a', 'b', 'c', 'd', 'e'].map(l => (
+              <WorkoutTabContent key={`content-${l}`} tabId={`treino-${l}`} />
+            ))}
           </Tabs>
         </main>
         
