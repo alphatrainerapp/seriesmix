@@ -5,39 +5,40 @@ Seu assistente pessoal de treinos com Inteligência Artificial.
 ## 🔗 Repositório
 Você pode encontrar o código fonte deste projeto em: [SEU_LINK_DO_GITHUB_AQUI]
 
-## 🚀 Funcionalidades Implementadas
-- **IA Generativa:** Geração de planos de treino personalizados baseados em objetivos e equipamentos (Genkit + Gemini).
-- **Busca Inteligente:** Substituição de exercícios clicando no nome, acessando a base de dados do sistema.
-- **Edição em Massa:** Ajuste de séries, repetições e intervalos com opção de aplicar a todos os exercícios do treino simultaneamente via checkbox.
-- **Layout Full Width:** Visualização expandida para Desktop (aproveitando 100% da largura) e responsividade otimizada para Mobile (720px max).
-- **Gestão de Séries:** Identificação automática de séries de Aquecimento, Preparatórias e Válidas, ocultando tipos com contagem zero.
-- **Combinações Avançadas:** Suporte para Biset, Triset, Supersérie e HIIT com configurações específicas.
+## 🚀 Como subir para o seu GitHub (Primeira vez)
+1. Crie um repositório novo e vazio no [GitHub](https://github.com/new).
+2. Abra o terminal na pasta do projeto e execute:
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit: WorkoutAI v1.0"
+   git branch -M main
+   git remote add origin [COLE_O_LINK_DO_SEU_REPOSITORIO_AQUI]
+   git push -u origin main
+   ```
 
-## 🛠 Tecnologias
+## 🛠 Funcionalidades Implementadas
+- **IA Generativa:** Geração de planos de treino personalizados (Genkit + Gemini).
+- **Gestão de Sessões:** Salvar e carregar treinos completos com organização por pastas.
+- **Busca de Exercícios:** Substituição rápida via banco de dados do sistema.
+- **Edição em Massa:** Ajuste de séries e repetições com replicação para todo o treino.
+- **Layout Premium:** Design responsivo com arredondamentos de 16px e 24px, otimizado para Desktop e Mobile.
+- **Categorização:** Pastas específicas (Inferiores, Superiores, etc) para organizar sua biblioteca de treinos.
+
+## 💻 Tecnologias
 - Next.js 15 (App Router)
 - React 19
 - Tailwind CSS & Shadcn UI
 - Genkit (IA)
 - Lucide React Icons
-- Recharts (Métricas de Treino)
 
-## 💻 Como rodar localmente
-1. Instale as dependências: `npm install`
-2. Configure seu `.env` com a `GEMINI_API_KEY`.
-3. Rode o servidor de desenvolvimento: `npm run dev`
+## ⌨️ Comandos Git do dia a dia
+- `git add .`: Prepara todas as mudanças.
+- `git commit -m "descrição"`: Salva as alterações localmente.
+- `git push`: Envia as mudanças para o GitHub.
+- `git pull`: Baixa as mudanças do GitHub.
 
-## ⌨️ Comandos Git Úteis
-
-### Comandos do dia a dia
-- `git add .`: Adiciona todas as mudanças.
-- `git commit -m "mensagem"`: Cria um ponto de salvamento.
-- `git push origin main`: Envia para o GitHub.
-
-### Como limpar e recomeçar o repositório (Reset)
-Se você deseja apagar todo o histórico e subir o projeto como se fosse a primeira vez:
-1. **Remover pasta Git**: `rm -rf .git` (Mac/Linux) ou `rd /s /q .git` (Windows)
-2. **Iniciar novo Git**: `git init`
-3. **Adicionar tudo**: `git add .`
-4. **Primeiro Commit**: `git commit -m "Initial commit"`
-5. **Linkar Remoto**: `git remote add origin [LINK_DO_REPOSITORIO]`
-6. **Push Forçado**: `git push -u -f origin main`
+## 🧹 Como resetar o Git (se necessário)
+Se precisar apagar o histórico e começar o repositório do zero:
+1. Remova a pasta oculta: `rm -rf .git` (Mac/Linux) ou `rd /s /q .git` (Windows).
+2. Siga os passos da seção "Como subir para o seu GitHub" acima.
