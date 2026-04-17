@@ -8,11 +8,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Search, X, Plus, ChevronRight } from 'lucide-react';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { Search, X, Check } from 'lucide-react';
 import { systemExercises } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
@@ -27,7 +26,7 @@ export function ExerciseSearchDialog({
 }) {
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState('');
-  const [selectedCategories, setSelectedCategories] = React.useState<string[]>(['Posterior de Coxa (Isquiotibiais)']);
+  const [selectedCategories, setSelectedCategories] = React.useState<string[]>([]);
   const [highlightedExercise, setHighlightedExercise] = React.useState<string | null>(null);
 
   const categories = React.useMemo(() => {
@@ -64,7 +63,7 @@ export function ExerciseSearchDialog({
 
   const resetState = () => {
     setSearch('');
-    setSelectedCategories(['Posterior de Coxa (Isquiotibiais)']);
+    setSelectedCategories([]);
     setHighlightedExercise(null);
   };
 
@@ -76,7 +75,7 @@ export function ExerciseSearchDialog({
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[500px] p-0 gap-0 overflow-hidden bg-card border-none shadow-2xl rounded-3xl">
         <DialogHeader className="p-6 pb-2">
-          <DialogTitle className="text-xl font-bold tracking-tight">Exercícios</DialogTitle>
+          <DialogTitle className="text-xl font-bold tracking-tight">Buscar Exercício</DialogTitle>
         </DialogHeader>
         
         <div className="px-6 pb-4 space-y-4">
@@ -88,70 +87,80 @@ export function ExerciseSearchDialog({
               onChange={(e) => setSearch(e.target.value)}
               autoFocus
             />
-            {search && (
+            {search ? (
                <button 
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                 onClick={() => setSearch('')}
                >
                  <X className="h-4 w-4" />
                </button>
+            ) : (
+              <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
             )}
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
-            {selectedCategories.map(cat => (
-              <Badge 
-                key={cat} 
-                className="bg-black hover:bg-black/90 text-white rounded-full px-4 py-1.5 flex items-center gap-2 text-[11px] font-bold"
-              >
-                {cat}
-                <button onClick={() => toggleCategory(cat)}>
-                  <X className="h-3 w-3" />
-                </button>
-              </Badge>
-            ))}
-            <button className="flex items-center gap-2 px-4 py-1.5 rounded-full border border-dashed border-border text-[11px] font-bold text-muted-foreground hover:bg-muted transition-colors">
-              <Plus className="h-3 w-3" />
-              FILTRO
-            </button>
+          <div className="space-y-2">
+            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Filtrar por Grupo Muscular</p>
+            <ScrollArea className="w-full whitespace-nowrap pb-2">
+              <div className="flex w-max gap-2">
+                {categories.map((category) => (
+                  <Badge
+                    key={category}
+                    variant={selectedCategories.includes(category) ? 'default' : 'outline'}
+                    className={cn(
+                      "cursor-pointer rounded-full px-4 py-1.5 text-[11px] font-bold border-border/60 transition-all",
+                      selectedCategories.includes(category) 
+                        ? "bg-primary text-white border-primary" 
+                        : "hover:bg-muted text-muted-foreground"
+                    )}
+                    onClick={() => toggleCategory(category)}
+                  >
+                    {category}
+                    {selectedCategories.includes(category) && <Check className="ml-1 h-3 w-3" />}
+                  </Badge>
+                ))}
+              </div>
+              <ScrollBar orientation="horizontal" className="hidden" />
+            </ScrollArea>
           </div>
         </div>
 
-        <ScrollArea className="h-[450px] px-6">
-          <div className="space-y-4 pb-20">
+        <ScrollArea className="h-[400px] px-6">
+          <div className="space-y-3 pb-24">
             {filteredExercises.length > 0 ? (
               filteredExercises.map((exercise) => (
                 <div
                   key={exercise.name}
                   className={cn(
-                    "flex items-center justify-between p-3 rounded-2xl transition-all group cursor-pointer",
-                    highlightedExercise === exercise.name ? "bg-primary/5" : "hover:bg-muted/50"
+                    "flex items-center justify-between p-3 rounded-2xl transition-all group cursor-pointer border border-transparent",
+                    highlightedExercise === exercise.name 
+                      ? "bg-primary/5 border-primary/20" 
+                      : "hover:bg-muted/50"
                   )}
                   onClick={() => handleSelect(exercise.name)}
                 >
                   <div className="flex items-center gap-4 flex-1 min-w-0">
-                    <div className="relative h-14 w-14 rounded-xl overflow-hidden bg-muted flex-shrink-0">
+                    <div className="relative h-12 w-12 rounded-xl overflow-hidden bg-muted flex-shrink-0">
                       <Image 
                         src={`https://picsum.photos/seed/${exercise.imageHint}/100/100`}
                         alt={exercise.name}
                         fill
                         className="object-cover"
+                        data-ai-hint={exercise.imageHint}
                       />
                     </div>
                     <div className="flex flex-col min-w-0">
-                      <span className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-tight">
+                      <span className="text-[9px] font-black text-primary uppercase tracking-tight">
                         {exercise.category}
                       </span>
-                      <span className="font-bold text-[15px] truncate">{exercise.name}</span>
+                      <span className="font-bold text-sm truncate text-foreground">{exercise.name}</span>
                     </div>
                   </div>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="rounded-full h-8 px-4 text-[11px] font-bold border-border/60 hover:border-primary/50 transition-colors ml-4"
-                  >
-                    Ver detalhes
-                  </Button>
+                  {highlightedExercise === exercise.name && (
+                    <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center">
+                       <Check className="h-3.5 w-3.5 text-white" />
+                    </div>
+                  )}
                 </div>
               ))
             ) : (
@@ -163,13 +172,13 @@ export function ExerciseSearchDialog({
           </div>
         </ScrollArea>
 
-        <div className="absolute bottom-6 right-6">
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-48px)]">
            <Button 
-            className="bg-[#FF6A3D] hover:bg-[#FF6A3D]/90 text-white rounded-full px-8 h-12 font-bold shadow-lg shadow-orange-500/20 uppercase tracking-widest text-xs"
+            className="w-full bg-[#FF6A3D] hover:bg-[#FF6A3D]/90 text-white rounded-xl h-12 font-black shadow-lg shadow-orange-500/20 uppercase tracking-widest text-[11px]"
             onClick={handleConfirm}
             disabled={!highlightedExercise}
            >
-             Adicionar
+             CONFIRMAR SELEÇÃO
            </Button>
         </div>
       </DialogContent>
