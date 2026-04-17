@@ -1,33 +1,30 @@
-import type { Exercise, SavedSession } from './types';
+import type { Exercise, SavedSession, SystemExercise } from './types';
 
-export const systemExercises = [
-  'Agachamento Livre',
-  'Agachamento no Smith',
-  'Leg Press 45',
-  'Cadeira Extensora',
-  'Mesa Flexora',
-  'Cadeira Flexora',
-  'Stiff',
-  'Elevação Pélvica',
-  'Afundo',
-  'Passada',
-  'Supino Reto',
-  'Supino Inclinado',
-  'Crucifixo Reto',
-  'Desenvolvimento com Halteres',
-  'Elevação Lateral',
-  'Remada Curvada',
-  'Puxada na Frente',
-  'Remada Baixa',
-  'Rosca Direta',
-  'Rosca Alternada',
-  'Rosca Concentrada',
-  'Tríceps Pulley',
-  'Tríceps Testa',
-  'Abdominal Supra',
-  'Prancha Isométrica',
-  'Mobilidade de Quadril',
-  'Mobilidade de Tornozelo',
+export const systemExercises: SystemExercise[] = [
+  { name: 'Agachamento Livre', category: 'Quadríceps', imageHint: 'squat' },
+  { name: 'Agachamento no Smith', category: 'Quadríceps', imageHint: 'smith machine squat' },
+  { name: 'Leg Press 45', category: 'Quadríceps', imageHint: 'leg press' },
+  { name: 'Cadeira Extensora', category: 'Quadríceps', imageHint: 'leg extension' },
+  { name: 'Mesa Flexora', category: 'Posterior de Coxa (Isquiotibiais)', imageHint: 'lying leg curl' },
+  { name: 'Cadeira Flexora', category: 'Posterior de Coxa (Isquiotibiais)', imageHint: 'seated leg curl' },
+  { name: 'Stiff', category: 'Posterior de Coxa (Isquiotibiais)', imageHint: 'stiff deadlift' },
+  { name: 'Elevação Pélvica', category: 'Glúteo', imageHint: 'hip thrust' },
+  { name: 'Afundo', category: 'Quadríceps/Glúteo', imageHint: 'lunge' },
+  { name: 'Supino Reto', category: 'Peitoral', imageHint: 'bench press' },
+  { name: 'Supino Inclinado', category: 'Peitoral', imageHint: 'inclined bench press' },
+  { name: 'Crucifixo Reto', category: 'Peitoral', imageHint: 'chest fly' },
+  { name: 'Desenvolvimento com Halteres', category: 'Deltoides', imageHint: 'shoulder press' },
+  { name: 'Elevação Lateral', category: 'Deltoides', imageHint: 'lateral raise' },
+  { name: 'Remada Curvada', category: 'Costas', imageHint: 'bent over row' },
+  { name: 'Puxada na Frente', category: 'Costas', imageHint: 'lat pulldown' },
+  { name: 'Remada Baixa', category: 'Costas', imageHint: 'seated row' },
+  { name: 'Rosca Direta', category: 'Bíceps', imageHint: 'bicep curl' },
+  { name: 'Rosca Alternada', category: 'Bíceps', imageHint: 'alternating bicep curl' },
+  { name: 'Tríceps Pulley', category: 'Tríceps', imageHint: 'tricep pushdown' },
+  { name: 'Abdominal Supra', category: 'Abômen', imageHint: 'crunch' },
+  { name: 'Flexora em Pé', category: 'Posterior de Coxa (Isquiotibiais)', imageHint: 'standing leg curl' },
+  { name: 'Mesa Flexora Unilateral', category: 'Posterior de Coxa (Isquiotibiais)', imageHint: 'unilateral leg curl' },
+  { name: 'Cadeira Flexora Unilateral', category: 'Posterior de Coxa (Isquiotibiais)', imageHint: 'seated unilateral leg curl' },
 ];
 
 export const mockWorkout: Exercise[] = [
@@ -103,7 +100,7 @@ export const exampleSessions: SavedSession[] = [
   {
     id: 'ex-1',
     name: 'Costas e Bíceps - Foco Remada',
-    folder: 'Costa e Triceps', // Using existing matching folders or Geral
+    folder: 'Costa e Triceps', 
     date: 'Exemplo',
     combinationTypes: {},
     workoutData: [

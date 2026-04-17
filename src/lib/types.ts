@@ -9,6 +9,12 @@ export type Set = {
   rir: string;
 };
 
+export type SystemExercise = {
+  name: string;
+  category: string;
+  imageHint: string;
+};
+
 export type Exercise = {
   id: number;
   name: string;
@@ -17,6 +23,7 @@ export type Exercise = {
   repsRange: string;
   observation?: string;
   groupId?: string;
+  category?: string;
 };
 
 export type CombinationType = 'biset' | 'triset' | 'superserie' | 'hiit';
