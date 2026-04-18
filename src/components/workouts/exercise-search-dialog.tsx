@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -10,8 +11,20 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { Search, X, Check, Dumbbell, Zap } from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { 
+  Search, 
+  X, 
+  Check, 
+  Dumbbell, 
+  Plus, 
+  Info, 
+  Circle,
+  ChevronDown,
+  User,
+  Heart,
+  Activity
+} from 'lucide-react';
 import { systemExercises } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
@@ -19,12 +32,27 @@ import { Badge } from '../ui/badge';
 
 // Mapeamento de Divisões para Categorias (Músculos)
 const divisions = [
-  { id: 'inf', name: 'Inferiores', categories: ['Quadríceps', 'Posterior de Coxa (Isquiotibiais)', 'Glúteo', 'Quadríceps/Glúteo'] },
+  { id: 'inf', name: 'Inferiores', categories: ['Quadríceps', 'Posterior de Coxa (Isquiotibiais)', 'Glúteo', 'Panturrilha', 'Quadríceps/Glúteo'] },
   { id: 'pt', name: 'Peito e Tríceps', categories: ['Peitoral', 'Tríceps'] },
   { id: 'cb', name: 'Costas e Bíceps', categories: ['Costas', 'Bíceps'] },
-  { id: 'sh', name: 'Ombros e Trapézio', categories: ['Deltoides'] },
+  { id: 'sh', name: 'Ombros e Trapézio', categories: ['Deltoides', 'Trapézio'] },
   { id: 'core', name: 'Core', categories: ['Abômen'] },
 ];
+
+const muscleIcons: Record<string, React.ElementType> = {
+  'Quadríceps': Activity,
+  'Posterior de Coxa (Isquiotibiais)': Activity,
+  'Glúteo': User,
+  'Panturrilha': User,
+  'Peitoral': Dumbbell,
+  'Costas': Activity,
+  'Bíceps': Dumbbell,
+  'Tríceps': Dumbbell,
+  'Deltoides': User,
+  'Abômen': Heart,
+  'Trapézio': Activity,
+  'Quadríceps/Glúteo': Activity,
+};
 
 export function ExerciseSearchDialog({
   children,
@@ -35,8 +63,8 @@ export function ExerciseSearchDialog({
 }) {
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState('');
-  const [selectedCategories, setSelectedCategories] = React.useState<string[]>([]);
-  const [activeDivision, setActiveDivision] = React.useState<string | null>(null);
+  const [selectedCategories, setSelectedCategories] = React.useState<string[]>(['Quadríceps', 'Posterior de Coxa (Isquiotibiais)', 'Glúteo', 'Panturrilha']);
+  const [activeDivision, setActiveDivision] = React.useState<string | null>('inf');
   const [highlightedExercise, setHighlightedExercise] = React.useState<string | null>(null);
 
   const categories = React.useMemo(() => {
@@ -51,6 +79,14 @@ export function ExerciseSearchDialog({
     });
   }, [search, selectedCategories]);
 
+  const toggleCategory = (category: string) => {
+    setSelectedCategories((prev) =>
+      prev.includes(category)
+        ? prev.filter((c) => c !== category)
+        : [...prev, category]
+    );
+  };
+
   const handleSelect = (name: string) => {
     setHighlightedExercise(name);
   };
@@ -59,188 +95,218 @@ export function ExerciseSearchDialog({
     if (highlightedExercise) {
       onSelect(highlightedExercise);
       setOpen(false);
-      resetState();
     }
   };
 
-  const toggleCategory = (category: string) => {
+  const clearDivision = () => {
     setActiveDivision(null);
-    setSelectedCategories((prev) =>
-      prev.includes(category)
-        ? prev.filter((c) => c !== category)
-        : [...prev, category]
-    );
-  };
-
-  const selectDivision = (divisionId: string) => {
-    if (activeDivision === divisionId) {
-      setActiveDivision(null);
-      setSelectedCategories([]);
-    } else {
-      const division = divisions.find(d => d.id === divisionId);
-      if (division) {
-        setActiveDivision(divisionId);
-        setSelectedCategories(division.categories);
-      }
-    }
-  };
-
-  const resetState = () => {
-    setSearch('');
     setSelectedCategories([]);
-    setActiveDivision(null);
-    setHighlightedExercise(null);
   };
 
   return (
-    <Dialog open={open} onOpenChange={(val) => {
-      setOpen(val);
-      if (!val) resetState();
-    }}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[560px] p-0 gap-0 overflow-hidden bg-card border-none shadow-2xl rounded-[32px] max-h-[90vh]">
-        <DialogHeader className="p-8 pb-4">
-          <DialogTitle className="text-2xl font-black italic tracking-tighter uppercase text-left">Buscar Exercício</DialogTitle>
-        </DialogHeader>
+      <DialogContent className="sm:max-w-[640px] p-0 gap-0 overflow-hidden bg-white border-none shadow-2xl rounded-[24px] max-h-[95vh] flex flex-col">
         
-        <div className="px-8 pb-6 space-y-6">
-          {/* Campo de Busca */}
+        {/* Header Section */}
+        <div className="p-8 pb-4 space-y-6 shrink-0">
+          <div className="space-y-1">
+            <DialogTitle className="text-[28px] font-bold text-slate-900 tracking-tight">
+              Buscar exercício
+            </DialogTitle>
+            <p className="text-slate-500 text-[15px]">
+              Encontre exercícios por nome, divisão ou grupo muscular.
+            </p>
+          </div>
+
           <div className="relative group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
             <Input
               placeholder="Digite o nome do exercício..."
-              className="h-14 bg-muted/40 border border-border/40 rounded-2xl text-base font-bold focus-visible:ring-primary/20 pr-12 transition-all"
+              className="h-14 bg-white border-slate-200 rounded-xl text-base font-medium pl-12 focus-visible:ring-primary/20 transition-all shadow-sm"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              autoFocus
             />
-            {search ? (
-               <button 
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+            {search && (
+              <button 
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                 onClick={() => setSearch('')}
-               >
-                 <X className="h-5 w-5" />
-               </button>
-            ) : (
-              <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground/30" />
+              >
+                <X className="h-5 w-5" />
+              </button>
             )}
-          </div>
-
-          {/* Filtro por Divisão */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 px-1">
-              <Zap className="h-3.5 w-3.5 text-primary fill-primary/20" />
-              <p className="text-[11px] font-black uppercase tracking-[0.15em] text-muted-foreground/80">Divisões Sugeridas</p>
-            </div>
-            <ScrollArea className="w-full whitespace-nowrap pb-2">
-              <div className="flex w-max gap-3 px-1">
-                {divisions.map((div) => (
-                  <Badge
-                    key={div.id}
-                    variant={activeDivision === div.id ? 'default' : 'secondary'}
-                    className={cn(
-                      "cursor-pointer rounded-xl px-5 py-2.5 text-[10px] font-black uppercase tracking-widest border border-transparent transition-all active:scale-95",
-                      activeDivision === div.id 
-                        ? "bg-primary text-white border-primary shadow-lg shadow-primary/20" 
-                        : "hover:bg-muted text-muted-foreground bg-muted/40"
-                    )}
-                    onClick={() => selectDivision(div.id)}
-                  >
-                    {div.name}
-                  </Badge>
-                ))}
-              </div>
-              <ScrollBar orientation="horizontal" className="hidden" />
-            </ScrollArea>
-          </div>
-
-          {/* Filtro por Grupo Muscular */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 px-1">
-              <Dumbbell className="h-3.5 w-3.5 text-muted-foreground" />
-              <p className="text-[11px] font-black uppercase tracking-[0.15em] text-muted-foreground/80">Grupos Musculares</p>
-            </div>
-            <ScrollArea className="w-full whitespace-nowrap pb-2">
-              <div className="flex w-max gap-3 px-1">
-                {categories.map((category) => (
-                  <Badge
-                    key={category}
-                    variant={selectedCategories.includes(category) ? 'default' : 'outline'}
-                    className={cn(
-                      "cursor-pointer rounded-full px-5 py-2 text-[10px] font-bold border-border/60 transition-all uppercase tracking-tight active:scale-95",
-                      selectedCategories.includes(category) 
-                        ? "bg-primary/20 text-primary border-primary/30" 
-                        : "hover:bg-muted text-muted-foreground/60"
-                    )}
-                    onClick={() => toggleCategory(category)}
-                  >
-                    {category}
-                    {selectedCategories.includes(category) && <Check className="ml-1.5 h-3 w-3" />}
-                  </Badge>
-                ))}
-              </div>
-              <ScrollBar orientation="horizontal" className="hidden" />
-            </ScrollArea>
           </div>
         </div>
 
-        <ScrollArea className="h-[400px] w-full">
-          <div className="px-8 space-y-4 pb-32">
-            {filteredExercises.length > 0 ? (
-              filteredExercises.map((exercise) => (
-                <div
-                  key={exercise.name}
-                  className={cn(
-                    "flex items-center justify-between p-4 rounded-[24px] transition-all group cursor-pointer border-2",
-                    highlightedExercise === exercise.name 
-                      ? "bg-primary/5 border-primary/30 shadow-sm" 
-                      : "hover:bg-muted/40 border-transparent bg-muted/20"
-                  )}
-                  onClick={() => handleSelect(exercise.name)}
-                >
-                  <div className="flex items-center gap-5 flex-1 min-w-0">
-                    <div className="relative h-16 w-16 rounded-2xl overflow-hidden bg-muted flex-shrink-0 shadow-inner">
-                      <Image 
-                        src={`https://picsum.photos/seed/${exercise.imageHint}/120/120`}
-                        alt={exercise.name}
-                        fill
-                        className="object-cover"
-                        data-ai-hint={exercise.imageHint}
-                      />
-                    </div>
-                    <div className="flex flex-col min-w-0">
-                      <span className="text-[10px] font-black text-primary uppercase tracking-widest mb-1 opacity-80">
-                        {exercise.category}
-                      </span>
-                      <span className="font-black text-base truncate text-foreground leading-tight uppercase italic tracking-tight">{exercise.name}</span>
-                    </div>
-                  </div>
-                  <div className={cn(
-                    "h-10 w-10 rounded-full flex items-center justify-center transition-all shadow-sm shrink-0 ml-4",
-                    highlightedExercise === exercise.name 
-                      ? "bg-primary text-white scale-110" 
-                      : "bg-muted text-muted-foreground/20 group-hover:bg-primary/10 group-hover:text-primary"
-                  )}>
-                     <Check className={cn("h-5 w-5 transition-all", highlightedExercise === exercise.name ? "opacity-100 scale-100" : "opacity-0 scale-50")} />
+        <ScrollArea className="flex-1 overflow-y-auto px-8 pb-32">
+          <div className="space-y-8">
+            
+            {/* Division Active Section */}
+            {activeDivision && (
+              <div className="space-y-3">
+                <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-slate-500 pl-1">Divisão Ativa</p>
+                <div className="flex items-center gap-4">
+                  <Badge variant="outline" className="bg-[#E7F7F4] text-[#2E9B79] border-[#C2E9E0] px-4 py-2.5 rounded-xl flex items-center gap-2 group cursor-pointer hover:bg-[#D9F2ED]">
+                    <Activity className="h-4 w-4" />
+                    <span className="font-bold text-[13px]">
+                      {divisions.find(d => d.id === activeDivision)?.name}
+                    </span>
+                    <button onClick={(e) => { e.stopPropagation(); clearDivision(); }}>
+                      <X className="h-4 w-4 text-[#2E9B79]/60 group-hover:text-[#2E9B79]" />
+                    </button>
+                  </Badge>
+                  
+                  <div className="flex-1 bg-slate-50 rounded-xl p-3 flex items-center gap-3 border border-slate-100">
+                    <Info className="h-5 w-5 text-slate-400 shrink-0" />
+                    <p className="text-[12px] text-slate-500 leading-tight">
+                      A divisão ativa filtra os músculos exibidos. Você pode alterar a seleção abaixo.
+                    </p>
                   </div>
                 </div>
-              ))
-            ) : (
-              <div className="py-24 text-center opacity-20">
-                <Dumbbell className="h-12 w-12 mx-auto mb-4" />
-                <p className="text-sm font-black uppercase tracking-[0.2em]">Nenhum exercício encontrado</p>
               </div>
             )}
+
+            {/* Muscle Groups Section */}
+            <div className="space-y-4 rounded-2xl border border-slate-100 p-6 bg-white shadow-sm">
+              <div className="flex items-center justify-between px-1">
+                <div className="space-y-0.5">
+                  <p className="text-[13px] font-bold uppercase tracking-widest text-slate-900">Grupos Musculares</p>
+                  <p className="text-[12px] text-slate-400 font-medium">Selecione os músculos para filtrar os exercícios.</p>
+                </div>
+                <div className="flex items-center gap-4">
+                  <button className="text-[12px] font-bold text-emerald-600 hover:underline">Selecionar todos</button>
+                  <button className="text-[12px] font-bold text-slate-400 hover:underline">Limpar</button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {categories.map((category) => {
+                  const isActive = selectedCategories.includes(category);
+                  const Icon = muscleIcons[category] || Activity;
+                  return (
+                    <button
+                      key={category}
+                      onClick={() => toggleCategory(category)}
+                      className={cn(
+                        "flex items-center gap-2 px-3 py-3.5 rounded-xl border text-left transition-all active:scale-95 group relative",
+                        isActive 
+                          ? "border-emerald-600 bg-emerald-50/50 text-emerald-700" 
+                          : "border-slate-100 bg-white text-slate-600 hover:border-slate-200"
+                      )}
+                    >
+                      <Icon className={cn("h-4 w-4", isActive ? "text-emerald-600" : "text-slate-400 group-hover:text-slate-600")} />
+                      <span className="text-[12px] font-bold truncate pr-4">{category}</span>
+                      <div className={cn(
+                        "absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 rounded-full flex items-center justify-center transition-all",
+                        isActive ? "bg-emerald-600" : "border-2 border-slate-100"
+                      )}>
+                        {isActive ? (
+                          <Check className="h-3 w-3 text-white" />
+                        ) : (
+                          <div className="h-1.5 w-1.5 rounded-full bg-slate-100" />
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="pt-2 flex items-center gap-2 px-1 text-slate-400">
+                <div className="bg-blue-50 p-1 rounded-md">
+                  <Heart className="h-3 w-3 text-blue-400" />
+                </div>
+                <p className="text-[11px] font-medium italic">
+                  Dica: desmarque os músculos da divisão ou selecione outros para buscar em grupos específicos.
+                </p>
+              </div>
+            </div>
+
+            {/* Exercise Results Section */}
+            <div className="space-y-4 rounded-2xl border border-slate-100 p-6 bg-white shadow-sm">
+              <div className="flex items-center justify-between px-1">
+                <div className="flex items-center gap-2">
+                  <p className="text-[13px] font-bold uppercase tracking-widest text-slate-900">Exercícios Encontrados</p>
+                  <Badge variant="secondary" className="bg-slate-100 text-slate-500 font-bold px-2 py-0 h-5 text-[10px]">
+                    {filteredExercises.length}
+                  </Badge>
+                </div>
+                <div className="flex items-center gap-2 text-[12px] text-slate-400 font-bold">
+                  Ordenar por:
+                  <button className="flex items-center gap-1 text-slate-700 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
+                    Mais relevantes <ChevronDown className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                {filteredExercises.map((exercise) => (
+                  <div
+                    key={exercise.name}
+                    className={cn(
+                      "flex items-center justify-between p-3 rounded-2xl border transition-all cursor-pointer group",
+                      highlightedExercise === exercise.name 
+                        ? "border-emerald-600 bg-emerald-50/20" 
+                        : "border-slate-100 hover:border-emerald-200 hover:bg-slate-50/50"
+                    )}
+                    onClick={() => handleSelect(exercise.name)}
+                  >
+                    <div className="flex items-center gap-4 flex-1 min-w-0">
+                      <div className="relative h-[72px] w-[100px] rounded-xl overflow-hidden bg-slate-100 shrink-0 shadow-sm">
+                        <Image 
+                          src={`https://picsum.photos/seed/${exercise.imageHint}/200/144`}
+                          alt={exercise.name}
+                          fill
+                          className="object-cover"
+                          data-ai-hint={exercise.imageHint}
+                        />
+                      </div>
+                      <div className="flex flex-col min-w-0 space-y-1.5">
+                        <span className="font-bold text-[15px] text-slate-900 leading-tight truncate">
+                          {exercise.name}
+                        </span>
+                        <div className="flex flex-wrap gap-1.5">
+                          <Badge variant="outline" className="bg-slate-50 text-slate-400 border-slate-100 text-[9px] font-bold px-2 py-0 uppercase">
+                            {exercise.category}
+                          </Badge>
+                          <Badge variant="outline" className="bg-slate-50 text-slate-400 border-slate-100 text-[9px] font-bold px-2 py-0 uppercase">
+                            Glúteo
+                          </Badge>
+                          <Badge variant="outline" className="bg-slate-50 text-slate-400 border-slate-100 text-[9px] font-bold px-2 py-0 uppercase">
+                            Posterior
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <button className={cn(
+                      "h-10 w-10 rounded-xl flex items-center justify-center transition-all shadow-sm shrink-0 ml-4",
+                      highlightedExercise === exercise.name 
+                        ? "bg-emerald-600 text-white" 
+                        : "border border-emerald-600 text-emerald-600 bg-white hover:bg-emerald-50"
+                    )}>
+                      {highlightedExercise === exercise.name ? <Check className="h-6 w-6" /> : <Plus className="h-6 w-6" />}
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <button className="w-full py-4 text-[13px] font-bold text-emerald-600 flex items-center justify-center gap-2 hover:bg-emerald-50 rounded-xl transition-colors">
+                Ver mais exercícios <ChevronDown className="h-4 w-4" />
+              </button>
+            </div>
+
           </div>
         </ScrollArea>
 
-        <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-card via-card to-transparent pointer-events-none">
+        {/* Footer Fixed Action */}
+        <div className="absolute bottom-0 left-0 right-0 p-8 pt-4 bg-white border-t border-slate-100 z-10">
            <Button 
-            className="w-full bg-[#FF6A3D] hover:bg-[#FF6A3D]/90 text-white rounded-2xl h-16 font-black shadow-xl shadow-orange-500/30 uppercase tracking-[0.2em] text-sm gap-4 pointer-events-auto transition-transform active:scale-95"
+            className="w-full bg-[#2E9B79] hover:bg-[#268567] text-white rounded-xl h-14 font-bold uppercase tracking-widest text-[14px] gap-3 shadow-lg shadow-emerald-900/10 transition-transform active:scale-95"
             onClick={handleConfirm}
             disabled={!highlightedExercise}
            >
-             CONFIRMAR EXERCÍCIO
-             {highlightedExercise && <Check className="h-6 w-6" />}
+             <Plus className="h-5 w-5" />
+             ADICIONAR EXERCÍCIO
            </Button>
         </div>
       </DialogContent>
