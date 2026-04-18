@@ -103,6 +103,15 @@ export function ExerciseSearchDialog({
     setSelectedCategories([]);
   };
 
+  const handleSelectAll = () => {
+    setSelectedCategories([...categories]);
+  };
+
+  const handleClearAll = () => {
+    setSelectedCategories([]);
+    setActiveDivision(null);
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -174,8 +183,18 @@ export function ExerciseSearchDialog({
                   <p className="text-[12px] text-slate-400 font-medium">Selecione os músculos para filtrar os exercícios.</p>
                 </div>
                 <div className="flex items-center gap-4">
-                  <button className="text-[12px] font-bold text-emerald-600 hover:underline">Selecionar todos</button>
-                  <button className="text-[12px] font-bold text-slate-400 hover:underline">Limpar</button>
+                  <button 
+                    onClick={handleSelectAll}
+                    className="text-[12px] font-bold text-emerald-600 hover:underline"
+                  >
+                    Selecionar todos
+                  </button>
+                  <button 
+                    onClick={handleClearAll}
+                    className="text-[12px] font-bold text-slate-400 hover:underline"
+                  >
+                    Limpar
+                  </button>
                 </div>
               </div>
 
