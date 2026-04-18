@@ -30,7 +30,21 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Plus, ListOrdered, SquarePen, Combine, Save, History, Dumbbell } from 'lucide-react';
+import { 
+  Plus, 
+  ListOrdered, 
+  SquarePen, 
+  Combine, 
+  Save, 
+  History, 
+  Dumbbell, 
+  Check, 
+  FolderPlus, 
+  Printer, 
+  Download, 
+  Send, 
+  Home as HomeIcon 
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { PageSidebar } from '@/components/sidebar/page-sidebar';
@@ -40,8 +54,47 @@ type WorkoutState = {
   combinationTypes: Record<string, CombinationType>;
 };
 
+// Barra de ações final baseada na imagem de referência
+const WorkoutActionsFooter = () => (
+  <div className="flex flex-wrap items-center gap-3 mt-12 pb-10 border-t pt-8">
+    <Button className="bg-[#ffa726] hover:bg-[#fb8c00] text-white rounded-full px-6 h-10 font-bold gap-2 border-none shadow-sm uppercase text-[11px] tracking-widest">
+      <Check className="h-4 w-4" />
+      Finalizar
+    </Button>
+    
+    <Button className="bg-[#4db6ac] hover:bg-[#26a69a] text-white rounded-md px-5 h-10 font-bold gap-2 border-none shadow-sm text-[11px] uppercase tracking-widest">
+      <Save className="h-4 w-4" />
+      Salvar Treino
+    </Button>
+    
+    <Button className="bg-[#90a4ae] hover:bg-[#78909c] text-white rounded-md px-5 h-10 font-bold gap-2 border-none shadow-sm text-[11px] uppercase tracking-widest">
+      <FolderPlus className="h-4 w-4" />
+      Salvar Modelo
+    </Button>
+    
+    <Button className="bg-[#90a4ae] hover:bg-[#78909c] text-white rounded-md px-5 h-10 font-bold gap-2 border-none shadow-sm text-[11px] uppercase tracking-widest">
+      <Printer className="h-4 w-4" />
+      Imprimir
+    </Button>
+    
+    <Button className="bg-[#90a4ae] hover:bg-[#78909c] text-white rounded-md px-5 h-10 font-bold gap-2 border-none shadow-sm text-[11px] uppercase tracking-widest">
+      <Download className="h-4 w-4" />
+      Baixar
+    </Button>
+    
+    <Button className="bg-[#4db6ac] hover:bg-[#26a69a] text-white rounded-md px-5 h-10 font-bold gap-2 border-none shadow-sm text-[11px] uppercase tracking-widest">
+      <Send className="h-4 w-4" />
+      Enviar
+    </Button>
+    
+    <Button className="bg-[#009688] hover:bg-[#00796b] text-white rounded-md px-5 h-10 font-bold gap-2 border-none shadow-sm text-[11px] uppercase tracking-widest">
+      <HomeIcon className="h-4 w-4" />
+      Área do Aluno
+    </Button>
+  </div>
+);
+
 // Componente isolado para o conteúdo do treino
-// Fora do Home para evitar re-criação da definição do componente
 const WorkoutTabContent = memo(({ 
   tabId, 
   workout, 
@@ -354,7 +407,6 @@ export default function Home() {
               </TabsList>
             </div>
 
-            {/* Renderiza apenas o conteúdo da aba ATIVA para evitar travamentos e loops de estado */}
             <div className="w-full">
               <WorkoutTabContent 
                 tabId={activeTab}
@@ -367,6 +419,8 @@ export default function Home() {
               />
             </div>
           </Tabs>
+
+          <WorkoutActionsFooter />
         </main>
         
         <aside className="w-full lg:w-[320px] xl:w-[380px] space-y-6 shrink-0">
@@ -376,3 +430,4 @@ export default function Home() {
     </div>
   );
 }
+
