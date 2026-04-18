@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { Search, X, Check, Dumbbell, Zap, LayoutGrid } from 'lucide-react';
+import { Search, X, Check, Dumbbell, Zap } from 'lucide-react';
 import { systemExercises } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
@@ -64,7 +64,7 @@ export function ExerciseSearchDialog({
   };
 
   const toggleCategory = (category: string) => {
-    setActiveDivision(null); // Limpa divisão ativa se mexer no individual
+    setActiveDivision(null);
     setSelectedCategories((prev) =>
       prev.includes(category)
         ? prev.filter((c) => c !== category)
@@ -98,12 +98,12 @@ export function ExerciseSearchDialog({
       if (!val) resetState();
     }}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[520px] p-0 gap-0 overflow-hidden bg-card border-none shadow-2xl rounded-[32px]">
+      <DialogContent className="sm:max-w-[560px] p-0 gap-0 overflow-hidden bg-card border-none shadow-2xl rounded-[32px] max-h-[90vh]">
         <DialogHeader className="p-8 pb-4">
-          <DialogTitle className="text-2xl font-black italic tracking-tighter uppercase">Buscar Exercício</DialogTitle>
+          <DialogTitle className="text-2xl font-black italic tracking-tighter uppercase text-left">Buscar Exercício</DialogTitle>
         </DialogHeader>
         
-        <div className="px-8 pb-6 space-y-8">
+        <div className="px-8 pb-6 space-y-6">
           {/* Campo de Busca */}
           <div className="relative group">
             <Input
@@ -127,7 +127,7 @@ export function ExerciseSearchDialog({
 
           {/* Filtro por Divisão */}
           <div className="space-y-3">
-            <div className="flex items-center gap-2 mb-1 px-1">
+            <div className="flex items-center gap-2 px-1">
               <Zap className="h-3.5 w-3.5 text-primary fill-primary/20" />
               <p className="text-[11px] font-black uppercase tracking-[0.15em] text-muted-foreground/80">Divisões Sugeridas</p>
             </div>
@@ -155,7 +155,7 @@ export function ExerciseSearchDialog({
 
           {/* Filtro por Grupo Muscular */}
           <div className="space-y-3">
-            <div className="flex items-center gap-2 mb-1 px-1">
+            <div className="flex items-center gap-2 px-1">
               <Dumbbell className="h-3.5 w-3.5 text-muted-foreground" />
               <p className="text-[11px] font-black uppercase tracking-[0.15em] text-muted-foreground/80">Grupos Musculares</p>
             </div>
@@ -183,17 +183,17 @@ export function ExerciseSearchDialog({
           </div>
         </div>
 
-        <ScrollArea className="h-[420px] px-8">
-          <div className="space-y-4 pb-32">
+        <ScrollArea className="h-[400px] w-full">
+          <div className="px-8 space-y-4 pb-32">
             {filteredExercises.length > 0 ? (
               filteredExercises.map((exercise) => (
                 <div
                   key={exercise.name}
                   className={cn(
-                    "flex items-center justify-between p-4 rounded-3xl transition-all group cursor-pointer border-2",
+                    "flex items-center justify-between p-4 rounded-[24px] transition-all group cursor-pointer border-2",
                     highlightedExercise === exercise.name 
                       ? "bg-primary/5 border-primary/30 shadow-sm" 
-                      : "hover:bg-muted/40 border-transparent"
+                      : "hover:bg-muted/40 border-transparent bg-muted/20"
                   )}
                   onClick={() => handleSelect(exercise.name)}
                 >
@@ -215,7 +215,7 @@ export function ExerciseSearchDialog({
                     </div>
                   </div>
                   <div className={cn(
-                    "h-10 w-10 rounded-full flex items-center justify-center transition-all shadow-sm",
+                    "h-10 w-10 rounded-full flex items-center justify-center transition-all shadow-sm shrink-0 ml-4",
                     highlightedExercise === exercise.name 
                       ? "bg-primary text-white scale-110" 
                       : "bg-muted text-muted-foreground/20 group-hover:bg-primary/10 group-hover:text-primary"
@@ -226,14 +226,14 @@ export function ExerciseSearchDialog({
               ))
             ) : (
               <div className="py-24 text-center opacity-20">
-                <Search className="h-12 w-12 mx-auto mb-4" />
+                <Dumbbell className="h-12 w-12 mx-auto mb-4" />
                 <p className="text-sm font-black uppercase tracking-[0.2em]">Nenhum exercício encontrado</p>
               </div>
             )}
           </div>
         </ScrollArea>
 
-        <div className="absolute bottom-8 left-8 right-8 pointer-events-none">
+        <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-card via-card to-transparent pointer-events-none">
            <Button 
             className="w-full bg-[#FF6A3D] hover:bg-[#FF6A3D]/90 text-white rounded-2xl h-16 font-black shadow-xl shadow-orange-500/30 uppercase tracking-[0.2em] text-sm gap-4 pointer-events-auto transition-transform active:scale-95"
             onClick={handleConfirm}
