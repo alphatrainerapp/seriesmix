@@ -24,6 +24,7 @@ export type Exercise = {
   observation?: string;
   groupId?: string;
   category?: string;
+  resistanceProfile?: 'ascendente' | 'u-invertido' | 'descendente';
 };
 
 export type CombinationType = 'biset' | 'triset' | 'superserie' | 'hiit';

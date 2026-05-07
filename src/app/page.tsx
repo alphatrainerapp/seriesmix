@@ -1,4 +1,3 @@
-
 'use client';
 
 import {
@@ -424,10 +423,9 @@ export default function Home() {
         </main>
         
         <aside className="w-full lg:w-[320px] xl:w-[380px] space-y-6 shrink-0">
-          <PageSidebar />
+          <PageSidebar exercises={workouts[activeTab].data} currentTab={activeTab} />
         </aside>
       </div>
     </div>
   );
 }
-
