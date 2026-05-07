@@ -3,6 +3,7 @@
 import { ClientProfileCard } from './client-profile-card';
 import { PrescriptionFormsCard } from './prescription-forms-card';
 import { TrainingMetricsCard } from './training-metrics-card';
+import { ResistanceProfilesCard } from './resistance-profiles-card';
 
 export function PageSidebar() {
   return (
@@ -10,6 +11,7 @@ export function PageSidebar() {
       <ClientProfileCard />
       <PrescriptionFormsCard />
       <TrainingMetricsCard />
+      <ResistanceProfilesCard />
     </div>
   );
 }
