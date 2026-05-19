@@ -131,6 +131,7 @@ export function MobileExerciseCard({
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                   className="absolute inset-0"
+                  loading="lazy"
                 />
               </div>
             ) : videoThumbnail && (
