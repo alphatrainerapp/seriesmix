@@ -4,7 +4,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '../ui/button';
-import { GripVertical, PlaySquare, MessageSquare, Trash2, Link2, Flame, Check, Pencil, SlidersHorizontal, Dumbbell, Timer } from 'lucide-react';
+import { GripVertical, PlaySquare, MessageSquare, Trash2, Link2, Flame, Check, Pencil, SlidersHorizontal, Dumbbell, Timer, ExternalLink } from 'lucide-react';
 import type { Exercise, Set, SetType, CombinationType } from '@/lib/types';
 import {
   Select,
@@ -87,6 +87,12 @@ export function ExerciseCard({
     onUpdateExercise({ ...exercise, name: newName });
   };
 
+  const handlePlayVideo = () => {
+    if (exercise.videoUrl) {
+      window.open(exercise.videoUrl.replace('embed/', 'watch?v='), '_blank');
+    }
+  };
+
   return (
     <>
       <TableRow className={cn(
@@ -124,8 +130,14 @@ export function ExerciseCard({
         </TableCell>
         <TableCell className="p-1 pt-3 w-[120px]">
           <div className="flex items-center gap-1.5">
-            <Button variant="ghost" size="icon" className="shrink-0 h-8 w-8 text-primary/70">
-              <PlaySquare className="w-4 h-4" />
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className={cn("shrink-0 h-8 w-8 transition-colors", exercise.videoUrl ? "text-primary" : "text-muted-foreground/30")}
+              onClick={handlePlayVideo}
+              disabled={!exercise.videoUrl}
+            >
+              {exercise.videoUrl ? <ExternalLink className="w-4 h-4" /> : <PlaySquare className="w-4 h-4" />}
             </Button>
             <Select>
               <SelectTrigger className="w-full bg-exercise-card border-border shadow-sm rounded-lg h-9 text-[10px] px-3 font-black uppercase tracking-wider">

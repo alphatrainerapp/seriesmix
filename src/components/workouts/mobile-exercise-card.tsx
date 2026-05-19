@@ -120,7 +120,20 @@ export function MobileExerciseCard({
 
         <AccordionContent className="pb-0 pt-5 px-0">
           <div className="space-y-5">
-            {videoThumbnail && (
+            {exercise.videoUrl ? (
+              <div className="relative aspect-video rounded-xl overflow-hidden border border-border shadow-inner-sm bg-black">
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src={exercise.videoUrl}
+                  title={`Vídeo de ${exercise.name}`}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="absolute inset-0"
+                />
+              </div>
+            ) : videoThumbnail && (
               <div className="relative aspect-video rounded-xl overflow-hidden border border-border shadow-inner-sm">
                 <Image
                   src={videoThumbnail.imageUrl}

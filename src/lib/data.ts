@@ -39,6 +39,7 @@ export const mockWorkout: Exercise[] = [
     repsRange: '20s',
     observation: 'Focar na amplitude do movimento.',
     groupId: 'warmup',
+    videoUrl: 'https://www.youtube.com/embed/qi9tu_oWOJc',
   },
   {
     id: 2,
@@ -63,6 +64,7 @@ export const mockWorkout: Exercise[] = [
     repsRange: '8-10',
     observation: 'Manter a coluna reta durante todo o movimento.',
     resistanceProfile: 'ascendente',
+    videoUrl: 'https://www.youtube.com/embed/qi9tu_oWOJc',
   },
   {
     id: 4,
