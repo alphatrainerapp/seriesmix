@@ -6,7 +6,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Button, buttonVariants } from '../ui/button';
-import { MessageSquare, PlaySquare, Trash2, Flame, SlidersHorizontal, Dumbbell, Link2, Timer, Hash } from 'lucide-react';
+import { MessageSquare, PlaySquare, Trash2, Flame, SlidersHorizontal, Dumbbell, Link2, Timer, Hash, Shuffle, ExternalLink } from 'lucide-react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { Exercise, SetType, CombinationType } from '@/lib/types';
@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { EditSetsDialog } from './edit-sets-dialog';
 import { EditObservationDialog } from './edit-observation-dialog';
 import { ExerciseSearchDialog } from './exercise-search-dialog';
+import { SubstitutionDialog } from './substitution-dialog';
 import { Badge } from '../ui/badge';
 import { cn } from '@/lib/utils';
 import { Input } from '../ui/input';
@@ -79,6 +80,12 @@ export function MobileExerciseCard({
   const handleUpdateName = (newName: string) => {
     onUpdateExercise({ ...exercise, name: newName });
   };
+
+  const handleSaveSubstitutions = (substitutions: string[]) => {
+    onUpdateExercise({ ...exercise, substitutions });
+  };
+
+  const substitutionCount = exercise.substitutions?.length || 0;
 
   return (
     <AccordionItem value={`item-${exercise.id}`} className="border-none">
@@ -228,6 +235,29 @@ export function MobileExerciseCard({
                       </SelectContent>
                   </Select>
                </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <SubstitutionDialog exercise={exercise} onSave={handleSaveSubstitutions}>
+                <Button 
+                  variant="outline" 
+                  className={cn(
+                    "rounded-xl h-12 gap-2 font-black uppercase tracking-widest text-[10px] shadow-sm border-[#00bfa5]/20",
+                    substitutionCount > 0 ? "text-[#00bfa5] bg-[#00bfa5]/5" : "text-muted-foreground"
+                  )}
+                >
+                  <Shuffle className="h-4 w-4" />
+                  Trocas ({substitutionCount})
+                </Button>
+              </SubstitutionDialog>
+              
+              <Button 
+                variant="outline" 
+                className="rounded-xl h-12 gap-2 font-black uppercase tracking-widest text-[10px] shadow-sm text-primary"
+              >
+                <ExternalLink className="h-4 w-4" />
+                Dicas
+              </Button>
             </div>
 
             {combinationType && (

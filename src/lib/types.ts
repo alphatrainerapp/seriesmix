@@ -26,6 +26,7 @@ export type Exercise = {
   category?: string;
   resistanceProfile?: 'ascendente' | 'u-invertido' | 'descendente';
   videoUrl?: string;
+  substitutions?: string[];
 };
 
 export type CombinationType = 'biset' | 'triset' | 'superserie' | 'hiit';

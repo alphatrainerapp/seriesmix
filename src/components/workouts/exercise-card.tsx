@@ -4,7 +4,21 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '../ui/button';
-import { GripVertical, PlaySquare, MessageSquare, Trash2, Link2, Flame, Check, Pencil, SlidersHorizontal, Dumbbell, Timer, ExternalLink } from 'lucide-react';
+import { 
+  GripVertical, 
+  PlaySquare, 
+  MessageSquare, 
+  Trash2, 
+  Link2, 
+  Flame, 
+  Check, 
+  Pencil, 
+  SlidersHorizontal, 
+  Dumbbell, 
+  Timer, 
+  ExternalLink,
+  Shuffle
+} from 'lucide-react';
 import type { Exercise, Set, SetType, CombinationType } from '@/lib/types';
 import {
   Select,
@@ -18,6 +32,7 @@ import { Input } from '../ui/input';
 import { EditSetsDialog } from './edit-sets-dialog';
 import { EditObservationDialog } from './edit-observation-dialog';
 import { ExerciseSearchDialog } from './exercise-search-dialog';
+import { SubstitutionDialog } from './substitution-dialog';
 
 const setTypeConfig: {
   [key in SetType]: {
@@ -87,11 +102,17 @@ export function ExerciseCard({
     onUpdateExercise({ ...exercise, name: newName });
   };
 
+  const handleSaveSubstitutions = (substitutions: string[]) => {
+    onUpdateExercise({ ...exercise, substitutions });
+  };
+
   const handlePlayVideo = () => {
     if (exercise.videoUrl) {
       window.open(exercise.videoUrl.replace('embed/', 'watch?v='), '_blank');
     }
   };
+
+  const substitutionCount = exercise.substitutions?.length || 0;
 
   return (
     <>
@@ -128,7 +149,7 @@ export function ExerciseCard({
             </ExerciseSearchDialog>
           </div>
         </TableCell>
-        <TableCell className="p-1 pt-3 w-[120px]">
+        <TableCell className="p-1 pt-3 w-[160px]">
           <div className="flex items-center gap-1.5">
             <Button 
               variant="ghost" 
@@ -139,6 +160,27 @@ export function ExerciseCard({
             >
               {exercise.videoUrl ? <ExternalLink className="w-4 h-4" /> : <PlaySquare className="w-4 h-4" />}
             </Button>
+            
+            <SubstitutionDialog exercise={exercise} onSave={handleSaveSubstitutions}>
+              <div className="relative group cursor-pointer">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className={cn(
+                    "h-8 w-8 transition-all hover:bg-[#00bfa5]/10 hover:shadow-[0_0_15px_rgba(0,191,165,0.3)]",
+                    substitutionCount > 0 ? "text-[#00bfa5]" : "text-muted-foreground/30"
+                  )}
+                >
+                  <Shuffle className="w-4 h-4" />
+                </Button>
+                {substitutionCount > 0 && (
+                  <span className="absolute -top-1 -right-1 h-4 w-4 bg-[#00bfa5] text-white text-[9px] font-black flex items-center justify-center rounded-full shadow-sm">
+                    {substitutionCount}
+                  </span>
+                )}
+              </div>
+            </SubstitutionDialog>
+
             <Select>
               <SelectTrigger className="w-full bg-exercise-card border-border shadow-sm rounded-lg h-9 text-[10px] px-3 font-black uppercase tracking-wider">
                 <SelectValue placeholder="MÉTODO" />
