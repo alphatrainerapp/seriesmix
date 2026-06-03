@@ -167,8 +167,8 @@ export function ExerciseCard({
                   variant="ghost" 
                   size="icon" 
                   className={cn(
-                    "h-8 w-8 transition-all hover:bg-[#00bfa5]/10 hover:shadow-[0_0_15px_rgba(0,191,165,0.3)]",
-                    substitutionCount > 0 ? "text-[#00bfa5]" : "text-muted-foreground/30"
+                    "h-8 w-8 transition-all hover:bg-[#00bfa5]/15 hover:shadow-[0_0_15px_rgba(0,191,165,0.2)]",
+                    substitutionCount > 0 ? "text-[#00bfa5]" : "text-[#00bfa5]/50"
                   )}
                 >
                   <Shuffle className="w-4 h-4" />

@@ -242,8 +242,8 @@ export function MobileExerciseCard({
                 <Button 
                   variant="outline" 
                   className={cn(
-                    "rounded-xl h-12 gap-2 font-black uppercase tracking-widest text-[10px] shadow-sm border-[#00bfa5]/20",
-                    substitutionCount > 0 ? "text-[#00bfa5] bg-[#00bfa5]/5" : "text-muted-foreground"
+                    "rounded-xl h-12 gap-2 font-black uppercase tracking-widest text-[10px] shadow-sm border-[#00bfa5]/30 hover:bg-[#00bfa5]/10",
+                    substitutionCount > 0 ? "text-[#00bfa5] bg-[#00bfa5]/5 border-[#00bfa5]" : "text-[#00bfa5]/60"
                   )}
                 >
                   <Shuffle className="h-4 w-4" />
