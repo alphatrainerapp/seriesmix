@@ -139,15 +139,19 @@ const WorkoutTabContent = memo(({
     const renderedGroupIds = new Set<string>();
 
     workout.data.forEach((currentExercise) => {
-      // Se for um WOD, renderiza o componente de WOD
+      // Se for um WOD, renderiza o componente de WOD dentro de uma estrutura de tabela válida
       if (currentExercise.isWod) {
         elements.push(
-          <div key={`wod-${currentExercise.id}-${tabId}`} className="col-span-full">
-            <WodBlockCard 
-              exercise={currentExercise} 
-              onUpdateExercise={(ex) => onUpdateExercise(ex, tabId)} 
-            />
-          </div>
+          <TableBody key={`wod-body-${currentExercise.id}-${tabId}`} className="border-none">
+            <TableRow className="hover:bg-transparent border-none">
+              <TableCell colSpan={10} className="p-0 border-none pt-4 pb-4">
+                <WodBlockCard 
+                  exercise={currentExercise} 
+                  onUpdateExercise={(ex) => onUpdateExercise(ex, tabId)} 
+                />
+              </TableCell>
+            </TableRow>
+          </TableBody>
         );
         return;
       }
@@ -160,7 +164,7 @@ const WorkoutTabContent = memo(({
         const group = workout.data.filter(e => e.groupId === currentExercise.groupId);
         const combinationType = workout.combinationTypes[currentExercise.groupId];
         elements.push(
-          <tbody key={`group-${currentExercise.groupId}-${tabId}`} className="relative border-b-0">
+          <TableBody key={`group-${currentExercise.groupId}-${tabId}`} className="relative border-b-0">
              {group.map((exercise, idx) => (
                 <ExerciseCard
                   key={`${exercise.id}-${tabId}`}
@@ -173,18 +177,18 @@ const WorkoutTabContent = memo(({
                   combinationType={combinationType}
                 />
               ))}
-          </tbody>
+          </TableBody>
         );
         renderedGroupIds.add(currentExercise.groupId);
       } else {
         elements.push(
-          <tbody key={`${currentExercise.id}-${tabId}`}>
+          <TableBody key={`${currentExercise.id}-${tabId}`}>
             <ExerciseCard
               exercise={currentExercise}
               onUpdateExercise={(ex) => onUpdateExercise(ex, tabId)}
               onApplySetsToAll={(sets) => onApplySetsToAll(sets, tabId)}
             />
-          </tbody>
+          </TableBody>
         );
       }
     });
@@ -502,4 +506,3 @@ export default function Home() {
     </div>
   );
 }
-
