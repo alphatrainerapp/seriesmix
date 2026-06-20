@@ -15,6 +15,27 @@ export type SystemExercise = {
   imageHint: string;
 };
 
+export type WodType = 'AMRAP' | 'EMOM' | 'FOR TIME' | 'TABATA' | 'CHIPPER' | 'INTERVALADO' | 'LIVRE';
+
+export interface WodExercise {
+  id: string;
+  name: string;
+  reps?: string;
+  load?: string;
+  distance?: string;
+  calories?: string;
+  time?: string;
+}
+
+export interface WodDetails {
+  type: WodType;
+  description: string;
+  exercises: WodExercise[];
+  rounds?: string;
+  duration?: string;
+  restBetweenRounds?: string;
+}
+
 export type Exercise = {
   id: number;
   name: string;
@@ -27,6 +48,8 @@ export type Exercise = {
   resistanceProfile?: 'ascendente' | 'u-invertido' | 'descendente';
   videoUrl?: string;
   substitutions?: string[];
+  isWod?: boolean;
+  wodDetails?: WodDetails;
 };
 
 export type CombinationType = 'biset' | 'triset' | 'superserie' | 'hiit';

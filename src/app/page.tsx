@@ -11,18 +11,20 @@ import {
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { mockWorkout as initialWorkoutData } from '@/lib/data';
 import { ExerciseCard } from '@/components/workouts/exercise-card';
+import { WodBlockCard } from '@/components/workouts/wod-block-card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { TrainingPlanHeader } from '@/components/plan/training-plan-header';
 import { TrainingSplit } from '@/components/plan/training-split';
 import { useState, useCallback, memo, useMemo } from 'react';
-import type { CombinationType, Exercise, Set } from '@/lib/types';
+import type { CombinationType, Exercise, Set, WodDetails } from '@/lib/types';
 import { MobileExerciseCard } from '@/components/workouts/mobile-exercise-card';
 import { Accordion } from '@/components/ui/accordion';
 import { CombineExercisesDialog } from '@/components/workouts/combine-exercises-dialog';
 import { SaveSessionDialog } from '@/components/workouts/save-session-dialog';
 import { UseSavedSessionDialog } from '@/components/workouts/use-saved-session-dialog';
+import { WodConfigDialog } from '@/components/workouts/wod-config-dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -42,7 +44,8 @@ import {
   Printer, 
   Download, 
   Send, 
-  Home as HomeIcon 
+  Home as HomeIcon,
+  Zap
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
@@ -101,7 +104,8 @@ const WorkoutTabContent = memo(({
   onApplySetsToAll, 
   onApplySavedSession, 
   onUpdateWorkoutData, 
-  onUpdateCombinationTypes 
+  onUpdateCombinationTypes,
+  onAddWod
 }: { 
   tabId: string;
   workout: WorkoutState;
@@ -110,6 +114,7 @@ const WorkoutTabContent = memo(({
   onApplySavedSession: (data: Exercise[], types: Record<string, CombinationType>, tabId: string) => void;
   onUpdateWorkoutData: (data: Exercise[], tabId: string) => void;
   onUpdateCombinationTypes: (types: Record<string, CombinationType>, tabId: string) => void;
+  onAddWod: (tabId: string) => void;
 }) => {
   const [isSorting, setIsSorting] = useState(false);
 
@@ -134,6 +139,19 @@ const WorkoutTabContent = memo(({
     const renderedGroupIds = new Set<string>();
 
     workout.data.forEach((currentExercise) => {
+      // Se for um WOD, renderiza o componente de WOD
+      if (currentExercise.isWod) {
+        elements.push(
+          <div key={`wod-${currentExercise.id}-${tabId}`} className="col-span-full">
+            <WodBlockCard 
+              exercise={currentExercise} 
+              onUpdateExercise={(ex) => onUpdateExercise(ex, tabId)} 
+            />
+          </div>
+        );
+        return;
+      }
+
       if (currentExercise.groupId && renderedGroupIds.has(currentExercise.groupId)) {
         return;
       }
@@ -228,24 +246,26 @@ const WorkoutTabContent = memo(({
       </div>
       
       {/* Desktop View */}
-      <div className="border rounded-2xl bg-card shadow-sm hidden md:block overflow-hidden w-full border-border/40">
-        <Table className="w-full">
-          <TableHeader>
-            <TableRow className="hover:bg-transparent bg-muted/20 border-b-border/40 text-[10px] uppercase tracking-[0.2em] font-black">
-              <TableHead className="w-[40px] px-2"></TableHead>
-              <TableHead className="min-w-[200px]">Exercício</TableHead>
-              <TableHead className="w-[120px]">Método</TableHead>
-              <TableHead className="w-[45px] text-center">Obs</TableHead>
-              <TableHead className="w-[55px] text-center">Série</TableHead>
-              <TableHead className="w-[55px] text-center">Reps</TableHead>
-              <TableHead className="w-[55px] text-center">Inter</TableHead>
-              <TableHead className="w-[55px] text-center">Cadê</TableHead>
-              <TableHead className="w-[45px] text-center">Status</TableHead>
-              <TableHead className="w-[45px]"></TableHead>
-            </TableRow>
-          </TableHeader>
-          {renderExerciseList()}
-        </Table>
+      <div className="space-y-4">
+        <div className="border rounded-2xl bg-card shadow-sm hidden md:block overflow-hidden w-full border-border/40">
+          <Table className="w-full">
+            <TableHeader>
+              <TableRow className="hover:bg-transparent bg-muted/20 border-b-border/40 text-[10px] uppercase tracking-[0.2em] font-black">
+                <TableHead className="w-[40px] px-2"></TableHead>
+                <TableHead className="min-w-[200px]">Exercício</TableHead>
+                <TableHead className="w-[120px]">Método</TableHead>
+                <TableHead className="w-[45px] text-center">Obs</TableHead>
+                <TableHead className="w-[55px] text-center">Série</TableHead>
+                <TableHead className="w-[55px] text-center">Reps</TableHead>
+                <TableHead className="w-[55px] text-center">Inter</TableHead>
+                <TableHead className="w-[55px] text-center">Cadê</TableHead>
+                <TableHead className="w-[45px] text-center">Status</TableHead>
+                <TableHead className="w-[45px]"></TableHead>
+              </TableRow>
+            </TableHeader>
+            {renderExerciseList()}
+          </Table>
+        </div>
       </div>
 
       {/* Mobile View */}
@@ -253,12 +273,20 @@ const WorkoutTabContent = memo(({
         {workout.data.length > 0 ? (
           <Accordion type="single" collapsible className="flex flex-col gap-3 w-full">
             {workout.data.map((exercise) => (
-              <MobileExerciseCard
-                key={`${exercise.id}-mobile-${tabId}`}
-                exercise={exercise}
-                onUpdateExercise={(ex) => onUpdateExercise(ex, tabId)}
-                combinationType={exercise.groupId ? workout.combinationTypes[exercise.groupId] : undefined}
-              />
+              exercise.isWod ? (
+                 <WodBlockCard 
+                  key={`wod-mobile-${exercise.id}-${tabId}`}
+                  exercise={exercise} 
+                  onUpdateExercise={(ex) => onUpdateExercise(ex, tabId)} 
+                />
+              ) : (
+                <MobileExerciseCard
+                  key={`${exercise.id}-mobile-${tabId}`}
+                  exercise={exercise}
+                  onUpdateExercise={(ex) => onUpdateExercise(ex, tabId)}
+                  combinationType={exercise.groupId ? workout.combinationTypes[exercise.groupId] : undefined}
+                />
+              )
             ))}
           </Accordion>
         ) : (
@@ -281,6 +309,13 @@ const WorkoutTabContent = memo(({
             <DropdownMenuContent align="start" className="w-64 rounded-xl p-2 shadow-xl border-border/40">
               <DropdownMenuItem className="rounded-lg p-4 cursor-pointer font-bold uppercase text-[10px] tracking-widest">Protocolo aeróbico</DropdownMenuItem>
               <DropdownMenuItem className="rounded-lg p-4 cursor-pointer font-bold uppercase text-[10px] tracking-widest">Hiit</DropdownMenuItem>
+              <DropdownMenuItem 
+                className="rounded-lg p-4 cursor-pointer font-bold uppercase text-[10px] tracking-widest"
+                onClick={() => onAddWod(tabId)}
+              >
+                <Zap className="h-4 w-4 mr-2 text-primary" />
+                Protocolo WOD
+              </DropdownMenuItem>
               <DropdownMenuItem className="rounded-lg p-4 cursor-pointer font-bold uppercase text-[10px] tracking-widest">Exercício</DropdownMenuItem>
               <DropdownMenuItem className="rounded-lg p-4 cursor-pointer font-bold uppercase text-[10px] tracking-widest">Aquecimento</DropdownMenuItem>
             </DropdownMenuContent>
@@ -320,6 +355,7 @@ WorkoutTabContent.displayName = 'WorkoutTabContent';
 export default function Home() {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('treino-a');
+  const [wodConfigOpen, setWodConfigOpen] = useState(false);
   
   const [workouts, setWorkouts] = useState<Record<string, WorkoutState>>({
     'treino-a': { data: JSON.parse(JSON.stringify(initialWorkoutData)), combinationTypes: { 'warmup': 'biset' } },
@@ -384,6 +420,42 @@ export default function Home() {
     }));
   }, []);
 
+  const handleAddWod = (tabId: string) => {
+    const newWod: Exercise = {
+      id: Date.now(),
+      name: 'WOD: AMRAP',
+      isWod: true,
+      preExhaustion: false,
+      repsRange: '',
+      sets: [],
+      wodDetails: {
+        type: 'AMRAP',
+        description: 'Complete o máximo de voltas possível no tempo determinado.',
+        exercises: [],
+        rounds: '1',
+        duration: '20:00'
+      }
+    };
+    
+    setWorkouts(prev => ({
+      ...prev,
+      [tabId]: {
+        ...prev[tabId],
+        data: [...prev[tabId].data, newWod]
+      }
+    }));
+    
+    toast({
+      title: "Bloco WOD Adicionado",
+      description: "Configure os exercícios e o formato do seu WOD.",
+    });
+  };
+
+  const handleSaveWodDetails = (details: WodDetails) => {
+     // A atualização real acontece no componente WodBlockCard
+     setWodConfigOpen(false);
+  };
+
   return (
     <div className="app-container py-8 text-foreground transition-all duration-300">
       <div className="flex flex-col lg:flex-row gap-8 items-start w-full">
@@ -415,6 +487,7 @@ export default function Home() {
                 onApplySavedSession={handleApplySavedSession}
                 onUpdateWorkoutData={handleUpdateWorkoutData}
                 onUpdateCombinationTypes={handleUpdateCombinationTypes}
+                onAddWod={handleAddWod}
               />
             </div>
           </Tabs>
@@ -429,3 +502,4 @@ export default function Home() {
     </div>
   );
 }
+
