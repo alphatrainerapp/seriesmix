@@ -13,7 +13,8 @@ import {
   Info,
   Clock,
   Repeat,
-  LayoutList
+  LayoutList,
+  Dumbbell
 } from 'lucide-react';
 import type { Exercise, WodDetails } from '@/lib/types';
 import { cn } from '@/lib/utils';
