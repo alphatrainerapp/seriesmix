@@ -139,18 +139,14 @@ const WorkoutTabContent = memo(({
     const renderedGroupIds = new Set<string>();
 
     workout.data.forEach((currentExercise) => {
-      // Se for um WOD, renderiza o componente de WOD dentro de uma estrutura de tabela válida
+      // Se for um WOD, renderiza o componente WodBlockCard que agora é uma linha compacta
       if (currentExercise.isWod) {
         elements.push(
-          <TableBody key={`wod-body-${currentExercise.id}-${tabId}`} className="border-none">
-            <TableRow className="hover:bg-transparent border-none">
-              <TableCell colSpan={10} className="p-0 border-none pt-4 pb-4">
-                <WodBlockCard 
-                  exercise={currentExercise} 
-                  onUpdateExercise={(ex) => onUpdateExercise(ex, tabId)} 
-                />
-              </TableCell>
-            </TableRow>
+          <TableBody key={`wod-body-${currentExercise.id}-${tabId}`}>
+            <WodBlockCard 
+              exercise={currentExercise} 
+              onUpdateExercise={(ex) => onUpdateExercise(ex, tabId)} 
+            />
           </TableBody>
         );
         return;
@@ -359,7 +355,6 @@ WorkoutTabContent.displayName = 'WorkoutTabContent';
 export default function Home() {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('treino-a');
-  const [wodConfigOpen, setWodConfigOpen] = useState(false);
   
   const [workouts, setWorkouts] = useState<Record<string, WorkoutState>>({
     'treino-a': { data: JSON.parse(JSON.stringify(initialWorkoutData)), combinationTypes: { 'warmup': 'biset' } },
@@ -433,11 +428,12 @@ export default function Home() {
       repsRange: '',
       sets: [],
       wodDetails: {
+        name: 'METCON 01',
         type: 'AMRAP',
         description: 'Complete o máximo de voltas possível no tempo determinado.',
         exercises: [],
         rounds: '1',
-        duration: '20:00'
+        duration: '15:00'
       }
     };
     
@@ -450,14 +446,9 @@ export default function Home() {
     }));
     
     toast({
-      title: "Bloco WOD Adicionado",
-      description: "Configure os exercícios e o formato do seu WOD.",
+      title: "Protocolo WOD Criado",
+      description: "Edite o bloco para configurar o formato e exercícios.",
     });
-  };
-
-  const handleSaveWodDetails = (details: WodDetails) => {
-     // A atualização real acontece no componente WodBlockCard
-     setWodConfigOpen(false);
   };
 
   return (

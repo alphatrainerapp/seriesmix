@@ -28,6 +28,7 @@ export interface WodExercise {
 }
 
 export interface WodDetails {
+  name?: string;
   type: WodType;
   description: string;
   exercises: WodExercise[];
