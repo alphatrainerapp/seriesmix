@@ -1,13 +1,13 @@
-
 'use client';
 
 import Image from 'next/image';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Target, CalendarDays, User, Pencil } from 'lucide-react';
+import { Target, CalendarDays, User, Pencil, ShieldCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { Badge } from '../ui/badge';
 
 interface SectionHeaderProps {
   icon: React.ElementType;
@@ -60,7 +60,6 @@ const StudentProfile = () => {
         </Button>
       </div>
       
-      {/* Avatar Circular Perfeito */}
       <div className="relative w-32 h-32 mb-4">
         <div className="w-full h-full rounded-full overflow-hidden border-4 border-background shadow-xl bg-muted flex items-center justify-center">
            {studentAvatar ? (
@@ -75,10 +74,18 @@ const StudentProfile = () => {
             <User className="w-12 h-12 text-muted-foreground" />
           )}
         </div>
+        <div className="absolute -bottom-1 -right-1 bg-primary text-white p-2 rounded-full border-4 border-background shadow-lg">
+          <ShieldCheck className="h-5 w-5" />
+        </div>
       </div>
       
       <h3 className="text-xl font-bold tracking-tight">João Silva</h3>
-      <p className="text-sm text-muted-foreground font-semibold uppercase tracking-wider">Aluno</p>
+      <div className="flex items-center gap-2 mt-1">
+        <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 hover:bg-emerald-500/20 rounded-full px-4">
+          ATIVO
+        </Badge>
+        <span className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Membro Premium</span>
+      </div>
     </div>
   );
 };
@@ -87,13 +94,11 @@ export function TrainingPlanHeader() {
   const studentAvatar = PlaceHolderImages.find((img) => img.id === 'student-avatar');
 
   return (
-    <Card className="p-6 bg-card shadow-sm rounded-2xl border-none">
+    <Card className="p-6 bg-card shadow-sm rounded-2xl border border-border/40">
       {/* Mobile View */}
       <div className="block md:hidden space-y-4">
-        {/* Perfil do Aluno */}
         <StudentProfile />
 
-        {/* Programa */}
         <SectionHeader icon={Target} title="Programa" />
         <Field label="Objetivo" value="Ganho de massa muscular" />
         <Field label="Tipo de Exercício" value="Musculação" />
@@ -102,7 +107,6 @@ export function TrainingPlanHeader() {
           <Field label="Intensidade" value="Moderada" />
         </div>
 
-        {/* Cronograma */}
         <SectionHeader icon={CalendarDays} title="Cronograma" />
         <div className="grid grid-cols-2 gap-4">
           <Field label="Início" value="14/01/2024" />
@@ -115,17 +119,16 @@ export function TrainingPlanHeader() {
         />
         <Field label="Frequência Semanal" value="4x por semana" />
 
-        {/* Observações */}
         <SectionHeader icon={User} title="Observações" />
         <Field label="" value="Aluno focado em hipertrofia e progressão de carga constante." />
       </div>
 
       {/* Desktop View */}
       <div className="hidden md:block">
-         <div className="flex justify-between items-start mb-8">
-            <div className="flex items-center gap-4">
-                <div className="relative w-16 h-16">
-                    <div className="w-full h-full rounded-full overflow-hidden border-2 border-background shadow-md bg-muted">
+         <div className="flex justify-between items-start mb-10">
+            <div className="flex items-center gap-6">
+                <div className="relative w-20 h-20">
+                    <div className="w-full h-full rounded-full overflow-hidden border-2 border-background shadow-xl bg-muted">
                     {studentAvatar ? (
                       <Image
                         src={studentAvatar.imageUrl}
@@ -134,41 +137,54 @@ export function TrainingPlanHeader() {
                         className="object-cover rounded-full"
                       />
                     ) : (
-                      <User className="w-6 h-6 text-muted-foreground" />
+                      <User className="w-8 h-8 text-muted-foreground" />
                     )}
                     </div>
+                    <div className="absolute bottom-0 right-0 bg-primary h-6 w-6 rounded-full flex items-center justify-center border-2 border-background">
+                       <ShieldCheck className="h-3 w-3 text-white" />
+                    </div>
                 </div>
-                <div>
-                    <h3 className="text-xl font-bold tracking-tight">João Silva</h3>
-                    <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">Aluno</p>
+                <div className="space-y-1">
+                    <div className="flex items-center gap-3">
+                      <h3 className="text-2xl font-black tracking-tighter italic uppercase">João Silva</h3>
+                      <Badge className="bg-emerald-500 text-white border-none rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-500/20">
+                        ATIVO
+                      </Badge>
+                    </div>
+                    <p className="text-xs text-muted-foreground font-black uppercase tracking-[0.2em]">Aluno de Consultoria Online</p>
                 </div>
             </div>
-            <Button variant="outline" size="sm" className="rounded-xl gap-2 shadow-sm">
-                <Pencil className="h-4 w-4" />
-                Editar Perfil
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button variant="ghost" className="rounded-xl gap-2 font-bold text-muted-foreground">
+                Histórico de Medidas
+              </Button>
+              <Button variant="outline" className="rounded-xl gap-2 shadow-sm border-border hover:bg-muted/50 font-bold px-6">
+                  <Pencil className="h-4 w-4" />
+                  Editar Perfil
+              </Button>
+            </div>
          </div>
 
-         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="space-y-4">
                 <SectionHeader icon={Target} title="Programa" />
-                <Field label="Objetivo" value="Ganho de massa muscular" />
-                <Field label="Tipo" value="Musculação" />
+                <Field label="Objetivo Principal" value="Ganho de massa muscular" />
+                <Field label="Tipo de Atividade" value="Musculação" />
             </div>
             <div className="space-y-4">
                 <div className="h-8 mb-4 mt-6 first:mt-0" />
-                <Field label="Duração" value="60 min" />
-                <Field label="Intensidade" value="Moderada" />
+                <Field label="Tempo Estimado" value="60 min" />
+                <Field label="Intensidade Alvo" value="Moderada" />
             </div>
             <div className="space-y-4">
                 <SectionHeader icon={CalendarDays} title="Cronograma" />
-                <Field label="Início" value="14/01/2024" />
-                <Field label="Divisão" value="ABCD" inputClassName="bg-primary/10 text-primary font-bold" />
+                <Field label="Data de Início" value="14/01/2024" />
+                <Field label="Divisão Atual" value="ABCD" inputClassName="bg-primary/10 text-primary font-bold" />
             </div>
             <div className="space-y-4">
-                <SectionHeader icon={User} title="Notas" />
-                <Field label="Frequência" value="4x/Semana" />
-                <Field label="Observação" value="Foco em Hipertrofia" />
+                <SectionHeader icon={User} title="Prescrição" />
+                <Field label="Meta Semanal" value="4x/Semana" />
+                <Field label="Foco do Mês" value="Hipertrofia" />
             </div>
          </div>
       </div>

@@ -26,6 +26,7 @@ import {
   Plus,
   X,
   Hash,
+  Clock,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Exercise, Set, SetType } from '@/lib/types';
@@ -53,6 +54,8 @@ const setTypeOptions: {
   { value: 'trabalho', label: 'Trabalho', icon: Dumbbell, color: 'text-green-500' },
 ];
 
+const intervalPresets = ['30', '60', '90', '120'];
+
 const SetTypeSelectItem = ({
   value,
   label,
@@ -72,7 +75,7 @@ const SetTypeSelectItem = ({
   </SelectItem>
 );
 
-const GRID_COLS_CLASS = "md:grid-cols-[40px_160px_1fr_90px_90px_40px]";
+const GRID_COLS_CLASS = "md:grid-cols-[40px_160px_1fr_110px_90px_40px]";
 
 export function EditSetsDialog({
   children,
@@ -137,7 +140,7 @@ export function EditSetsDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-2xl bg-card p-0 gap-0 overflow-hidden border-none shadow-2xl rounded-2xl">
+      <DialogContent className="sm:max-w-3xl bg-card p-0 gap-0 overflow-hidden border-none shadow-2xl rounded-2xl">
         <DialogHeader className="p-6 pb-2">
           <DialogTitle className="text-xl font-black uppercase tracking-tighter italic">Editar Séries</DialogTitle>
         </DialogHeader>
@@ -147,20 +150,20 @@ export function EditSetsDialog({
             <div className="text-center">Série</div>
             <div>Tipo</div>
             <div className="text-center">Reps / Tempo</div>
-            <div className="text-center">Intervalo</div>
+            <div className="text-center">Intervalo (s)</div>
             <div className="flex items-center justify-center gap-1">
               RIR <HelpCircle className="h-3 w-3 opacity-50" />
             </div>
             <div></div>
           </div>
 
-          <div className="space-y-4 md:space-y-2">
+          <div className="space-y-4 md:space-y-3">
             {sets.map((set, index) => {
               const setType = setTypeOptions.find((t) => t.value === set.type);
               const Icon = setType?.icon;
               
               return (
-                <div key={set.id} className={cn("relative md:grid items-center md:gap-x-4 gap-y-3 p-4 md:p-0 rounded-2xl border md:border-none bg-muted/20 md:bg-transparent transition-all", GRID_COLS_CLASS)}>
+                <div key={set.id} className={cn("relative md:grid items-center md:gap-x-4 gap-y-3 p-4 md:p-3 rounded-2xl border md:border md:border-border/40 bg-muted/20 md:bg-muted/10 transition-all", GRID_COLS_CLASS)}>
                   <div className="flex items-center justify-between md:block mb-2 md:mb-0">
                     <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest md:hidden">Série {index + 1}</span>
                     <div className="hidden md:flex font-black text-foreground h-10 items-center justify-center w-10 text-sm bg-muted/40 rounded-lg">{index + 1}</div>
@@ -224,13 +227,32 @@ export function EditSetsDialog({
 
                     <div className="space-y-1 md:space-y-0">
                       <label className="text-[10px] font-black text-muted-foreground uppercase md:hidden tracking-wider text-center">Intervalo</label>
-                      <Input
-                        value={set.interval}
-                        onChange={(e) =>
-                          handleSetChange(set.id, 'interval', e.target.value)
-                        }
-                        className="bg-background h-10 rounded-lg font-bold text-center border-border/40 text-sm md:text-[14px]"
-                      />
+                      <div className="flex flex-col gap-1.5">
+                        <Input
+                          value={set.interval}
+                          onChange={(e) =>
+                            handleSetChange(set.id, 'interval', e.target.value)
+                          }
+                          className="bg-background h-10 rounded-lg font-bold text-center border-border/40 text-sm md:text-[14px]"
+                        />
+                        <div className="flex items-center justify-between gap-1 mt-1">
+                          {intervalPresets.map((p) => (
+                            <button
+                              key={p}
+                              type="button"
+                              onClick={() => handleSetChange(set.id, 'interval', p)}
+                              className={cn(
+                                "flex-1 text-[9px] font-black h-5 rounded-sm border transition-colors",
+                                set.interval === p 
+                                  ? "bg-primary text-white border-primary" 
+                                  : "bg-background text-muted-foreground border-border/40 hover:bg-primary/10 hover:border-primary/30"
+                              )}
+                            >
+                              {p}s
+                            </button>
+                          ))}
+                        </div>
+                      </div>
                     </div>
 
                     <div className="space-y-1 md:space-y-0">

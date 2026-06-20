@@ -119,17 +119,19 @@ export function ExerciseCard({
       <TableRow className={cn(
         "align-top hover:bg-muted/50 border-b-border/30",
         isGrouped && !isLastInGroup ? "border-b-0" : "",
-        isGrouped ? "bg-muted/10" : ""
+        isGrouped ? "bg-muted/5 border-x border-primary/10" : "",
+        isFirstInGroup ? "border-t border-primary/20 rounded-t-xl" : "",
+        isLastInGroup ? "border-b border-primary/20 rounded-b-xl" : ""
       )}>
         <TableCell className="w-[40px] pt-4 px-1.5 relative">
           {isGrouped && (
-             <div className="absolute left-[20px] top-0 h-full w-[2px] bg-primary/20">
-                {isFirstInGroup && <div className="absolute -top-0 left-1/2 -translate-x-1/2 h-3 w-3 rounded-full bg-primary/20" />}
-                {isLastInGroup && <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 h-3 w-3 rounded-full bg-primary/20" />}
+             <div className="absolute left-[20px] top-0 h-full w-[2px] bg-primary/30">
+                {isFirstInGroup && <div className="absolute -top-0 left-1/2 -translate-x-1/2 h-3 w-3 rounded-full bg-primary/40" />}
+                {isLastInGroup && <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 h-3 w-3 rounded-full bg-primary/40" />}
              </div>
           )}
            {isGrouped && (
-             <div className="absolute left-[28px] top-1/2 -translate-y-1/2 w-3 h-[2px] bg-primary/20" />
+             <div className="absolute left-[28px] top-1/2 -translate-y-1/2 w-3 h-[2px] bg-primary/30" />
            )}
           <Button variant="ghost" size="icon" className="h-7 w-7 opacity-30 hover:opacity-100">
             <GripVertical className="text-muted-foreground w-4 h-4" />
@@ -167,14 +169,14 @@ export function ExerciseCard({
                   variant="ghost" 
                   size="icon" 
                   className={cn(
-                    "h-8 w-8 transition-all hover:bg-[#00bfa5]/15 hover:shadow-[0_0_15px_rgba(0,191,165,0.2)]",
-                    substitutionCount > 0 ? "text-[#00bfa5]" : "text-[#00bfa5]/50"
+                    "h-8 w-8 transition-all hover:bg-primary/15 hover:shadow-[0_0_15px_rgba(var(--primary),0.2)]",
+                    substitutionCount > 0 ? "text-primary opacity-100" : "text-primary/50 opacity-60"
                   )}
                 >
                   <Shuffle className="w-4 h-4" />
                 </Button>
                 {substitutionCount > 0 && (
-                  <span className="absolute -top-1 -right-1 h-4 w-4 bg-[#00bfa5] text-white text-[9px] font-black flex items-center justify-center rounded-full shadow-sm">
+                  <span className="absolute -top-1 -right-1 h-4 w-4 bg-primary text-white text-[9px] font-black flex items-center justify-center rounded-full shadow-sm">
                     {substitutionCount}
                   </span>
                 )}
@@ -186,6 +188,7 @@ export function ExerciseCard({
                 <SelectValue placeholder="MÉTODO" />
               </SelectTrigger>
               <SelectContent className="rounded-xl">
+                <SelectItem value="padrao">PADRÃO</SelectItem>
                 <SelectItem value="dropset">DROPSET</SelectItem>
                 <SelectItem value="rest-pause">REST-PAUSE</SelectItem>
                 <SelectItem value="pyramid">PYRAMID</SelectItem>
@@ -254,10 +257,10 @@ export function ExerciseCard({
           </Button>
         </TableCell>
       </TableRow>
-       <TableRow className={cn("hover:bg-transparent", isGrouped ? "bg-muted/10" : "")}>
+       <TableRow className={cn("hover:bg-transparent", isGrouped ? "bg-muted/5 border-x border-primary/10" : "")}>
         <TableCell className={cn("w-[40px] pt-0 relative", isGrouped ? "border-b-0" : "")}>
            {isGrouped && (
-             <div className="absolute left-[20px] top-0 h-full w-[2px] bg-primary/20" />
+             <div className="absolute left-[20px] top-0 h-full w-[2px] bg-primary/30" />
            )}
         </TableCell>
         <TableCell className="pt-0 pb-5 pl-2" colSpan={9}>
