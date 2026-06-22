@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -24,7 +25,6 @@ import { Accordion } from '@/components/ui/accordion';
 import { CombineExercisesDialog } from '@/components/workouts/combine-exercises-dialog';
 import { SaveSessionDialog } from '@/components/workouts/save-session-dialog';
 import { UseSavedSessionDialog } from '@/components/workouts/use-saved-session-dialog';
-import { WodConfigDialog } from '@/components/workouts/wod-config-dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,7 +45,8 @@ import {
   Download, 
   Send, 
   Home as HomeIcon,
-  Zap
+  Zap,
+  Clock
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
@@ -118,6 +119,21 @@ const WorkoutTabContent = memo(({
 }) => {
   const [isSorting, setIsSorting] = useState(false);
 
+  const estimatedDuration = useMemo(() => {
+    let total = 0;
+    workout.data.forEach(ex => {
+      if (ex.isWod && ex.wodDetails?.duration) {
+        // Tenta converter "15:00" para 15 minutos
+        const mins = parseInt(ex.wodDetails.duration.split(':')[0]);
+        total += isNaN(mins) ? 15 : mins;
+      } else {
+        // Média de 10 minutos por bloco de exercício regular (séries + descanso)
+        total += 10;
+      }
+    });
+    return total;
+  }, [workout.data]);
+
   const renderExerciseList = () => {
     if (!workout || !Array.isArray(workout.data) || workout.data.length === 0) {
       return (
@@ -139,7 +155,7 @@ const WorkoutTabContent = memo(({
     const renderedGroupIds = new Set<string>();
 
     workout.data.forEach((currentExercise) => {
-      // Se for um WOD, renderiza o componente WodBlockCard que agora é uma linha compacta
+      // Se for um WOD, renderiza o componente WodBlockCard envolvido em estrutura de tabela válida
       if (currentExercise.isWod) {
         elements.push(
           <TableBody key={`wod-body-${currentExercise.id}-${tabId}`}>
@@ -196,9 +212,17 @@ const WorkoutTabContent = memo(({
     <div className="mt-8 animate-in fade-in-50 duration-500">
       <div className="flex flex-wrap items-center justify-between gap-6 mb-8">
         <div className="flex flex-wrap items-center gap-6">
-          <h2 className="text-2xl font-black tracking-tighter uppercase italic">
-            {tabId.replace('treino-', 'Treino ').toUpperCase()}
-          </h2>
+          <div className="space-y-1">
+            <h2 className="text-2xl font-black tracking-tighter uppercase italic flex items-center gap-4">
+              {tabId.replace('treino-', 'Treino ').toUpperCase()}
+              {estimatedDuration > 0 && (
+                <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full border border-primary/20 not-italic">
+                  <Clock className="h-3.5 w-3.5" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">{estimatedDuration} min est.</span>
+                </div>
+              )}
+            </h2>
+          </div>
 
           <div className="flex flex-wrap items-center gap-4 md:gap-6">
             <label className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
