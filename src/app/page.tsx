@@ -105,7 +105,7 @@ const WorkoutTabContent = memo(({
   onApplySetsToAll, 
   onApplySavedSession, 
   onUpdateWorkoutData, 
-  onUpdateCombinationTypes,
+  onUpdateWorkoutDataWithCombination,
   onAddWod
 }: { 
   tabId: string;
@@ -114,7 +114,7 @@ const WorkoutTabContent = memo(({
   onApplySetsToAll: (sets: Set[], tabId: string) => void;
   onApplySavedSession: (data: Exercise[], types: Record<string, CombinationType>, tabId: string) => void;
   onUpdateWorkoutData: (data: Exercise[], tabId: string) => void;
-  onUpdateCombinationTypes: (types: Record<string, CombinationType>, tabId: string) => void;
+  onUpdateWorkoutDataWithCombination: (types: Record<string, CombinationType>, tabId: string) => void;
   onAddWod: (tabId: string) => void;
 }) => {
   const [isSorting, setIsSorting] = useState(false);
@@ -213,18 +213,18 @@ const WorkoutTabContent = memo(({
       <div className="flex flex-wrap items-center justify-between gap-6 mb-8">
         <div className="flex flex-wrap items-center gap-6">
           <div className="space-y-1">
-            <h2 className="text-2xl font-black tracking-tighter uppercase italic flex items-center gap-4">
+            <h2 className="text-2xl font-black tracking-tighter uppercase italic">
               {tabId.replace('treino-', 'Treino ').toUpperCase()}
-              {estimatedDuration > 0 && (
-                <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full border border-primary/20 not-italic">
-                  <Clock className="h-3.5 w-3.5" />
-                  <span className="text-[10px] font-black uppercase tracking-widest">{estimatedDuration} min est.</span>
-                </div>
-              )}
             </h2>
+            {estimatedDuration > 0 && (
+              <div className="flex items-center gap-2 text-primary px-1">
+                <Clock className="h-3.5 w-3.5" />
+                <span className="text-[10px] font-black uppercase tracking-widest">Duração estimada: {estimatedDuration} min</span>
+              </div>
+            )}
           </div>
 
-          <div className="flex flex-wrap items-center gap-4 md:gap-6">
+          <div className="flex flex-wrap items-center gap-4 md:gap-6 pt-1">
             <label className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
               <Checkbox id={`presencial-${tabId}`} className="h-5 w-5 rounded-md border-muted-foreground/30 data-[state=checked]:bg-primary" />
               Presencial
@@ -239,7 +239,7 @@ const WorkoutTabContent = memo(({
               exercises={workout.data}
               onUpdateWorkout={(newData) => onUpdateWorkoutData(newData, tabId)}
               combinationTypes={workout.combinationTypes}
-              onUpdateCombinationTypes={(newTypes) => onUpdateCombinationTypes(newTypes, tabId)}
+              onUpdateCombinationTypes={(newTypes) => onUpdateWorkoutDataWithCombination(newTypes, tabId)}
             >
               <button className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">
                 <Combine className="h-5 w-5 text-primary" />
@@ -505,7 +505,7 @@ export default function Home() {
                 onApplySetsToAll={handleApplySetsToAll}
                 onApplySavedSession={handleApplySavedSession}
                 onUpdateWorkoutData={handleUpdateWorkoutData}
-                onUpdateCombinationTypes={handleUpdateCombinationTypes}
+                onUpdateWorkoutDataWithCombination={handleUpdateCombinationTypes}
                 onAddWod={handleAddWod}
               />
             </div>
