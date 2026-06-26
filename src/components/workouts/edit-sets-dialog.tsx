@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,21 +18,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 import {
   Flame,
   SlidersHorizontal,
-  Dumbbell,
-  Timer,
-  HelpCircle,
+  Check,
   Plus,
+  Trash2,
+  HelpCircle,
+  RefreshCcw,
+  List,
   X,
-  Hash,
-  Clock,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Exercise, Set, SetType } from '@/lib/types';
 import { useState } from 'react';
-import { Checkbox } from '@/components/ui/checkbox';
 
 const setTypeOptions: {
   value: SetType;
@@ -41,41 +42,23 @@ const setTypeOptions: {
 }[] = [
   {
     value: 'aquecimento',
-    label: 'Aquecimento',
+    label: 'Aquec.',
     icon: Flame,
-    color: 'text-yellow-500',
+    color: 'text-orange-500',
   },
   {
     value: 'preparatoria',
-    label: 'Preparatória',
+    label: 'Prep.',
     icon: SlidersHorizontal,
-    color: 'text-blue-500',
+    color: 'text-emerald-500',
   },
-  { value: 'trabalho', label: 'Trabalho', icon: Dumbbell, color: 'text-green-500' },
+  { 
+    value: 'trabalho', 
+    label: 'Trab.', 
+    icon: Check, 
+    color: 'text-green-500' 
+  },
 ];
-
-const intervalPresets = ['30', '60', '90', '120'];
-
-const SetTypeSelectItem = ({
-  value,
-  label,
-  icon: Icon,
-  color,
-}: {
-  value: string;
-  label: string;
-  icon: React.ElementType;
-  color: string;
-}) => (
-  <SelectItem value={value}>
-    <div className="flex items-center gap-2">
-      <Icon className={cn('h-4 w-4', color)} />
-      <span className="font-bold">{label}</span>
-    </div>
-  </SelectItem>
-);
-
-const GRID_COLS_CLASS = "md:grid-cols-[40px_160px_1fr_110px_90px_40px]";
 
 export function EditSetsDialog({
   children,
@@ -98,25 +81,14 @@ export function EditSetsDialog({
     );
   };
 
-  const toggleSetUnit = (id: number) => {
-    setSets((prevSets) =>
-      prevSets.map((s) => {
-        if (s.id === id) {
-          return { ...s, unit: s.unit === 'reps' ? 'time' : 'reps' };
-        }
-        return s;
-      })
-    );
-  };
-
   const addNewSet = () => {
     const newSet: Set = {
       id: sets.length > 0 ? Math.max(...sets.map(s => s.id)) + 1 : 1,
       type: 'trabalho',
       unit: 'reps',
-      reps: '8-12',
-      interval: '60',
-      rir: '',
+      reps: '10-12',
+      interval: '40',
+      rir: '-',
     };
     setSets([...sets, newSet]);
   };
@@ -134,143 +106,102 @@ export function EditSetsDialog({
   };
   
   React.useEffect(() => {
-    setSets(exercise.sets);
+    if (open) {
+      setSets(exercise.sets);
+    }
   }, [exercise.sets, open]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-3xl bg-card p-0 gap-0 overflow-hidden border-none shadow-2xl rounded-2xl">
-        <DialogHeader className="p-6 pb-2">
-          <DialogTitle className="text-xl font-black uppercase tracking-tighter italic">Editar Séries</DialogTitle>
+      <DialogContent className="sm:max-w-[500px] bg-white p-0 gap-0 overflow-hidden border-none shadow-2xl rounded-[24px]">
+        <DialogHeader className="p-8 pb-4 relative">
+          <DialogTitle className="text-[22px] font-bold text-slate-800">Editar Séries do Exercício</DialogTitle>
+          <p className="text-slate-400 font-medium mt-1">{exercise.name}</p>
+          <DialogClose className="absolute right-8 top-8 opacity-40 hover:opacity-100">
+            <X className="h-6 w-6" />
+          </DialogClose>
         </DialogHeader>
         
-        <div className="px-6 pb-4 max-h-[70vh] overflow-y-auto no-scrollbar">
-          <div className={cn("hidden md:grid items-center gap-x-4 gap-y-2 text-[10px] text-muted-foreground/60 mb-2 sticky top-0 bg-card py-2 z-10 uppercase font-black tracking-[0.15em]", GRID_COLS_CLASS)}>
-            <div className="text-center">Série</div>
-            <div>Tipo</div>
-            <div className="text-center">Reps / Tempo</div>
-            <div className="text-center">Intervalo (s)</div>
-            <div className="flex items-center justify-center gap-1">
-              RIR <HelpCircle className="h-3 w-3 opacity-50" />
-            </div>
+        <div className="px-8 pb-4">
+          {/* Header da Tabela */}
+          <div className="grid grid-cols-[30px_110px_1fr_1fr_60px_40px] gap-2 mb-4 px-1">
             <div></div>
+            <div className="text-[12px] font-medium text-slate-400 text-center">Tipo</div>
+            <div className="text-[12px] font-medium text-slate-400 text-center">Reps</div>
+            <div className="text-[12px] font-medium text-slate-400 text-center">Int (s)</div>
+            <div className="text-[12px] font-medium text-slate-400 text-center">RIR</div>
+            <div className="flex justify-center">
+               <HelpCircle className="h-4 w-4 text-slate-300" />
+            </div>
           </div>
 
-          <div className="space-y-4 md:space-y-3">
+          {/* Lista de Séries */}
+          <div className="space-y-4 max-h-[45vh] overflow-y-auto no-scrollbar pr-1">
             {sets.map((set, index) => {
               const setType = setTypeOptions.find((t) => t.value === set.type);
-              const Icon = setType?.icon;
+              const Icon = setType?.icon || Check;
               
               return (
-                <div key={set.id} className={cn("relative md:grid items-center md:gap-x-4 gap-y-3 p-4 md:p-3 rounded-2xl border md:border md:border-border/40 bg-muted/20 md:bg-muted/10 transition-all", GRID_COLS_CLASS)}>
-                  <div className="flex items-center justify-between md:block mb-2 md:mb-0">
-                    <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest md:hidden">Série {index + 1}</span>
-                    <div className="hidden md:flex font-black text-foreground h-10 items-center justify-center w-10 text-sm bg-muted/40 rounded-lg">{index + 1}</div>
-                    
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="h-8 w-8 text-destructive/70 md:hidden" 
-                      onClick={() => removeSet(set.id)}
-                    >
-                        <X className='h-4 w-4' />
+                <div key={set.id} className="grid grid-cols-[30px_110px_1fr_1fr_60px_40px] gap-2 items-center">
+                  <div className="flex justify-center">
+                    <Icon className={cn('h-5 w-5', setType?.color)} />
+                  </div>
+
+                  <Select
+                    value={set.type}
+                    onValueChange={(value) =>
+                      handleSetChange(set.id, 'type', value)
+                    }
+                  >
+                    <SelectTrigger className="bg-slate-50 h-11 border-slate-100 rounded-xl text-sm font-bold focus:ring-emerald-500/20">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl">
+                      {setTypeOptions.map((type) => (
+                        <SelectItem key={type.value} value={type.value} className="font-bold">
+                          {type.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <div className="flex items-center gap-1">
+                    <Input
+                      value={set.reps}
+                      onChange={(e) => handleSetChange(set.id, 'reps', e.target.value)}
+                      className="bg-slate-50 h-11 border-slate-100 rounded-xl text-center font-bold text-sm px-1"
+                    />
+                    <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg shadow-sm">
+                      <RefreshCcw className="h-3.5 w-3.5" />
                     </Button>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3 md:contents">
-                    <div className="space-y-1 md:space-y-0">
-                      <label className="text-[10px] font-black text-muted-foreground uppercase md:hidden tracking-wider">Tipo</label>
-                      <Select
-                        value={set.type}
-                        onValueChange={(value) =>
-                          handleSetChange(set.id, 'type', value)
-                        }
-                      >
-                        <SelectTrigger className="bg-background h-10 px-3 rounded-lg text-sm font-bold border-border/40 focus:ring-primary/20">
-                          <SelectValue>
-                            <div className="flex items-center gap-2">
-                              {Icon && <Icon className={cn('h-4 w-4', setType?.color)} />}
-                              <span className="truncate">{setType?.label}</span>
-                            </div>
-                          </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent className="rounded-xl">
-                          {setTypeOptions.map((type) => (
-                            <SetTypeSelectItem key={type.value} {...type} />
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="space-y-1 md:space-y-0">
-                      <label className="text-[10px] font-black text-muted-foreground uppercase md:hidden tracking-wider text-center">Reps/Tempo</label>
-                      <div className='flex items-center gap-1.5'>
-                        <Button 
-                          variant="outline" 
-                          size="icon" 
-                          className="h-10 w-10 shrink-0 text-primary bg-background rounded-lg border-border/40 hover:bg-primary/5" 
-                          onClick={() => toggleSetUnit(set.id)}
-                          type="button"
-                        >
-                          {set.unit === 'reps' ? <Hash className="h-4 w-4"/> : <Timer className="h-4 w-4"/>}
-                        </Button>
-                        <Input
-                          value={set.reps}
-                          onChange={(e) =>
-                            handleSetChange(set.id, 'reps', e.target.value)
-                          }
-                          className="bg-background h-10 rounded-lg font-bold text-center border-border/40 text-sm md:text-[14px]"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-1 md:space-y-0">
-                      <label className="text-[10px] font-black text-muted-foreground uppercase md:hidden tracking-wider text-center">Intervalo</label>
-                      <div className="flex flex-col gap-1.5">
-                        <Input
-                          value={set.interval}
-                          onChange={(e) =>
-                            handleSetChange(set.id, 'interval', e.target.value)
-                          }
-                          className="bg-background h-10 rounded-lg font-bold text-center border-border/40 text-sm md:text-[14px]"
-                        />
-                        <div className="flex items-center justify-between gap-1 mt-1">
-                          {intervalPresets.map((p) => (
-                            <button
-                              key={p}
-                              type="button"
-                              onClick={() => handleSetChange(set.id, 'interval', p)}
-                              className={cn(
-                                "flex-1 text-[9px] font-black h-5 rounded-sm border transition-colors",
-                                set.interval === p 
-                                  ? "bg-primary text-white border-primary" 
-                                  : "bg-background text-muted-foreground border-border/40 hover:bg-primary/10 hover:border-primary/30"
-                              )}
-                            >
-                              {p}s
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-1 md:space-y-0">
-                      <label className="text-[10px] font-black text-muted-foreground uppercase md:hidden tracking-wider text-center">RIR</label>
-                      <Input
-                        placeholder="Ex: 2"
-                        value={set.rir}
-                        onChange={(e) =>
-                          handleSetChange(set.id, 'rir', e.target.value)
-                        }
-                        className="bg-background h-10 rounded-lg font-bold text-center border-border/40 text-sm md:text-[14px]"
-                      />
-                    </div>
+                  <div className="flex items-center gap-1">
+                    <Input
+                      value={set.interval}
+                      onChange={(e) => handleSetChange(set.id, 'interval', e.target.value)}
+                      className="bg-slate-50 h-11 border-slate-100 rounded-xl text-center font-bold text-sm px-1"
+                    />
+                    <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg shadow-sm">
+                      <List className="h-3.5 w-3.5" />
+                    </Button>
                   </div>
 
-                  <div className="hidden md:flex items-center justify-center">
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/50 hover:text-destructive hover:bg-destructive/10 rounded-full" onClick={() => removeSet(set.id)}>
-                        <X className='h-4 w-4' />
+                  <Input
+                    value={set.rir}
+                    onChange={(e) => handleSetChange(set.id, 'rir', e.target.value)}
+                    className="bg-slate-50 h-11 border-slate-100 rounded-xl text-center font-bold text-sm px-1"
+                  />
+
+                  <div className="flex justify-center">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-10 w-10 text-red-500 hover:bg-red-50 rounded-xl" 
+                      onClick={() => removeSet(set.id)}
+                    >
+                      <Trash2 className="h-5 w-5" />
                     </Button>
                   </div>
                 </div>
@@ -278,39 +209,40 @@ export function EditSetsDialog({
             })}
           </div>
 
-          <div className='mt-6 mb-2'>
-            <Button variant="outline" className="w-full md:w-auto text-primary border-primary/20 hover:bg-primary/5 h-12 md:h-10 rounded-lg font-black text-[11px] uppercase tracking-widest" onClick={addNewSet}>
-                <Plus className="h-4 w-4 mr-2" />
-                Adicionar Série
-            </Button>
+          {/* Botão Adicionar */}
+          <button 
+            onClick={addNewSet}
+            className="w-full mt-6 h-14 border-2 border-dashed border-emerald-500/30 rounded-2xl flex items-center justify-center gap-2 text-emerald-500 font-bold hover:bg-emerald-50 transition-colors"
+          >
+            <Plus className="h-5 w-5" />
+            Adicionar nova série
+          </button>
+
+          {/* Opção Aplicar Todos */}
+          <div className="flex items-center justify-between mt-8 mb-4 px-2">
+            <div className="flex items-center gap-3">
+              <Switch 
+                id="apply-to-all" 
+                checked={shouldApplyToAll}
+                onCheckedChange={setShouldApplyToAll}
+                className="data-[state=checked]:bg-emerald-500"
+              />
+              <label htmlFor="apply-to-all" className="text-sm font-medium text-slate-500 cursor-pointer">
+                Aplicar para todos os exercícios deste treino
+              </label>
+            </div>
+            <HelpCircle className="h-5 w-5 text-slate-300" />
           </div>
         </div>
 
-        <div className="p-6 bg-muted/50 border-t flex flex-col gap-4">
+        {/* Footer com Botão Salvar */}
+        <div className="p-8 pt-4">
           <Button
-            className="w-full bg-primary hover:bg-primary/90 text-white h-12 md:h-14 font-black uppercase tracking-[0.2em] text-sm shadow-lg shadow-primary/20 rounded-lg"
-            size="lg"
+            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white h-[60px] rounded-2xl font-bold text-lg shadow-lg shadow-emerald-500/20 transition-all active:scale-[0.98]"
             onClick={handleSave}
           >
-            Salvar Alterações
+            Salvar
           </Button>
-          
-          {onApplyToAll && (
-            <div className="flex items-center justify-center gap-3 py-1">
-              <Checkbox 
-                id="apply-to-all" 
-                checked={shouldApplyToAll} 
-                onCheckedChange={(checked) => setShouldApplyToAll(checked as boolean)}
-                className="border-primary/40 data-[state=checked]:bg-primary h-5 w-5 rounded-md"
-              />
-              <label 
-                htmlFor="apply-to-all" 
-                className="text-[10px] font-black uppercase tracking-widest text-muted-foreground cursor-pointer select-none hover:text-foreground transition-colors"
-              >
-                Replicar para todos os exercícios deste treino
-              </label>
-            </div>
-          )}
         </div>
       </DialogContent>
     </Dialog>
