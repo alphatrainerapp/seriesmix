@@ -103,12 +103,12 @@ export function MobileExerciseCard({
           
           <div className="flex items-center gap-3 shrink-0">
             <button 
-              className="text-destructive/60 hover:text-destructive transition-colors p-2"
+              className="text-[#ff7043] hover:text-[#f4511e] transition-colors p-2"
               onClick={(e) => {
                 e.stopPropagation();
               }}
             >
-              <Trash2 className="h-5 w-5" />
+              <X className="h-5 w-5" />
             </button>
             <AccordionTrigger className="p-0 hover:no-underline [&>svg]:h-5 [&>svg]:w-5 text-muted-foreground dark:text-white/40 [&>svg]:ml-0">
             </AccordionTrigger>
@@ -170,12 +170,12 @@ export function MobileExerciseCard({
               </div>
             </div>
 
-            {/* Container Escuro das Variáveis */}
-            <div className="bg-[#1a1a1e] p-6 rounded-[24px] space-y-6 shadow-inner">
+            {/* Container das Variáveis - Adaptável para temas Light/Dark */}
+            <div className="bg-muted dark:bg-[#1a1a1e] p-6 rounded-[24px] space-y-6 shadow-inner border border-border/5">
               <div className="grid grid-cols-3 gap-3">
                 <EditSetsDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
                   <div className="space-y-2 cursor-pointer group">
-                    <p className="text-[11px] font-bold text-white/60 text-center uppercase tracking-tight">Série</p>
+                    <p className="text-[11px] font-bold text-muted-foreground dark:text-white/60 text-center uppercase tracking-tight">Série</p>
                     <div className="bg-[#ffa726] text-black font-black rounded-xl h-14 flex items-center justify-center gap-2 border-none transition-transform active:scale-95 shadow-md text-lg relative">
                       {exercise.sets.length}
                       <Pencil className="h-4 w-4 absolute bottom-2 right-2 opacity-60"/>
@@ -184,7 +184,7 @@ export function MobileExerciseCard({
                 </EditSetsDialog>
 
                 <div className="space-y-2">
-                  <p className="text-[11px] font-bold text-white/60 text-center uppercase tracking-tight">Repetições</p>
+                  <p className="text-[11px] font-bold text-muted-foreground dark:text-white/60 text-center uppercase tracking-tight">Repetições</p>
                   <Input 
                     className="bg-[#c5e1a5] text-black font-black text-center h-14 border-none rounded-xl focus-visible:ring-primary/40 shadow-md text-lg"
                     defaultValue={exercise.repsRange}
@@ -192,7 +192,7 @@ export function MobileExerciseCard({
                 </div>
 
                 <div className="space-y-2">
-                  <p className="text-[11px] font-bold text-white/60 text-center uppercase tracking-tight">Intervalo</p>
+                  <p className="text-[11px] font-bold text-muted-foreground dark:text-white/60 text-center uppercase tracking-tight">Intervalo</p>
                   <Input 
                     className="bg-[#4caf50] text-black font-black text-center h-14 border-none rounded-xl focus-visible:ring-primary/40 shadow-md text-lg"
                     defaultValue={exercise.sets[0]?.interval || '40'}
@@ -202,7 +202,7 @@ export function MobileExerciseCard({
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <p className="text-[11px] font-bold text-white/60 text-center uppercase tracking-tight">Cadência</p>
+                  <p className="text-[11px] font-bold text-muted-foreground dark:text-white/60 text-center uppercase tracking-tight">Cadência</p>
                   <Input 
                     className="bg-[#0097a7] text-white font-black text-center h-14 border-none rounded-xl focus-visible:ring-primary/40 shadow-md text-lg"
                     defaultValue="2.3"
@@ -210,7 +210,7 @@ export function MobileExerciseCard({
                 </div>
 
                 <div className="space-y-2">
-                  <p className="text-[11px] font-bold text-white/60 text-center uppercase tracking-tight">Observação</p>
+                  <p className="text-[11px] font-bold text-muted-foreground dark:text-white/60 text-center uppercase tracking-tight">Observação</p>
                   <EditObservationDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
                     <Button className="w-full bg-[#0097a7] hover:bg-[#00838f] text-white rounded-xl h-14 gap-2 font-black shadow-md border-none">
                       <MessageSquare className="h-6 w-6"/>
