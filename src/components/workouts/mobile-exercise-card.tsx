@@ -222,16 +222,19 @@ export function MobileExerciseCard({
                 </Button>
                </EditObservationDialog>
 
-               <Select defaultValue="padrao">
-                  <SelectTrigger className="rounded-2xl bg-muted/40 border-border/40 h-14 text-[11px] font-black text-foreground focus:ring-primary/20 shadow-sm">
-                      <SelectValue placeholder="MÉTODO" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-popover border-border rounded-xl">
-                      <SelectItem value="padrao" className="font-bold">PADRÃO</SelectItem>
-                      <SelectItem value="biset" className="font-bold">BISET</SelectItem>
-                      <SelectItem value="dropset" className="font-bold">DROPSET</SelectItem>
-                  </SelectContent>
-               </Select>
+               <div className="space-y-1.5">
+                  <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Método</p>
+                  <Select defaultValue="padrao">
+                      <SelectTrigger className="rounded-2xl bg-muted/40 border-border/40 h-14 text-[11px] font-black text-foreground focus:ring-primary/20 shadow-sm">
+                          <SelectValue placeholder="MÉTODO" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-popover border-border rounded-xl">
+                          <SelectItem value="padrao" className="font-bold">PADRÃO</SelectItem>
+                          <SelectItem value="biset" className="font-bold">BISET</SelectItem>
+                          <SelectItem value="dropset" className="font-bold">DROPSET</SelectItem>
+                      </SelectContent>
+                  </Select>
+               </div>
             </div>
 
             <div className="pb-2">
