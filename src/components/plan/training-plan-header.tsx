@@ -19,7 +19,7 @@ const SectionHeader = ({ icon: Icon, title }: SectionHeaderProps) => (
     <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary">
       <Icon className="w-4 h-4" />
     </div>
-    <h3 className="text-lg font-bold text-foreground">{title}</h3>
+    <h3 className="text-[13px] font-black uppercase tracking-widest text-foreground">{title}</h3>
   </div>
 );
 
@@ -33,7 +33,7 @@ interface FieldProps {
 const Field = ({ label, value, className, inputClassName }: FieldProps) => (
   <div className={cn("space-y-1.5", className)}>
     {label && (
-      <label className="text-sm font-medium text-muted-foreground ml-1">
+      <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">
         {label}
       </label>
     )}
@@ -41,7 +41,7 @@ const Field = ({ label, value, className, inputClassName }: FieldProps) => (
       defaultValue={value}
       readOnly
       className={cn(
-        "h-11 bg-muted/30 border-none rounded-xl font-medium focus-visible:ring-primary/30 cursor-default",
+        "h-12 bg-muted/40 border-none rounded-xl font-bold focus-visible:ring-primary/30 cursor-default text-sm",
         inputClassName
       )}
     />
@@ -51,16 +51,16 @@ const Field = ({ label, value, className, inputClassName }: FieldProps) => (
 const StudentProfile = () => {
   const studentAvatar = PlaceHolderImages.find((img) => img.id === 'student-avatar');
   return (
-    <div className="flex flex-col items-center mb-8 w-full">
+    <div className="flex flex-col items-center mb-6 w-full px-2">
       <div className="flex w-full justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold tracking-tight">Perfil do Aluno</h2>
-        <Button variant="outline" size="sm" className="h-9 px-4 rounded-xl gap-2 shadow-sm border-border/50">
+        <h2 className="text-xl font-black uppercase tracking-tighter italic">Perfil do Aluno</h2>
+        <Button variant="ghost" size="sm" className="h-10 px-4 rounded-xl gap-2 font-bold text-primary hover:bg-primary/5">
           <Pencil className="h-4 w-4" />
           Editar
         </Button>
       </div>
       
-      <div className="relative w-32 h-32 mb-4">
+      <div className="relative w-28 h-28 mb-4">
         <div className="w-full h-full rounded-full overflow-hidden border-4 border-background shadow-xl bg-muted flex items-center justify-center">
            {studentAvatar ? (
             <Image
@@ -71,7 +71,7 @@ const StudentProfile = () => {
               data-ai-hint={studentAvatar.imageHint}
             />
           ) : (
-            <User className="w-12 h-12 text-muted-foreground" />
+            <User className="w-10 h-10 text-muted-foreground" />
           )}
         </div>
         <div className="absolute -bottom-1 -right-1 bg-primary text-white p-2 rounded-full border-4 border-background shadow-lg">
@@ -79,12 +79,11 @@ const StudentProfile = () => {
         </div>
       </div>
       
-      <h3 className="text-xl font-bold tracking-tight">João Silva</h3>
+      <h3 className="text-xl font-black uppercase tracking-tight italic">João Silva</h3>
       <div className="flex items-center gap-2 mt-1">
-        <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 hover:bg-emerald-500/20 rounded-full px-4">
+        <Badge className="bg-emerald-500 text-white border-none rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-widest">
           ATIVO
         </Badge>
-        <span className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Membro Premium</span>
       </div>
     </div>
   );
@@ -94,33 +93,32 @@ export function TrainingPlanHeader() {
   const studentAvatar = PlaceHolderImages.find((img) => img.id === 'student-avatar');
 
   return (
-    <Card className="p-6 bg-card shadow-sm rounded-2xl border border-border/40">
+    <Card className="p-5 md:p-8 bg-card shadow-sm rounded-3xl border border-border/40">
       {/* Mobile View */}
-      <div className="block md:hidden space-y-4">
+      <div className="block md:hidden space-y-6">
         <StudentProfile />
 
-        <SectionHeader icon={Target} title="Programa" />
-        <Field label="Objetivo" value="Ganho de massa muscular" />
-        <Field label="Tipo de Exercício" value="Musculação" />
-        <div className="grid grid-cols-2 gap-4">
-          <Field label="Duração" value="60 minutos" />
-          <Field label="Intensidade" value="Moderada" />
-        </div>
+        <div className="space-y-4">
+          <SectionHeader icon={Target} title="Programa" />
+          <Field label="Objetivo" value="Ganho de massa muscular" />
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Duração" value="60 min" />
+            <Field label="Intensidade" value="Moderada" />
+          </div>
 
-        <SectionHeader icon={CalendarDays} title="Cronograma" />
-        <div className="grid grid-cols-2 gap-4">
-          <Field label="Início" value="14/01/2024" />
-          <Field label="Fim" value="14/04/2024" />
+          <SectionHeader icon={CalendarDays} title="Cronograma" />
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Início" value="14/01/2024" />
+            <Field 
+              label="Divisão" 
+              value="ABCD" 
+              inputClassName="bg-primary/10 text-primary font-bold"
+            />
+          </div>
         </div>
-        <Field 
-          label="Divisão de Treino" 
-          value="ABCD" 
-          inputClassName="bg-primary/10 text-primary font-bold"
-        />
-        <Field label="Frequência Semanal" value="4x por semana" />
 
         <SectionHeader icon={User} title="Observações" />
-        <Field label="" value="Aluno focado em hipertrofia e progressão de carga constante." />
+        <Field label="" value="Foco em hipertrofia e progressão de carga." />
       </div>
 
       {/* Desktop View */}
