@@ -90,13 +90,13 @@ export function MobileExerciseCard({
   return (
     <AccordionItem value={`item-${exercise.id}`} className="border-none mb-3">
       <div className={cn(
-        "w-full rounded-[16px] border border-white/5 bg-[#2a2a2e] transition-all shadow-sm overflow-hidden",
+        "w-full rounded-[16px] border border-border/40 bg-muted/40 dark:bg-[#2a2a2e] transition-all shadow-sm overflow-hidden",
         exercise.groupId && "border-primary/40"
       )}>
-        {/* Minimized Header - Exact match to reference */}
+        {/* Minimized Header - Exact match to reference with theme support */}
         <div className="flex items-center justify-between px-5 h-[64px]">
           <ExerciseSearchDialog onSelect={handleUpdateName}>
-            <span className="font-bold text-[15px] text-white truncate pr-4 cursor-pointer">
+            <span className="font-bold text-[15px] text-foreground dark:text-white truncate pr-4 cursor-pointer">
               {exercise.name}
             </span>
           </ExerciseSearchDialog>
@@ -111,13 +111,13 @@ export function MobileExerciseCard({
             >
               <Trash2 className="h-5 w-5" />
             </button>
-            <AccordionTrigger className="p-0 hover:no-underline [&>svg]:h-5 [&>svg]:w-5 [&>svg]:text-white/40 [&>svg]:ml-0">
+            <AccordionTrigger className="p-0 hover:no-underline [&>svg]:h-5 [&>svg]:w-5 text-muted-foreground dark:text-white/40 [&>svg]:ml-0">
               {/* Chevron is handled by AccordionTrigger component */}
             </AccordionTrigger>
           </div>
         </div>
 
-        <AccordionContent className="pb-6 pt-2 px-5 animate-in fade-in duration-300 bg-card border-t border-white/5">
+        <AccordionContent className="pb-6 pt-2 px-5 animate-in fade-in duration-300 bg-card border-t border-border/10 dark:border-white/5">
           <div className="space-y-6 pt-4">
             {/* Detailed content for expanded state */}
             {exercise.videoUrl ? (
