@@ -169,8 +169,8 @@ export function ExerciseCard({
                   variant="ghost" 
                   size="icon" 
                   className={cn(
-                    "h-8 w-8 transition-all hover:bg-primary/15 hover:shadow-[0_0_15px_rgba(var(--primary),0.2)]",
-                    substitutionCount > 0 ? "text-primary opacity-100" : "text-primary/50 opacity-60"
+                    "h-8 w-8 transition-all hover:bg-primary/20 hover:shadow-[0_0_15px_rgba(var(--primary),0.3)]",
+                    substitutionCount > 0 ? "text-primary opacity-100" : "text-primary/70 opacity-80"
                   )}
                 >
                   <Shuffle className="w-4 h-4" />

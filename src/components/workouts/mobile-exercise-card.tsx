@@ -85,6 +85,12 @@ export function MobileExerciseCard({
     onUpdateExercise({ ...exercise, substitutions });
   };
 
+  const handlePlayVideo = () => {
+    if (exercise.videoUrl) {
+      window.open(exercise.videoUrl.replace('embed/', 'watch?v='), '_blank');
+    }
+  };
+
   const substitutionCount = exercise.substitutions?.length || 0;
 
   return (
@@ -241,8 +247,8 @@ export function MobileExerciseCard({
                   className={cn(
                     "rounded-2xl h-14 gap-3 font-black uppercase tracking-widest text-[11px] shadow-sm transition-all",
                     substitutionCount > 0 
-                      ? "text-[#00bfa5] bg-[#00bfa5]/5 border-[#00bfa5] shadow-[#00bfa5]/10" 
-                      : "text-[#00bfa5]/70 border-[#00bfa5]/30 hover:bg-[#00bfa5]/5"
+                      ? "text-[#00bfa5] bg-[#00bfa5]/10 border-[#00bfa5] shadow-[#00bfa5]/20" 
+                      : "text-[#00bfa5]/80 border-[#00bfa5]/40 hover:bg-[#00bfa5]/5"
                   )}
                 >
                   <Shuffle className="h-5 w-5" />
@@ -252,7 +258,14 @@ export function MobileExerciseCard({
               
               <Button 
                 variant="outline" 
-                className="rounded-2xl h-14 gap-3 font-black uppercase tracking-widest text-[11px] shadow-sm text-primary border-primary/30"
+                className={cn(
+                  "rounded-2xl h-14 gap-3 font-black uppercase tracking-widest text-[11px] shadow-sm transition-all",
+                  exercise.videoUrl 
+                    ? "text-primary border-primary/40 hover:bg-primary/5" 
+                    : "text-muted-foreground/60 border-border/40 opacity-50 cursor-not-allowed"
+                )}
+                onClick={handlePlayVideo}
+                disabled={!exercise.videoUrl}
               >
                 <ExternalLink className="h-5 w-5" />
                 Execução
