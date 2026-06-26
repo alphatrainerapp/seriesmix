@@ -231,7 +231,9 @@ export function MobileExerciseCard({
                       <SelectContent className="bg-popover border-border rounded-xl">
                           <SelectItem value="padrao" className="font-bold">PADRÃO</SelectItem>
                           <SelectItem value="biset" className="font-bold">BISET</SelectItem>
+                          <SelectItem value="triset" className="font-bold">TRISET</SelectItem>
                           <SelectItem value="dropset" className="font-bold">DROPSET</SelectItem>
+                          <SelectItem value="rest-pause" className="font-bold">REST-PAUSE</SelectItem>
                       </SelectContent>
                   </Select>
                </div>

@@ -165,14 +165,15 @@ export function ExerciseCard({
               </div>
             </SubstitutionDialog>
 
-            <div className="flex-1 space-y-1">
-              <label className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">MÉTODO</label>
+            <div className="flex-1">
               <Select>
                 <SelectTrigger className="w-full bg-exercise-card border-border shadow-sm rounded-lg h-9 text-[10px] px-3 font-black uppercase tracking-wider">
-                  <SelectValue placeholder="SELECIONAR" />
+                  <SelectValue placeholder="MÉTODO" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
                   <SelectItem value="padrao">PADRÃO</SelectItem>
+                  <SelectItem value="biset">BISET</SelectItem>
+                  <SelectItem value="triset">TRISET</SelectItem>
                   <SelectItem value="dropset">DROPSET</SelectItem>
                   <SelectItem value="rest-pause">REST-PAUSE</SelectItem>
                   <SelectItem value="pyramid">PYRAMID</SelectItem>
