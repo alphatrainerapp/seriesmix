@@ -104,7 +104,11 @@ body {
   }
   
   .app-container {
-    @apply px-5; /* Um pouco mais de margem para o iPhone Pro Max */
+    @apply px-4 sm:px-8; /* Aumenta a margem lateral no mobile para estreitar o conteúdo */
+  }
+
+  .mobile-content-wrapper {
+    @apply max-w-[480px] mx-auto; /* Estreita o conteúdo no mobile para parecer um app */
   }
 }
 

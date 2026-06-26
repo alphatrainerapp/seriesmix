@@ -1,4 +1,3 @@
-
 'use client';
 
 import {
@@ -59,7 +58,7 @@ type WorkoutState = {
 
 // Barra de ações final baseada na imagem de referência
 const WorkoutActionsFooter = () => (
-  <div className="flex flex-wrap items-center gap-3 mt-12 pb-10 border-t pt-8">
+  <div className="flex flex-wrap items-center gap-3 mt-12 pb-10 border-t pt-8 mobile-content-wrapper">
     <Button className="bg-[#ffa726] hover:bg-[#fb8c00] text-white rounded-full px-6 h-10 font-bold gap-2 border-none shadow-sm uppercase text-[11px] tracking-widest">
       <Check className="h-4 w-4" />
       Finalizar
@@ -209,7 +208,7 @@ const WorkoutTabContent = memo(({
   };
 
   return (
-    <div className="mt-8 animate-in fade-in-50 duration-500">
+    <div className="mt-8 animate-in fade-in-50 duration-500 mobile-content-wrapper">
       <div className="flex flex-wrap items-center justify-between gap-6 mb-8">
         <div className="flex flex-wrap items-center gap-6">
           <div className="space-y-1">
@@ -479,11 +478,13 @@ export default function Home() {
     <div className="app-container py-8 text-foreground transition-all duration-300">
       <div className="flex flex-col lg:flex-row gap-8 items-start w-full">
         <main className="flex-1 min-w-0 w-full space-y-8">
-          <TrainingPlanHeader />
-          <TrainingSplit />
+          <div className="mobile-content-wrapper w-full space-y-8">
+            <TrainingPlanHeader />
+            <TrainingSplit />
+          </div>
           
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <div className="flex justify-between items-center border-b border-border/40 overflow-x-auto no-scrollbar">
+            <div className="flex justify-between items-center border-b border-border/40 overflow-x-auto no-scrollbar mobile-content-wrapper">
               <TabsList className="bg-transparent p-0 h-auto gap-2 min-w-max">
                 {['A', 'B', 'C', 'D', 'E'].map((letter) => (
                   <TabsTrigger
@@ -514,7 +515,7 @@ export default function Home() {
           <WorkoutActionsFooter />
         </main>
         
-        <aside className="w-full lg:w-[320px] xl:w-[380px] space-y-6 shrink-0">
+        <aside className="w-full lg:w-[320px] xl:w-[380px] space-y-6 shrink-0 mobile-content-wrapper lg:mobile-content-wrapper-none">
           <PageSidebar exercises={workouts[activeTab].data} currentTab={activeTab} />
         </aside>
       </div>
