@@ -143,7 +143,7 @@ export function ExerciseCard({
             </ExerciseSearchDialog>
           </div>
         </TableCell>
-        <TableCell className="p-1 pt-3 w-[160px]">
+        <TableCell className="p-2 pt-3 w-[160px]">
           <div className="flex items-center gap-1.5">
             <SubstitutionDialog exercise={exercise} onSave={handleSaveSubstitutions}>
               <div className="relative group cursor-pointer">
@@ -182,7 +182,7 @@ export function ExerciseCard({
             </div>
           </div>
         </TableCell>
-        <TableCell className="w-[45px] text-center p-0.5 pt-3">
+        <TableCell className="w-[45px] text-center p-2 pt-3">
           <EditObservationDialog
             exercise={exercise}
             onUpdateExercise={onUpdateExercise}

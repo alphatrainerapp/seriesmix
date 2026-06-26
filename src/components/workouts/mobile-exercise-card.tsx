@@ -215,12 +215,15 @@ export function MobileExerciseCard({
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <EditObservationDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
-                <Button variant="outline" className="rounded-2xl h-14 gap-2 font-black uppercase tracking-widest text-[11px] shadow-sm bg-muted/40 border-border/40">
-                  <MessageSquare className="h-5 w-5 text-primary"/>
-                  OBSERVAÇÕES
-                </Button>
-               </EditObservationDialog>
+               <div className="space-y-1.5">
+                  <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Observações</p>
+                  <EditObservationDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
+                    <Button variant="outline" className="w-full rounded-2xl h-14 gap-2 font-black uppercase tracking-widest text-[11px] shadow-sm bg-muted/40 border-border/40">
+                      <MessageSquare className="h-5 w-5 text-primary"/>
+                      EDITAR
+                    </Button>
+                  </EditObservationDialog>
+               </div>
 
                <div className="space-y-1.5">
                   <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest pl-1">Método</p>
