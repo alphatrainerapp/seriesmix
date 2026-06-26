@@ -93,7 +93,7 @@ export function MobileExerciseCard({
         "w-full rounded-[16px] border border-border/40 bg-muted/40 dark:bg-[#2a2a2e] transition-all shadow-sm overflow-hidden",
         exercise.groupId && "border-primary/40"
       )}>
-        {/* Minimized Header - Exact match to reference with theme support */}
+        {/* Header Minimizado */}
         <div className="flex items-center justify-between px-5 h-[64px]">
           <ExerciseSearchDialog onSelect={handleUpdateName}>
             <span className="font-bold text-[15px] text-foreground dark:text-white truncate pr-4 cursor-pointer">
@@ -106,20 +106,17 @@ export function MobileExerciseCard({
               className="text-destructive/60 hover:text-destructive transition-colors p-2"
               onClick={(e) => {
                 e.stopPropagation();
-                // Logic to delete would go here
               }}
             >
               <Trash2 className="h-5 w-5" />
             </button>
             <AccordionTrigger className="p-0 hover:no-underline [&>svg]:h-5 [&>svg]:w-5 text-muted-foreground dark:text-white/40 [&>svg]:ml-0">
-              {/* Chevron is handled by AccordionTrigger component */}
             </AccordionTrigger>
           </div>
         </div>
 
         <AccordionContent className="pb-6 pt-2 px-5 animate-in fade-in duration-300 bg-card border-t border-border/10 dark:border-white/5">
           <div className="space-y-6 pt-4">
-            {/* Detailed content for expanded state */}
             {exercise.videoUrl ? (
               <div className="relative aspect-video rounded-3xl overflow-hidden border-[6px] border-primary/20 shadow-xl bg-black">
                 <iframe
@@ -173,50 +170,53 @@ export function MobileExerciseCard({
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-3">
-              <EditSetsDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
-                <div className="space-y-1.5 cursor-pointer group">
-                  <p className="text-[11px] font-bold text-muted-foreground text-center uppercase tracking-tight">Série</p>
-                  <div className="bg-[#ffa726] text-black font-black rounded-xl h-14 flex items-center justify-center gap-2 border-none transition-transform active:scale-95 shadow-md text-lg relative">
-                    {exercise.sets.length}
-                    <Pencil className="h-4 w-4 absolute bottom-2 right-2 opacity-60"/>
+            {/* Container Escuro das Variáveis */}
+            <div className="bg-[#1a1a1e] p-6 rounded-[24px] space-y-6 shadow-inner">
+              <div className="grid grid-cols-3 gap-3">
+                <EditSetsDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
+                  <div className="space-y-2 cursor-pointer group">
+                    <p className="text-[11px] font-bold text-white/60 text-center uppercase tracking-tight">Série</p>
+                    <div className="bg-[#ffa726] text-black font-black rounded-xl h-14 flex items-center justify-center gap-2 border-none transition-transform active:scale-95 shadow-md text-lg relative">
+                      {exercise.sets.length}
+                      <Pencil className="h-4 w-4 absolute bottom-2 right-2 opacity-60"/>
+                    </div>
                   </div>
+                </EditSetsDialog>
+
+                <div className="space-y-2">
+                  <p className="text-[11px] font-bold text-white/60 text-center uppercase tracking-tight">Repetições</p>
+                  <Input 
+                    className="bg-[#c5e1a5] text-black font-black text-center h-14 border-none rounded-xl focus-visible:ring-primary/40 shadow-md text-lg"
+                    defaultValue={exercise.repsRange}
+                  />
                 </div>
-              </EditSetsDialog>
 
-              <div className="space-y-1.5">
-                <p className="text-[11px] font-bold text-muted-foreground text-center uppercase tracking-tight">Repetições</p>
-                <Input 
-                  className="bg-[#c5e1a5] text-black font-black text-center h-14 border-none rounded-xl focus-visible:ring-primary/40 shadow-md text-lg"
-                  defaultValue={exercise.repsRange}
-                />
+                <div className="space-y-2">
+                  <p className="text-[11px] font-bold text-white/60 text-center uppercase tracking-tight">Intervalo</p>
+                  <Input 
+                    className="bg-[#4caf50] text-black font-black text-center h-14 border-none rounded-xl focus-visible:ring-primary/40 shadow-md text-lg"
+                    defaultValue={exercise.sets[0]?.interval || '40'}
+                  />
+                </div>
               </div>
 
-              <div className="space-y-1.5">
-                <p className="text-[11px] font-bold text-muted-foreground text-center uppercase tracking-tight">Intervalo</p>
-                <Input 
-                  className="bg-[#4caf50] text-black font-black text-center h-14 border-none rounded-xl focus-visible:ring-primary/40 shadow-md text-lg"
-                  defaultValue={exercise.sets[0]?.interval || '40'}
-                />
-              </div>
-            </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <p className="text-[11px] font-bold text-white/60 text-center uppercase tracking-tight">Cadência</p>
+                  <Input 
+                    className="bg-[#0097a7] text-white font-black text-center h-14 border-none rounded-xl focus-visible:ring-primary/40 shadow-md text-lg"
+                    defaultValue="2.3"
+                  />
+                </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <p className="text-[11px] font-bold text-muted-foreground text-center uppercase tracking-tight">Cadência</p>
-                <Input 
-                  className="bg-[#0097a7] text-white font-black text-center h-14 border-none rounded-xl focus-visible:ring-primary/40 shadow-md text-lg"
-                  defaultValue="2.3"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <p className="text-[11px] font-bold text-muted-foreground text-center uppercase tracking-tight">Observação</p>
-                <EditObservationDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
-                  <Button className="w-full bg-[#0097a7] hover:bg-[#00838f] text-white rounded-xl h-14 gap-2 font-black shadow-md border-none">
-                    <MessageSquare className="h-6 w-6"/>
-                  </Button>
-                </EditObservationDialog>
+                <div className="space-y-2">
+                  <p className="text-[11px] font-bold text-white/60 text-center uppercase tracking-tight">Observação</p>
+                  <EditObservationDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
+                    <Button className="w-full bg-[#0097a7] hover:bg-[#00838f] text-white rounded-xl h-14 gap-2 font-black shadow-md border-none">
+                      <MessageSquare className="h-6 w-6"/>
+                    </Button>
+                  </EditObservationDialog>
+                </div>
               </div>
             </div>
 
