@@ -114,23 +114,23 @@ export function EditSetsDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[500px] bg-white p-0 gap-0 overflow-hidden border-none shadow-2xl rounded-[24px]">
-        <DialogHeader className="p-8 pb-4 relative">
-          <DialogTitle className="text-[22px] font-bold text-slate-800">Editar Séries do Exercício</DialogTitle>
-          <p className="text-slate-400 font-medium mt-1">{exercise.name}</p>
-          <DialogClose className="absolute right-8 top-8 opacity-40 hover:opacity-100">
+      <DialogContent className="sm:max-w-[550px] w-[95vw] max-w-[95vw] sm:w-full bg-white p-0 gap-0 overflow-hidden border-none shadow-2xl rounded-[24px]">
+        <DialogHeader className="p-6 sm:p-8 pb-4 relative">
+          <DialogTitle className="text-[20px] sm:text-[22px] font-bold text-slate-800">Editar Séries do Exercício</DialogTitle>
+          <p className="text-slate-400 font-medium mt-1 text-sm sm:text-base truncate pr-8">{exercise.name}</p>
+          <DialogClose className="absolute right-6 sm:right-8 top-6 sm:top-8 opacity-40 hover:opacity-100">
             <X className="h-6 w-6" />
           </DialogClose>
         </DialogHeader>
         
-        <div className="px-8 pb-4">
-          {/* Header da Tabela */}
-          <div className="grid grid-cols-[30px_110px_1fr_1fr_60px_40px] gap-2 mb-4 px-1">
+        <div className="px-4 sm:px-8 pb-4">
+          {/* Header da Tabela - Ajustado para melhor espaçamento */}
+          <div className="grid grid-cols-[24px_90px_1fr_1fr_50px_32px] gap-2 sm:gap-3 mb-4 px-1 items-center">
             <div></div>
-            <div className="text-[12px] font-medium text-slate-400 text-center">Tipo</div>
-            <div className="text-[12px] font-medium text-slate-400 text-center">Reps</div>
-            <div className="text-[12px] font-medium text-slate-400 text-center">Int (s)</div>
-            <div className="text-[12px] font-medium text-slate-400 text-center">RIR</div>
+            <div className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-slate-400 text-center">Tipo</div>
+            <div className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-slate-400 text-center">Reps</div>
+            <div className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-slate-400 text-center">Int(s)</div>
+            <div className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-slate-400 text-center">RIR</div>
             <div className="flex justify-center">
                <HelpCircle className="h-4 w-4 text-slate-300" />
             </div>
@@ -143,7 +143,7 @@ export function EditSetsDialog({
               const Icon = setType?.icon || Check;
               
               return (
-                <div key={set.id} className="grid grid-cols-[30px_110px_1fr_1fr_60px_40px] gap-2 items-center">
+                <div key={set.id} className="grid grid-cols-[24px_90px_1fr_1fr_50px_32px] gap-2 sm:gap-3 items-center group">
                   <div className="flex justify-center">
                     <Icon className={cn('h-5 w-5', setType?.color)} />
                   </div>
@@ -154,12 +154,12 @@ export function EditSetsDialog({
                       handleSetChange(set.id, 'type', value)
                     }
                   >
-                    <SelectTrigger className="bg-slate-50 h-11 border-slate-100 rounded-xl text-sm font-bold focus:ring-emerald-500/20">
+                    <SelectTrigger className="bg-slate-50 h-10 sm:h-11 border-slate-100 rounded-xl text-[10px] sm:text-xs font-black uppercase px-2 focus:ring-emerald-500/20">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl">
                       {setTypeOptions.map((type) => (
-                        <SelectItem key={type.value} value={type.value} className="font-bold">
+                        <SelectItem key={type.value} value={type.value} className="font-bold text-xs">
                           {type.label}
                         </SelectItem>
                       ))}
@@ -170,9 +170,9 @@ export function EditSetsDialog({
                     <Input
                       value={set.reps}
                       onChange={(e) => handleSetChange(set.id, 'reps', e.target.value)}
-                      className="bg-slate-50 h-11 border-slate-100 rounded-xl text-center font-bold text-sm px-1"
+                      className="bg-slate-50 h-10 sm:h-11 border-slate-100 rounded-xl text-center font-bold text-xs sm:text-sm px-1 min-w-0"
                     />
-                    <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg shadow-sm">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9 shrink-0 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg shadow-sm">
                       <RefreshCcw className="h-3.5 w-3.5" />
                     </Button>
                   </div>
@@ -181,9 +181,9 @@ export function EditSetsDialog({
                     <Input
                       value={set.interval}
                       onChange={(e) => handleSetChange(set.id, 'interval', e.target.value)}
-                      className="bg-slate-50 h-11 border-slate-100 rounded-xl text-center font-bold text-sm px-1"
+                      className="bg-slate-50 h-10 sm:h-11 border-slate-100 rounded-xl text-center font-bold text-xs sm:text-sm px-1 min-w-0"
                     />
-                    <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg shadow-sm">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9 shrink-0 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg shadow-sm">
                       <List className="h-3.5 w-3.5" />
                     </Button>
                   </div>
@@ -191,17 +191,17 @@ export function EditSetsDialog({
                   <Input
                     value={set.rir}
                     onChange={(e) => handleSetChange(set.id, 'rir', e.target.value)}
-                    className="bg-slate-50 h-11 border-slate-100 rounded-xl text-center font-bold text-sm px-1"
+                    className="bg-slate-50 h-10 sm:h-11 border-slate-100 rounded-xl text-center font-bold text-xs sm:text-sm px-1 min-w-0"
                   />
 
                   <div className="flex justify-center">
                     <Button 
                       variant="ghost" 
                       size="icon" 
-                      className="h-10 w-10 text-red-500 hover:bg-red-50 rounded-xl" 
+                      className="h-9 w-9 text-red-500 hover:bg-red-50 rounded-xl" 
                       onClick={() => removeSet(set.id)}
                     >
-                      <Trash2 className="h-5 w-5" />
+                      <Trash2 className="h-4.5 w-4.5" />
                     </Button>
                   </div>
                 </div>
@@ -212,7 +212,7 @@ export function EditSetsDialog({
           {/* Botão Adicionar */}
           <button 
             onClick={addNewSet}
-            className="w-full mt-6 h-14 border-2 border-dashed border-emerald-500/30 rounded-2xl flex items-center justify-center gap-2 text-emerald-500 font-bold hover:bg-emerald-50 transition-colors"
+            className="w-full mt-6 h-12 sm:h-14 border-2 border-dashed border-emerald-500/30 rounded-2xl flex items-center justify-center gap-2 text-emerald-500 font-bold hover:bg-emerald-50 transition-colors text-sm"
           >
             <Plus className="h-5 w-5" />
             Adicionar nova série
@@ -227,8 +227,8 @@ export function EditSetsDialog({
                 onCheckedChange={setShouldApplyToAll}
                 className="data-[state=checked]:bg-emerald-500"
               />
-              <label htmlFor="apply-to-all" className="text-sm font-medium text-slate-500 cursor-pointer">
-                Aplicar para todos os exercícios deste treino
+              <label htmlFor="apply-to-all" className="text-xs sm:text-sm font-bold text-slate-500 cursor-pointer uppercase tracking-tight">
+                Aplicar para todos os exercícios
               </label>
             </div>
             <HelpCircle className="h-5 w-5 text-slate-300" />
@@ -236,9 +236,9 @@ export function EditSetsDialog({
         </div>
 
         {/* Footer com Botão Salvar */}
-        <div className="p-8 pt-4">
+        <div className="p-6 sm:p-8 pt-4">
           <Button
-            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white h-[60px] rounded-2xl font-bold text-lg shadow-lg shadow-emerald-500/20 transition-all active:scale-[0.98]"
+            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white h-14 sm:h-[60px] rounded-2xl font-black text-base sm:text-lg shadow-lg shadow-emerald-500/20 transition-all active:scale-[0.98] uppercase tracking-widest"
             onClick={handleSave}
           >
             Salvar
