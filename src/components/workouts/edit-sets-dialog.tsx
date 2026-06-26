@@ -16,7 +16,6 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import {
@@ -124,8 +123,7 @@ export function EditSetsDialog({
         </DialogHeader>
         
         <div className="px-4 sm:px-8 pb-4">
-          <div className="grid grid-cols-[24px_90px_1fr_1fr_50px_32px] gap-2 sm:gap-3 mb-4 px-1 items-center">
-            <div></div>
+          <div className="grid grid-cols-[50px_1fr_1fr_50px_32px] gap-2 sm:gap-3 mb-4 px-1 items-center">
             <div className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-muted-foreground text-center">Tipo</div>
             <div className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-muted-foreground text-center">Reps</div>
             <div className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-muted-foreground text-center">Int(s)</div>
@@ -136,29 +134,28 @@ export function EditSetsDialog({
           </div>
 
           <div className="space-y-4 max-h-[45vh] overflow-y-auto no-scrollbar pr-1">
-            {sets.map((set, index) => {
-              const setType = setTypeOptions.find((t) => t.value === set.type);
-              const Icon = setType?.icon || Check;
+            {sets.map((set) => {
+              const currentType = setTypeOptions.find((t) => t.value === set.type);
+              const Icon = currentType?.icon || Check;
               
               return (
-                <div key={set.id} className="grid grid-cols-[24px_90px_1fr_1fr_50px_32px] gap-2 sm:gap-3 items-center group">
-                  <div className="flex justify-center">
-                    <Icon className={cn('h-5 w-5', setType?.color)} />
-                  </div>
-
+                <div key={set.id} className="grid grid-cols-[50px_1fr_1fr_50px_32px] gap-2 sm:gap-3 items-center group">
                   <Select
                     value={set.type}
                     onValueChange={(value) =>
                       handleSetChange(set.id, 'type', value)
                     }
                   >
-                    <SelectTrigger className="bg-muted/30 h-10 sm:h-11 border-border rounded-xl text-[10px] sm:text-xs font-black uppercase px-2 focus:ring-primary/20">
-                      <SelectValue />
+                    <SelectTrigger className="bg-muted/30 h-10 sm:h-11 border-border rounded-xl flex items-center justify-center p-0 focus:ring-primary/20">
+                       <Icon className={cn('h-5 w-5', currentType?.color)} />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl border-border">
                       {setTypeOptions.map((type) => (
                         <SelectItem key={type.value} value={type.value} className="font-bold text-xs uppercase tracking-widest">
-                          {type.label}
+                          <div className="flex items-center gap-2">
+                            <type.icon className={cn('h-4 w-4', type.color)} />
+                            {type.label}
+                          </div>
                         </SelectItem>
                       ))}
                     </SelectContent>
