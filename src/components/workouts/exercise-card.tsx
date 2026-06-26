@@ -6,7 +6,6 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '../ui/button';
 import { 
   GripVertical, 
-  PlaySquare, 
   MessageSquare, 
   Trash2, 
   Link2, 
@@ -16,7 +15,6 @@ import {
   SlidersHorizontal, 
   Dumbbell, 
   Timer, 
-  ExternalLink,
   Shuffle
 } from 'lucide-react';
 import type { Exercise, Set, SetType, CombinationType } from '@/lib/types';
@@ -106,12 +104,6 @@ export function ExerciseCard({
     onUpdateExercise({ ...exercise, substitutions });
   };
 
-  const handlePlayVideo = () => {
-    if (exercise.videoUrl) {
-      window.open(exercise.videoUrl.replace('embed/', 'watch?v='), '_blank');
-    }
-  };
-
   const substitutionCount = exercise.substitutions?.length || 0;
 
   return (
@@ -153,16 +145,6 @@ export function ExerciseCard({
         </TableCell>
         <TableCell className="p-1 pt-3 w-[160px]">
           <div className="flex items-center gap-1.5">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className={cn("shrink-0 h-8 w-8 transition-colors", exercise.videoUrl ? "text-primary" : "text-muted-foreground/30")}
-              onClick={handlePlayVideo}
-              disabled={!exercise.videoUrl}
-            >
-              {exercise.videoUrl ? <ExternalLink className="w-4 h-4" /> : <PlaySquare className="w-4 h-4" />}
-            </Button>
-            
             <SubstitutionDialog exercise={exercise} onSave={handleSaveSubstitutions}>
               <div className="relative group cursor-pointer">
                 <Button 
@@ -170,7 +152,7 @@ export function ExerciseCard({
                   size="icon" 
                   className={cn(
                     "h-8 w-8 transition-all hover:bg-primary/20 hover:shadow-[0_0_15px_rgba(var(--primary),0.3)]",
-                    substitutionCount > 0 ? "text-primary opacity-100" : "text-primary/70 opacity-80"
+                    substitutionCount > 0 ? "text-primary opacity-100" : "text-primary/70 opacity-100"
                   )}
                 >
                   <Shuffle className="w-4 h-4" />

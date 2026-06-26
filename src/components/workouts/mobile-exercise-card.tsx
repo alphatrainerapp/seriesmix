@@ -6,7 +6,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Button, buttonVariants } from '../ui/button';
-import { MessageSquare, PlaySquare, Trash2, Flame, SlidersHorizontal, Dumbbell, Link2, Timer, Hash, Shuffle, ExternalLink } from 'lucide-react';
+import { MessageSquare, PlaySquare, Trash2, Flame, SlidersHorizontal, Dumbbell, Link2, Timer, Hash, Shuffle } from 'lucide-react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { Exercise, SetType, CombinationType } from '@/lib/types';
@@ -83,12 +83,6 @@ export function MobileExerciseCard({
 
   const handleSaveSubstitutions = (substitutions: string[]) => {
     onUpdateExercise({ ...exercise, substitutions });
-  };
-
-  const handlePlayVideo = () => {
-    if (exercise.videoUrl) {
-      window.open(exercise.videoUrl.replace('embed/', 'watch?v='), '_blank');
-    }
   };
 
   const substitutionCount = exercise.substitutions?.length || 0;
@@ -240,36 +234,21 @@ export function MobileExerciseCard({
                </Select>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 pb-2">
+            <div className="pb-2">
               <SubstitutionDialog exercise={exercise} onSave={handleSaveSubstitutions}>
                 <Button 
                   variant="outline" 
                   className={cn(
-                    "rounded-2xl h-14 gap-3 font-black uppercase tracking-widest text-[11px] shadow-sm transition-all",
+                    "w-full rounded-2xl h-14 gap-3 font-black uppercase tracking-widest text-[11px] shadow-sm transition-all",
                     substitutionCount > 0 
                       ? "text-[#00bfa5] bg-[#00bfa5]/10 border-[#00bfa5] shadow-[#00bfa5]/20" 
-                      : "text-[#00bfa5]/80 border-[#00bfa5]/40 hover:bg-[#00bfa5]/5"
+                      : "text-[#00bfa5] border-[#00bfa5]/40 hover:bg-[#00bfa5]/5"
                   )}
                 >
                   <Shuffle className="h-5 w-5" />
                   Trocas ({substitutionCount})
                 </Button>
               </SubstitutionDialog>
-              
-              <Button 
-                variant="outline" 
-                className={cn(
-                  "rounded-2xl h-14 gap-3 font-black uppercase tracking-widest text-[11px] shadow-sm transition-all",
-                  exercise.videoUrl 
-                    ? "text-primary border-primary/40 hover:bg-primary/5" 
-                    : "text-muted-foreground/60 border-border/40 opacity-50 cursor-not-allowed"
-                )}
-                onClick={handlePlayVideo}
-                disabled={!exercise.videoUrl}
-              >
-                <ExternalLink className="h-5 w-5" />
-                Execução
-              </Button>
             </div>
 
             {combinationType && (
