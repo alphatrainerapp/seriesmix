@@ -5,7 +5,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Button, buttonVariants } from '../ui/button';
+import { Button } from '../ui/button';
 import { MessageSquare, PlaySquare, Trash2, Flame, SlidersHorizontal, Dumbbell, Link2, Timer, Hash, Shuffle, Pencil, X, ChevronDown, Check } from 'lucide-react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -88,35 +88,38 @@ export function MobileExerciseCard({
   const substitutionCount = exercise.substitutions?.length || 0;
 
   return (
-    <AccordionItem value={`item-${exercise.id}`} className="border-none">
+    <AccordionItem value={`item-${exercise.id}`} className="border-none mb-3">
       <div className={cn(
-        "w-full rounded-[24px] border border-border/40 bg-card p-5 transition-all shadow-md mb-4",
-        exercise.groupId && "border-primary/40 bg-primary/[0.02]"
+        "w-full rounded-[16px] border border-white/5 bg-[#2a2a2e] transition-all shadow-sm overflow-hidden",
+        exercise.groupId && "border-primary/40"
       )}>
-        {/* Header no estilo da referência */}
-        <div className="flex items-center gap-2 h-12">
+        {/* Minimized Header - Exact match to reference */}
+        <div className="flex items-center justify-between px-5 h-[64px]">
           <ExerciseSearchDialog onSelect={handleUpdateName}>
-            <div className="flex-1 h-12 bg-muted/30 border border-border/40 rounded-xl px-4 flex items-center justify-between group cursor-pointer active:scale-[0.98] transition-all">
-              <span className="font-bold text-sm text-foreground truncate uppercase tracking-tight">
-                {exercise.name}
-              </span>
-              <ChevronDown className="h-4 w-4 text-primary shrink-0 ml-2" />
-            </div>
+            <span className="font-bold text-[15px] text-white truncate pr-4 cursor-pointer">
+              {exercise.name}
+            </span>
           </ExerciseSearchDialog>
           
-          <div className="flex items-center gap-1 shrink-0">
-             <AccordionTrigger className="h-12 w-10 flex items-center justify-center p-0 hover:no-underline [&>svg]:ml-0">
-               {/* O ícone do accordion padrão do radix já cuida da rotação */}
-             </AccordionTrigger>
-             <button className="h-10 w-10 bg-orange-500 hover:bg-orange-600 text-white rounded-full flex items-center justify-center shadow-lg shadow-orange-500/20 active:scale-95 transition-all">
-                <X className="h-6 w-6" />
-             </button>
+          <div className="flex items-center gap-3 shrink-0">
+            <button 
+              className="text-destructive/60 hover:text-destructive transition-colors p-2"
+              onClick={(e) => {
+                e.stopPropagation();
+                // Logic to delete would go here
+              }}
+            >
+              <Trash2 className="h-5 w-5" />
+            </button>
+            <AccordionTrigger className="p-0 hover:no-underline [&>svg]:h-5 [&>svg]:w-5 [&>svg]:text-white/40 [&>svg]:ml-0">
+              {/* Chevron is handled by AccordionTrigger component */}
+            </AccordionTrigger>
           </div>
         </div>
 
-        <AccordionContent className="pb-0 pt-6 px-0 animate-in fade-in duration-300">
-          <div className="space-y-6">
-            {/* Vídeo / Imagem com borda Teal */}
+        <AccordionContent className="pb-6 pt-2 px-5 animate-in fade-in duration-300 bg-card border-t border-white/5">
+          <div className="space-y-6 pt-4">
+            {/* Detailed content for expanded state */}
             {exercise.videoUrl ? (
               <div className="relative aspect-video rounded-3xl overflow-hidden border-[6px] border-primary/20 shadow-xl bg-black">
                 <iframe
@@ -148,7 +151,6 @@ export function MobileExerciseCard({
               </div>
             )}
             
-            {/* Classificação das Séries */}
             <div className="space-y-3">
                <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest pl-1">Classificação das séries</p>
                <div className="flex flex-wrap items-center gap-3">
@@ -171,7 +173,6 @@ export function MobileExerciseCard({
               </div>
             </div>
 
-            {/* Grid de Métricas Coloridas Estilo Referência */}
             <div className="grid grid-cols-3 gap-3">
               <EditSetsDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
                 <div className="space-y-1.5 cursor-pointer group">
@@ -219,15 +220,10 @@ export function MobileExerciseCard({
               </div>
             </div>
 
-            {/* Rodapé do Card com Método e Trocas */}
             <div className="pt-6 border-t border-border/10 space-y-6">
                <div className="space-y-2">
                   <div className="flex items-center justify-between px-1">
                     <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Método</p>
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-[10px] font-bold text-muted-foreground uppercase">Cor:</span>
-                      <div className="h-5 w-5 rounded-md border border-border/40 shadow-sm bg-muted/40" />
-                    </div>
                   </div>
                   <Select defaultValue="padrao">
                       <SelectTrigger className="rounded-xl bg-muted/20 border-border/40 h-14 text-[13px] font-bold text-foreground focus:ring-primary/20 shadow-sm px-4">
