@@ -48,19 +48,19 @@ body {
     --tag-soft-blue-fg: 210 90% 40%;
   }
   .dark {
-    --background: 0 0% 20%; /* #333333 */
+    --background: 0 0% 15%; /* #262626 - Fundo mais escuro */
     --foreground: 0 0% 98%;
-    --card: 0 0% 20%; /* #333333 */
+    --card: 0 0% 20%; /* #333333 - Card um pouco mais claro */
     --card-foreground: 0 0% 98%;
     --workout-card: 0 0% 20%; /* #333333 */
-    --exercise-card: 0 0% 23%; /* #3b3b3b */
+    --exercise-card: 0 0% 23%; /* #3b3b3b - Blocos internos */
     --popover: 0 0% 20%;
     --popover-foreground: 0 0% 98%;
     --primary: 180 96% 34%;
     --primary-foreground: 0 0% 100%;
     --secondary: 0 0% 23%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 23%; /* #3b3b3b para blocos internos */
+    --muted: 0 0% 23%; /* #3b3b3b */
     --muted-foreground: 240 5% 64.9%;
     --accent: 0 0% 23%;
     --accent-foreground: 0 0% 98%;
@@ -76,9 +76,9 @@ body {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
 
-    --sidebar-background: 0 0% 15%;
+    --sidebar-background: 0 0% 13%;
     --sidebar-foreground: 240 5% 95%;
-    --sidebar-border: 0 0% 20%;
+    --sidebar-border: 0 0% 18%;
     --sidebar-accent: 0 0% 18%;
     --sidebar-accent-foreground: 240 5% 98%;
     --sidebar-ring: 175 75% 40%;
