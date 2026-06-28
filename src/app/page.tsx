@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -33,8 +34,8 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSub,
   DropdownMenuSubTrigger,
-  DropdownMenuSubContent,
   DropdownMenuPortal,
+  DropdownMenuSubContent,
 } from '@/components/ui/dropdown-menu';
 import { 
   Plus, 
@@ -53,7 +54,9 @@ import {
   Zap,
   Clock,
   Activity,
-  Flame
+  Flame,
+  LayoutGrid,
+  RefreshCcw
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
@@ -209,10 +212,10 @@ const WorkoutTabContent = memo(({
         const combinationType = workout.combinationTypes[currentExercise.groupId];
         elements.push(
           <TableBody key={`group-${currentExercise.groupId}-${tabId}`} className="relative border-b-0">
-             {group.map((exercise, idx) => (
+             {group.map((exerciseInGroup, idx) => (
                 <ExerciseCard
-                  key={`${exercise.id}-${tabId}`}
-                  exercise={exercise}
+                  key={`${exerciseInGroup.id}-${tabId}`}
+                  exercise={exerciseInGroup}
                   onUpdateExercise={(ex) => onUpdateExercise(ex, tabId)}
                   onApplySetsToAll={(sets) => onApplySetsToAll(sets, tabId)}
                   isFirstInGroup={idx === 0}
@@ -241,40 +244,64 @@ const WorkoutTabContent = memo(({
   };
 
   return (
-    <div className="mt-8 animate-in fade-in-50 duration-500 mobile-content-wrapper">
-      <div className="flex flex-wrap items-center justify-between gap-6 mb-8">
-        <div className="flex flex-wrap items-center gap-6">
+    <div className="mt-8 animate-in fade-in-50 duration-500 mobile-content-wrapper space-y-4">
+      {/* Header Info Card baseado na imagem */}
+      <div className="bg-card border border-border rounded-2xl p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 shadow-sm">
+        <div className="space-y-4">
+          <h2 className="text-3xl font-black tracking-tighter uppercase italic">
+            {tabId.replace('treino-', 'Treino ').toUpperCase()}
+          </h2>
           <div className="space-y-1">
-            <h2 className="text-2xl font-black tracking-tighter uppercase italic">
-              {tabId.replace('treino-', 'Treino ').toUpperCase()}
-            </h2>
-            {estimatedDuration > 0 && (
-              <div className="flex items-center gap-2 text-primary px-1">
-                <Clock className="h-3.5 w-3.5" />
-                <span className="text-[10px] font-black uppercase tracking-widest">Duração: {estimatedDuration} min</span>
-              </div>
-            )}
+            <div className="flex items-center gap-1.5 text-primary">
+              <Clock className="h-3.5 w-3.5" />
+              <span className="text-[10px] font-black uppercase tracking-widest">DURAÇÃO ESTIMADA</span>
+            </div>
+            <p className="text-xl font-black text-primary uppercase leading-none">{estimatedDuration} MIN</p>
           </div>
         </div>
-
-        <div className="flex flex-wrap items-center gap-4 md:gap-8">
-          <SaveSessionDialog workoutData={workout.data} combinationTypes={workout.combinationTypes}>
-            <button className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground">
-              <Save className="h-5 w-5 text-primary" />
-              Salvar sessão
-            </button>
-          </SaveSessionDialog>
-
-          <UseSavedSessionDialog onApplySession={(data, types) => onApplySavedSession(data, types, tabId)}>
-            <button className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground">
-              <History className="h-5 w-5 text-primary" />
-              Usar sessão salva
-            </button>
-          </UseSavedSessionDialog>
+        
+        <div className="flex flex-col gap-2 w-full sm:w-auto">
+          <div className="flex items-center gap-3 px-4 py-3 bg-muted/30 border border-border rounded-xl">
+            <Checkbox id="presencial" className="h-5 w-5 rounded-md" />
+            <label htmlFor="presencial" className="text-xs font-bold uppercase tracking-tight cursor-pointer">Presencial</label>
+          </div>
+          <div className="flex items-center gap-3 px-4 py-3 bg-muted/30 border border-border rounded-xl">
+            <Checkbox id="editar-varios" className="h-5 w-5 rounded-md" />
+            <label htmlFor="editar-varios" className="text-xs font-bold uppercase tracking-tight cursor-pointer">Editar Vários</label>
+          </div>
         </div>
       </div>
+
+      {/* Action Buttons Grid baseado na imagem */}
+      <div className="grid grid-cols-3 gap-3">
+        <CombineExercisesDialog 
+          exercises={workout.data} 
+          onUpdateWorkout={(data) => onUpdateWorkoutData(data, tabId)}
+          combinationTypes={workout.combinationTypes}
+          onUpdateCombinationTypes={(types) => onUpdateWorkoutDataWithCombination(types, tabId)}
+        >
+          <button className="flex flex-col items-center justify-center gap-2 py-4 rounded-xl border border-border bg-card hover:bg-muted/50 transition-all active:scale-95 shadow-sm">
+            <LayoutGrid className="h-6 w-6 text-primary" />
+            <span className="text-[10px] font-black uppercase tracking-tight text-primary">Combinar</span>
+          </button>
+        </CombineExercisesDialog>
+
+        <SaveSessionDialog workoutData={workout.data} combinationTypes={workout.combinationTypes}>
+          <button className="flex flex-col items-center justify-center gap-2 py-4 rounded-xl border border-border bg-card hover:bg-muted/50 transition-all active:scale-95 shadow-sm">
+            <Save className="h-6 w-6 text-primary" />
+            <span className="text-[10px] font-black uppercase tracking-tight text-primary">Salvar Sessão</span>
+          </button>
+        </SaveSessionDialog>
+
+        <UseSavedSessionDialog onApplySession={(data, types) => onApplySavedSession(data, types, tabId)}>
+          <button className="flex flex-col items-center justify-center gap-2 py-4 rounded-xl border border-border bg-card hover:bg-muted/50 transition-all active:scale-95 shadow-sm">
+            <RefreshCcw className="h-6 w-6 text-primary" />
+            <span className="text-[10px] font-black uppercase tracking-tight text-primary">Usar Sessão Salva</span>
+          </button>
+        </UseSavedSessionDialog>
+      </div>
       
-      <div className="space-y-4">
+      <div className="pt-4 space-y-4">
         <div className="border rounded-2xl bg-card shadow-sm hidden md:block overflow-hidden w-full border-border/40">
           <Table className="w-full">
             <TableHeader>
@@ -593,13 +620,13 @@ export default function Home() {
           </div>
           
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <div className="flex justify-between items-center border-b border-border/40 overflow-x-auto no-scrollbar mobile-content-wrapper">
-              <TabsList className="bg-transparent p-0 h-auto gap-2 min-w-max">
+            <div className="flex justify-center border-b border-border/40 overflow-x-auto no-scrollbar mobile-content-wrapper">
+              <TabsList className="bg-transparent p-0 h-auto gap-8 min-w-max">
                 {['A', 'B', 'C', 'D', 'E'].map((letter) => (
                   <TabsTrigger
                     key={`trigger-${letter}`}
                     value={`treino-${letter.toLowerCase()}`}
-                    className="data-[state=active]:border-primary data-[state=active]:text-primary border-b-2 border-transparent rounded-none px-8 py-4 font-black text-xs uppercase tracking-[0.2em] transition-all bg-transparent shadow-none"
+                    className="data-[state=active]:border-primary data-[state=active]:text-primary border-b-4 border-transparent rounded-none px-4 py-4 font-black text-sm uppercase tracking-widest transition-all bg-transparent shadow-none"
                   >
                     Treino {letter}
                   </TabsTrigger>
@@ -634,3 +661,4 @@ export default function Home() {
     </div>
   );
 }
+
