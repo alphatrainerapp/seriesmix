@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -15,14 +16,12 @@ import {
   Dumbbell, 
   Link2, 
   Timer, 
-  Hash, 
-  Shuffle, 
-  Pencil, 
-  X, 
-  ChevronDown, 
-  Check,
-  Zap,
-  Activity
+  Check, 
+  Zap, 
+  Activity,
+  Pencil,
+  Shuffle,
+  ChevronDown
 } from 'lucide-react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -111,12 +110,18 @@ export function MobileExerciseCard({
     return (
       <AccordionItem value={`item-${exercise.id}`} className="border-none mb-3">
         <div className="w-full rounded-[16px] border border-border/40 bg-muted/40 dark:bg-[#2a2a2e] transition-all shadow-sm overflow-hidden">
-          <div className="flex items-center justify-between px-5 h-[64px]">
-            <span className="font-bold text-[15px] text-foreground dark:text-white truncate pr-4">
-              {exercise.name}
-            </span>
+          <div className="flex items-center justify-between px-5 py-4 min-h-[72px]">
+            <div className="flex flex-col gap-1 min-w-0">
+              <span className="font-bold text-[15px] text-foreground dark:text-white truncate">
+                {exercise.name}
+              </span>
+              <div className="flex items-center gap-1.5 text-[#ffa726]">
+                {cardioDetails.type === 'hiit' ? <Zap className="h-3 w-3" /> : <Activity className="h-3 w-3" />}
+                <span className="text-[10px] font-black uppercase tracking-widest">{cardioDetails.type.toUpperCase()}</span>
+              </div>
+            </div>
             <div className="flex items-center gap-3 shrink-0">
-              <button className="text-[#ff7043] p-2">
+              <button className="text-destructive/60 hover:text-destructive p-2">
                 <Trash2 className="h-5 w-5" />
               </button>
               <AccordionTrigger className="p-0 hover:no-underline [&>svg]:h-5 [&>svg]:w-5 text-muted-foreground dark:text-white/40" />
@@ -125,7 +130,6 @@ export function MobileExerciseCard({
 
           <AccordionContent className="pb-6 pt-2 px-5 bg-card border-t border-border/10">
             <div className="space-y-6 pt-4">
-              {/* Nome */}
               <div className="space-y-1.5">
                 <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight pl-1">Protocolo:</label>
                 <div className="bg-muted dark:bg-[#1a1a1e] p-4 rounded-xl">
@@ -138,7 +142,6 @@ export function MobileExerciseCard({
                 </div>
               </div>
 
-              {/* Tipo de Exercício */}
               <div className="space-y-1.5">
                 <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight pl-1">Tipo de Cardio:</label>
                 <div className="bg-muted dark:bg-[#1a1a1e] p-4 rounded-xl">
@@ -149,7 +152,6 @@ export function MobileExerciseCard({
                 </div>
               </div>
 
-              {/* Descrição */}
               <div className="space-y-1.5">
                 <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight pl-1">Descrição do Protocolo</label>
                 <div className="bg-muted dark:bg-[#1a1a1e] p-4 rounded-xl min-h-[120px]">
@@ -178,19 +180,29 @@ export function MobileExerciseCard({
         "w-full rounded-[16px] border border-border/40 bg-muted/40 dark:bg-[#2a2a2e] transition-all shadow-sm overflow-hidden",
         (exercise.groupId || exercise.isWarmup) && "border-primary/40"
       )}>
-        {/* Header Minimizado */}
-        <div className="flex items-center justify-between px-5 h-[64px]">
-          <div className="flex items-center gap-2 overflow-hidden">
-            {exercise.isWarmup && <Flame className="h-4 w-4 text-orange-500 shrink-0" />}
+        <div className="flex items-center justify-between px-5 py-4 min-h-[72px]">
+          <div className="flex flex-col gap-1 min-w-0">
             <ExerciseSearchDialog onSelect={handleUpdateName}>
-              <span className="font-bold text-[15px] text-foreground dark:text-white truncate pr-4 cursor-pointer">
+              <span className="font-bold text-[15px] text-foreground dark:text-white truncate cursor-pointer">
                 {exercise.name}
               </span>
             </ExerciseSearchDialog>
+            
+            {exercise.isWarmup ? (
+              <div className="flex items-center gap-1.5 text-[#00bfa5]">
+                <Flame className="h-3 w-3" />
+                <span className="text-[10px] font-black uppercase tracking-widest">AQUECIMENTO</span>
+              </div>
+            ) : combinationType ? (
+              <div className="flex items-center gap-1.5 text-primary">
+                {CombinationIcon && <CombinationIcon className="h-3 w-3" />}
+                <span className="text-[10px] font-black uppercase tracking-widest">{combinationType.toUpperCase()}</span>
+              </div>
+            ) : null}
           </div>
           
           <div className="flex items-center gap-3 shrink-0">
-            <button className="text-[#ff7043] p-2">
+            <button className="text-destructive/60 hover:text-destructive p-2">
               <Trash2 className="h-5 w-5" />
             </button>
             <AccordionTrigger className="p-0 hover:no-underline [&>svg]:h-5 [&>svg]:w-5 text-muted-foreground dark:text-white/40" />
@@ -336,23 +348,6 @@ export function MobileExerciseCard({
                  </Button>
                </SubstitutionDialog>
             </div>
-
-            {(combinationType || exercise.isWarmup) && (
-              <div className="flex items-center gap-3 pt-4 border-t border-border/10">
-                <div className={cn(
-                  "h-9 w-9 rounded-full flex items-center justify-center border",
-                  exercise.isWarmup ? "bg-orange-500/10 border-orange-500/20 text-orange-500" : "bg-primary/10 border-primary/20 text-primary"
-                )}>
-                   {exercise.isWarmup ? <Flame className="h-4.5 w-4.5" /> : (CombinationIcon && <CombinationIcon className={cn("h-4.5 w-4.5", combinationIconClassName)} />)}
-                </div>
-                <span className={cn(
-                  "text-[11px] font-black uppercase tracking-[0.2em]",
-                  exercise.isWarmup ? "text-orange-500" : "text-primary"
-                )}>
-                  {exercise.isWarmup ? "AQUECIMENTO" : `COMBINADO (${combinationType})`}
-                </span>
-              </div>
-            )}
           </div>
         </AccordionContent>
       </div>
