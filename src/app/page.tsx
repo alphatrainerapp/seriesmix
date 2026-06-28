@@ -26,6 +26,7 @@ import { CombineExercisesDialog } from '@/components/workouts/combine-exercises-
 import { SaveSessionDialog } from '@/components/workouts/save-session-dialog';
 import { UseSavedSessionDialog } from '@/components/workouts/use-saved-session-dialog';
 import { ExerciseSearchDialog } from '@/components/workouts/exercise-search-dialog';
+import { MobileActionFooter } from '@/components/workouts/mobile-action-footer';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -68,7 +69,7 @@ type WorkoutState = {
 
 // Barra de ações final baseada na imagem de referência
 const WorkoutActionsFooter = () => (
-  <div className="flex flex-wrap items-center gap-3 mt-12 pb-10 border-t pt-8 mobile-content-wrapper">
+  <div className="flex flex-wrap items-center gap-3 mt-12 pb-10 border-t pt-8 mobile-content-wrapper hidden md:flex">
     <Button className="bg-[#ffa726] hover:bg-[#fb8c00] text-white rounded-full px-6 h-10 font-bold gap-2 border-none shadow-sm uppercase text-[11px] tracking-widest">
       <Check className="h-4 w-4" />
       Finalizar
@@ -139,7 +140,8 @@ const WorkoutTabContent = memo(({
     
     workout.data.forEach(ex => {
       if (ex.isWod && ex.wodDetails?.duration) {
-        const mins = parseInt(ex.wodDetails.duration.split(':')[0]);
+        const parts = ex.wodDetails.duration.split(':');
+        const mins = parseInt(parts[0]);
         totalSeconds += (isNaN(mins) ? 15 : mins) * 60;
       } else if (ex.isCardio) {
         totalSeconds += 20 * 60; // Assume 20 min padrão para cardio
@@ -657,6 +659,8 @@ export default function Home() {
           <PageSidebar exercises={workouts[activeTab].data} currentTab={activeTab} />
         </aside>
       </div>
+
+      <MobileActionFooter />
     </div>
   );
 }
