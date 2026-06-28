@@ -119,18 +119,32 @@ const WorkoutTabContent = memo(({
   const [isSorting, setIsSorting] = useState(false);
 
   const estimatedDuration = useMemo(() => {
-    let total = 0;
+    let totalSeconds = 0;
+    
     workout.data.forEach(ex => {
       if (ex.isWod && ex.wodDetails?.duration) {
         // Tenta converter "15:00" para 15 minutos
         const mins = parseInt(ex.wodDetails.duration.split(':')[0]);
-        total += isNaN(mins) ? 15 : mins;
-      } else {
-        // Média de 10 minutos por bloco de exercício regular (séries + descanso)
-        total += 10;
+        totalSeconds += (isNaN(mins) ? 15 : mins) * 60;
+      } else if (ex.sets && ex.sets.length > 0) {
+        const numSets = ex.sets.length;
+        // Tempo médio de execução por série: 60 segundos
+        const setExecutionTime = 60;
+        // Tempo de intervalo extraído do primeiro set ou 60 segundos padrão
+        const intervalTime = parseInt(ex.sets[0]?.interval) || 60;
+        
+        // Cálculo: (séries * execução) + (intervalos entre séries)
+        const exerciseTotalSeconds = (numSets * setExecutionTime) + ((numSets - 1) * intervalTime);
+        totalSeconds += exerciseTotalSeconds;
       }
     });
-    return total;
+    
+    // Adiciona 5 minutos fixos para aquecimento geral/transições se houver exercícios
+    if (workout.data.length > 0) {
+      totalSeconds += 300; 
+    }
+
+    return Math.ceil(totalSeconds / 60);
   }, [workout.data]);
 
   const renderExerciseList = () => {
