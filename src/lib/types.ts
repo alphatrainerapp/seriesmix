@@ -37,6 +37,12 @@ export interface WodDetails {
   restBetweenRounds?: string;
 }
 
+export interface CardioDetails {
+  type: 'aerobico' | 'hiit';
+  description: string;
+  videoOption?: string;
+}
+
 export type Exercise = {
   id: number;
   name: string;
@@ -51,6 +57,8 @@ export type Exercise = {
   substitutions?: string[];
   isWod?: boolean;
   wodDetails?: WodDetails;
+  isCardio?: boolean;
+  cardioDetails?: CardioDetails;
 };
 
 export type CombinationType = 'biset' | 'triset' | 'superserie' | 'hiit';

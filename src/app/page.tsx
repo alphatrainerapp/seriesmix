@@ -12,6 +12,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { mockWorkout as initialWorkoutData } from '@/lib/data';
 import { ExerciseCard } from '@/components/workouts/exercise-card';
 import { WodBlockCard } from '@/components/workouts/wod-block-card';
+import { CardioBlockCard } from '@/components/workouts/cardio-block-card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -24,6 +25,7 @@ import { Accordion } from '@/components/ui/accordion';
 import { CombineExercisesDialog } from '@/components/workouts/combine-exercises-dialog';
 import { SaveSessionDialog } from '@/components/workouts/save-session-dialog';
 import { UseSavedSessionDialog } from '@/components/workouts/use-saved-session-dialog';
+import { ExerciseSearchDialog } from '@/components/workouts/exercise-search-dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,7 +47,9 @@ import {
   Send, 
   Home as HomeIcon,
   Zap,
-  Clock
+  Clock,
+  Activity,
+  Flame
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
@@ -105,7 +109,9 @@ const WorkoutTabContent = memo(({
   onApplySavedSession, 
   onUpdateWorkoutData, 
   onUpdateWorkoutDataWithCombination,
-  onAddWod
+  onAddWod,
+  onAddCardio,
+  onAddRegularExercise
 }: { 
   tabId: string;
   workout: WorkoutState;
@@ -115,6 +121,8 @@ const WorkoutTabContent = memo(({
   onUpdateWorkoutData: (data: Exercise[], tabId: string) => void;
   onUpdateWorkoutDataWithCombination: (types: Record<string, CombinationType>, tabId: string) => void;
   onAddWod: (tabId: string) => void;
+  onAddCardio: (type: 'aerobico' | 'hiit', tabId: string) => void;
+  onAddRegularExercise: (name: string, tabId: string) => void;
 }) => {
   const [isSorting, setIsSorting] = useState(false);
 
@@ -123,23 +131,18 @@ const WorkoutTabContent = memo(({
     
     workout.data.forEach(ex => {
       if (ex.isWod && ex.wodDetails?.duration) {
-        // Tenta converter "15:00" para 15 minutos
         const mins = parseInt(ex.wodDetails.duration.split(':')[0]);
         totalSeconds += (isNaN(mins) ? 15 : mins) * 60;
+      } else if (ex.isCardio) {
+        totalSeconds += 20 * 60; // Assume 20 min padrão para cardio
       } else if (ex.sets && ex.sets.length > 0) {
         const numSets = ex.sets.length;
-        // Tempo médio de execução por série: 60 segundos
         const setExecutionTime = 60;
-        // Tempo de intervalo extraído do primeiro set ou 60 segundos padrão
         const intervalTime = parseInt(ex.sets[0]?.interval) || 60;
-        
-        // Cálculo: (séries * execução) + (intervalos entre séries)
-        const exerciseTotalSeconds = (numSets * setExecutionTime) + ((numSets - 1) * intervalTime);
-        totalSeconds += exerciseTotalSeconds;
+        totalSeconds += (numSets * setExecutionTime) + ((numSets - 1) * intervalTime);
       }
     });
     
-    // Adiciona 5 minutos fixos para aquecimento geral/transições se houver exercícios
     if (workout.data.length > 0) {
       totalSeconds += 300; 
     }
@@ -156,7 +159,6 @@ const WorkoutTabContent = memo(({
               <div className="flex flex-col items-center gap-3">
                 <Dumbbell className="h-10 w-10 opacity-10" />
                 <p className="font-black uppercase tracking-widest text-xs">Nenhum exercício carregado</p>
-                <p className="text-[10px] font-bold opacity-60">Use as opções de sessão ou adicione manualmente.</p>
               </div>
             </TableCell>
           </TableRow>
@@ -168,11 +170,22 @@ const WorkoutTabContent = memo(({
     const renderedGroupIds = new Set<string>();
 
     workout.data.forEach((currentExercise) => {
-      // Se for um WOD, renderiza o componente WodBlockCard envolvido em estrutura de tabela válida
       if (currentExercise.isWod) {
         elements.push(
           <TableBody key={`wod-body-${currentExercise.id}-${tabId}`}>
             <WodBlockCard 
+              exercise={currentExercise} 
+              onUpdateExercise={(ex) => onUpdateExercise(ex, tabId)} 
+            />
+          </TableBody>
+        );
+        return;
+      }
+
+      if (currentExercise.isCardio) {
+        elements.push(
+          <TableBody key={`cardio-body-${currentExercise.id}-${tabId}`}>
+            <CardioBlockCard 
               exercise={currentExercise} 
               onUpdateExercise={(ex) => onUpdateExercise(ex, tabId)} 
             />
@@ -232,49 +245,22 @@ const WorkoutTabContent = memo(({
             {estimatedDuration > 0 && (
               <div className="flex items-center gap-2 text-primary px-1">
                 <Clock className="h-3.5 w-3.5" />
-                <span className="text-[10px] font-black uppercase tracking-widest">Duração estimada: {estimatedDuration} min</span>
+                <span className="text-[10px] font-black uppercase tracking-widest">Duração: {estimatedDuration} min</span>
               </div>
             )}
-          </div>
-
-          <div className="flex flex-wrap items-center gap-4 md:gap-6 pt-1">
-            <label className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
-              <Checkbox id={`presencial-${tabId}`} className="h-5 w-5 rounded-md border-muted-foreground/30 data-[state=checked]:bg-primary" />
-              Presencial
-            </label>
-
-            <button className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">
-              <SquarePen className="h-5 w-5 text-primary" />
-              Editar variáveis
-            </button>
-
-            <CombineExercisesDialog
-              exercises={workout.data}
-              onUpdateWorkout={(newData) => onUpdateWorkoutData(newData, tabId)}
-              combinationTypes={workout.combinationTypes}
-              onUpdateCombinationTypes={(newTypes) => onUpdateWorkoutDataWithCombination(newTypes, tabId)}
-            >
-              <button className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">
-                <Combine className="h-5 w-5 text-primary" />
-                Combinar
-              </button>
-            </CombineExercisesDialog>
           </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-4 md:gap-8">
-          <SaveSessionDialog 
-            workoutData={workout.data} 
-            combinationTypes={workout.combinationTypes}
-          >
-            <button className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">
+          <SaveSessionDialog workoutData={workout.data} combinationTypes={workout.combinationTypes}>
+            <button className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground">
               <Save className="h-5 w-5 text-primary" />
               Salvar sessão
             </button>
           </SaveSessionDialog>
 
           <UseSavedSessionDialog onApplySession={(data, types) => onApplySavedSession(data, types, tabId)}>
-            <button className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">
+            <button className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground">
               <History className="h-5 w-5 text-primary" />
               Usar sessão salva
             </button>
@@ -282,7 +268,6 @@ const WorkoutTabContent = memo(({
         </div>
       </div>
       
-      {/* Desktop View */}
       <div className="space-y-4">
         <div className="border rounded-2xl bg-card shadow-sm hidden md:block overflow-hidden w-full border-border/40">
           <Table className="w-full">
@@ -305,25 +290,16 @@ const WorkoutTabContent = memo(({
         </div>
       </div>
 
-      {/* Mobile View */}
       <div className="block md:hidden">
         {workout.data.length > 0 ? (
           <Accordion type="single" collapsible className="flex flex-col gap-3 w-full">
             {workout.data.map((exercise) => (
-              exercise.isWod ? (
-                 <WodBlockCard 
-                  key={`wod-mobile-${exercise.id}-${tabId}`}
-                  exercise={exercise} 
-                  onUpdateExercise={(ex) => onUpdateExercise(ex, tabId)} 
-                />
-              ) : (
-                <MobileExerciseCard
-                  key={`${exercise.id}-mobile-${tabId}`}
-                  exercise={exercise}
-                  onUpdateExercise={(ex) => onUpdateExercise(ex, tabId)}
-                  combinationType={exercise.groupId ? workout.combinationTypes[exercise.groupId] : undefined}
-                />
-              )
+              <MobileExerciseCard
+                key={`${exercise.id}-mobile-${tabId}`}
+                exercise={exercise}
+                onUpdateExercise={(ex) => onUpdateExercise(ex, tabId)}
+                combinationType={exercise.groupId ? workout.combinationTypes[exercise.groupId] : undefined}
+              />
             ))}
           </Accordion>
         ) : (
@@ -338,14 +314,26 @@ const WorkoutTabContent = memo(({
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className="bg-[#009688] hover:bg-[#00796b] text-white rounded-xl px-10 h-14 font-black text-xs gap-3 shadow-lg shadow-teal-500/10 border-none uppercase tracking-widest">
+              <Button className="bg-[#009688] hover:bg-[#00796b] text-white rounded-xl px-10 h-14 font-black text-xs gap-3 shadow-lg border-none uppercase tracking-widest">
                 <Plus className="h-6 w-6" />
                 ADICIONAR EXERCÍCIO
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-64 rounded-xl p-2 shadow-xl border-border/40">
-              <DropdownMenuItem className="rounded-lg p-4 cursor-pointer font-bold uppercase text-[10px] tracking-widest">Protocolo aeróbico</DropdownMenuItem>
-              <DropdownMenuItem className="rounded-lg p-4 cursor-pointer font-bold uppercase text-[10px] tracking-widest">Hiit</DropdownMenuItem>
+              <DropdownMenuItem 
+                className="rounded-lg p-4 cursor-pointer font-bold uppercase text-[10px] tracking-widest"
+                onClick={() => onAddCardio('aerobico', tabId)}
+              >
+                <Activity className="h-4 w-4 mr-2 text-blue-500" />
+                Protocolo aeróbico
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                className="rounded-lg p-4 cursor-pointer font-bold uppercase text-[10px] tracking-widest"
+                onClick={() => onAddCardio('hiit', tabId)}
+              >
+                <Zap className="h-4 w-4 mr-2 text-orange-500" />
+                Hiit
+              </DropdownMenuItem>
               <DropdownMenuItem 
                 className="rounded-lg p-4 cursor-pointer font-bold uppercase text-[10px] tracking-widest"
                 onClick={() => onAddWod(tabId)}
@@ -353,15 +341,25 @@ const WorkoutTabContent = memo(({
                 <Zap className="h-4 w-4 mr-2 text-primary" />
                 Protocolo WOD
               </DropdownMenuItem>
-              <DropdownMenuItem className="rounded-lg p-4 cursor-pointer font-bold uppercase text-[10px] tracking-widest">Exercício</DropdownMenuItem>
-              <DropdownMenuItem className="rounded-lg p-4 cursor-pointer font-bold uppercase text-[10px] tracking-widest">Aquecimento</DropdownMenuItem>
+              <ExerciseSearchDialog onSelect={(name) => onAddRegularExercise(name, tabId)}>
+                <DropdownMenuItem className="rounded-lg p-4 cursor-pointer font-bold uppercase text-[10px] tracking-widest" onSelect={(e) => e.preventDefault()}>
+                  <Dumbbell className="h-4 w-4 mr-2 text-primary" />
+                  Exercício
+                </DropdownMenuItem>
+              </ExerciseSearchDialog>
+              <ExerciseSearchDialog onSelect={(name) => onAddRegularExercise(name, tabId)}>
+                <DropdownMenuItem className="rounded-lg p-4 cursor-pointer font-bold uppercase text-[10px] tracking-widest" onSelect={(e) => e.preventDefault()}>
+                  <Flame className="h-4 w-4 mr-2 text-orange-600" />
+                  Aquecimento
+                </DropdownMenuItem>
+              </ExerciseSearchDialog>
             </DropdownMenuContent>
           </DropdownMenu>
 
           <Button 
             variant="outline" 
             className={cn(
-              "rounded-xl px-10 h-14 font-black text-xs gap-3 shadow-sm border-border bg-card transition-all active:scale-95 uppercase tracking-widest",
+              "rounded-xl px-10 h-14 font-black text-xs gap-3 shadow-sm border-border bg-card uppercase tracking-widest",
               isSorting && "border-primary text-primary bg-primary/5"
             )}
             onClick={() => setIsSorting(!isSorting)}
@@ -375,7 +373,7 @@ const WorkoutTabContent = memo(({
           <h2 className="text-xl font-black tracking-tight text-foreground ml-1 uppercase italic">
             Observações {tabId.replace('treino-', 'Treino ').toUpperCase()}:
           </h2>
-          <div className="rounded-2xl border bg-card shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-primary/20 transition-all border-border/40">
+          <div className="rounded-2xl border bg-card shadow-sm overflow-hidden border-border/40">
             <Textarea 
               placeholder="Ao final do treino escreva a duração no campo de feedback..." 
               className="min-h-[160px] border-none shadow-none resize-none focus-visible:ring-0 p-6 text-sm font-bold leading-relaxed bg-transparent"
@@ -425,11 +423,7 @@ export default function Home() {
         })),
       },
     }));
-    toast({
-      title: "Configuração aplicada",
-      description: "As séries foram replicadas para todos os exercícios do treino.",
-    });
-  }, [toast]);
+  }, []);
 
   const handleApplySavedSession = useCallback((newData: Exercise[], newTypes: Record<string, CombinationType>, tabId: string) => {
     setWorkouts((prev) => {
@@ -473,7 +467,6 @@ export default function Home() {
         duration: '15:00'
       }
     };
-    
     setWorkouts(prev => ({
       ...prev,
       [tabId]: {
@@ -481,10 +474,57 @@ export default function Home() {
         data: [...prev[tabId].data, newWod]
       }
     }));
-    
+  };
+
+  const handleAddCardio = (type: 'aerobico' | 'hiit', tabId: string) => {
+    const newEx: Exercise = {
+      id: Date.now(),
+      name: type === 'aerobico' ? 'Novo Aeróbico' : 'Novo HIIT',
+      preExhaustion: false,
+      isCardio: true,
+      cardioDetails: {
+        type,
+        description: type === 'aerobico' 
+          ? 'Alternar velocidade a cada km\n1 km Pace 5:40"\n1 km Pace 5:10"\nAté final'
+          : 'Protocolo HIIT: 30s Esforço Máximo / 30s Descanso Ativo.',
+        videoOption: 'selecione'
+      },
+      sets: [],
+      repsRange: ''
+    };
+    setWorkouts(prev => ({
+      ...prev,
+      [tabId]: {
+        ...prev[tabId],
+        data: [...prev[tabId].data, newEx]
+      }
+    }));
     toast({
-      title: "Protocolo WOD Criado",
-      description: "Edite o bloco para configurar o formato e exercícios.",
+      title: "Cardio Adicionado",
+      description: `Protocolo de ${type} criado com sucesso.`,
+    });
+  };
+
+  const handleAddRegularExercise = (name: string, tabId: string) => {
+    const newEx: Exercise = {
+      id: Date.now(),
+      name,
+      preExhaustion: false,
+      sets: [
+        { id: 1, type: 'trabalho', unit: 'reps', reps: '10-12', interval: '60', rir: '' }
+      ],
+      repsRange: '10-12',
+    };
+    setWorkouts(prev => ({
+      ...prev,
+      [tabId]: {
+        ...prev[tabId],
+        data: [...prev[tabId].data, newEx]
+      }
+    }));
+    toast({
+      title: "Exercício Adicionado",
+      description: `${name} foi inserido no seu treino.`,
     });
   };
 
@@ -522,6 +562,8 @@ export default function Home() {
                 onUpdateWorkoutData={handleUpdateWorkoutData}
                 onUpdateWorkoutDataWithCombination={handleUpdateCombinationTypes}
                 onAddWod={handleAddWod}
+                onAddCardio={handleAddCardio}
+                onAddRegularExercise={handleAddRegularExercise}
               />
             </div>
           </Tabs>

@@ -6,7 +6,24 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Button } from '../ui/button';
-import { MessageSquare, PlaySquare, Trash2, Flame, SlidersHorizontal, Dumbbell, Link2, Timer, Hash, Shuffle, Pencil, X, ChevronDown, Check } from 'lucide-react';
+import { 
+  MessageSquare, 
+  PlaySquare, 
+  Trash2, 
+  Flame, 
+  SlidersHorizontal, 
+  Dumbbell, 
+  Link2, 
+  Timer, 
+  Hash, 
+  Shuffle, 
+  Pencil, 
+  X, 
+  ChevronDown, 
+  Check,
+  Zap,
+  Activity
+} from 'lucide-react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { Exercise, SetType, CombinationType } from '@/lib/types';
@@ -18,6 +35,7 @@ import { SubstitutionDialog } from './substitution-dialog';
 import { Badge } from '../ui/badge';
 import { cn } from '@/lib/utils';
 import { Input } from '../ui/input';
+import { Textarea } from '../ui/textarea';
 
 const setTypeConfig: {
   [key in SetType]: {
@@ -87,6 +105,86 @@ export function MobileExerciseCard({
 
   const substitutionCount = exercise.substitutions?.length || 0;
 
+  // Renderização específica para Cardio (Aeróbico / HIIT)
+  if (exercise.isCardio && exercise.cardioDetails) {
+    const { cardioDetails } = exercise;
+    return (
+      <AccordionItem value={`item-${exercise.id}`} className="border-none mb-3">
+        <div className="w-full rounded-[16px] border border-border/40 bg-muted/40 dark:bg-[#2a2a2e] transition-all shadow-sm overflow-hidden">
+          <div className="flex items-center justify-between px-5 h-[64px]">
+            <span className="font-bold text-[15px] text-foreground dark:text-white truncate pr-4">
+              {exercise.name}
+            </span>
+            <div className="flex items-center gap-3 shrink-0">
+              <button className="text-[#ff7043] p-2">
+                <X className="h-5 w-5" />
+              </button>
+              <AccordionTrigger className="p-0 hover:no-underline [&>svg]:h-5 [&>svg]:w-5 text-muted-foreground dark:text-white/40" />
+            </div>
+          </div>
+
+          <AccordionContent className="pb-6 pt-2 px-5 bg-card border-t border-border/10">
+            <div className="space-y-6 pt-4">
+              {/* Nome */}
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight pl-1">Nome:</label>
+                <div className="bg-muted dark:bg-[#1a1a1e] p-4 rounded-xl">
+                  <Input 
+                    value={exercise.name}
+                    onChange={(e) => onUpdateExercise({...exercise, name: e.target.value})}
+                    className="bg-transparent border-none p-0 h-auto font-bold text-foreground focus-visible:ring-0"
+                  />
+                </div>
+              </div>
+
+              {/* Opção de Vídeo */}
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight pl-1">Escolha a opção de vídeo:</label>
+                <div className="bg-muted dark:bg-[#1a1a1e] p-4 rounded-xl">
+                  <Select defaultValue={cardioDetails.videoOption}>
+                    <SelectTrigger className="bg-transparent border-none p-0 h-auto font-bold text-foreground focus:ring-0 shadow-none">
+                      <SelectValue placeholder="Selecione" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl">
+                      <SelectItem value="selecione" className="font-bold">Selecione</SelectItem>
+                      <SelectItem value="video-1" className="font-bold">Execução Básica</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {/* Tipo de Exercício */}
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight pl-1">Tipo de Exercício:</label>
+                <div className="bg-muted dark:bg-[#1a1a1e] p-4 rounded-xl">
+                  <span className="font-bold text-foreground capitalize">
+                    {cardioDetails.type}
+                  </span>
+                </div>
+              </div>
+
+              {/* Descrição */}
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight pl-1">Descrição</label>
+                <div className="bg-muted dark:bg-[#1a1a1e] p-4 rounded-xl min-h-[120px]">
+                  <Textarea 
+                    value={cardioDetails.description}
+                    onChange={(e) => onUpdateExercise({
+                      ...exercise, 
+                      cardioDetails: { ...cardioDetails, description: e.target.value }
+                    })}
+                    className="bg-transparent border-none p-0 h-auto font-bold text-foreground focus-visible:ring-0 resize-none min-h-[100px] leading-relaxed"
+                    placeholder="Descreva o protocolo..."
+                  />
+                </div>
+              </div>
+            </div>
+          </AccordionContent>
+        </div>
+      </AccordionItem>
+    );
+  }
+
   return (
     <AccordionItem value={`item-${exercise.id}`} className="border-none mb-3">
       <div className={cn(
@@ -102,20 +200,14 @@ export function MobileExerciseCard({
           </ExerciseSearchDialog>
           
           <div className="flex items-center gap-3 shrink-0">
-            <button 
-              className="text-[#ff7043] hover:text-[#f4511e] transition-colors p-2"
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            >
+            <button className="text-[#ff7043] p-2">
               <X className="h-5 w-5" />
             </button>
-            <AccordionTrigger className="p-0 hover:no-underline [&>svg]:h-5 [&>svg]:w-5 text-muted-foreground dark:text-white/40 [&>svg]:ml-0">
-            </AccordionTrigger>
+            <AccordionTrigger className="p-0 hover:no-underline [&>svg]:h-5 [&>svg]:w-5 text-muted-foreground dark:text-white/40" />
           </div>
         </div>
 
-        <AccordionContent className="pb-6 pt-2 px-5 animate-in fade-in duration-300 bg-card border-t border-border/10 dark:border-white/5">
+        <AccordionContent className="pb-6 pt-2 px-5 bg-card border-t border-border/10">
           <div className="space-y-6 pt-4">
             {exercise.videoUrl ? (
               <div className="relative aspect-video rounded-3xl overflow-hidden border-[6px] border-primary/20 shadow-xl bg-black">
@@ -125,10 +217,8 @@ export function MobileExerciseCard({
                   src={exercise.videoUrl}
                   title={`Vídeo de ${exercise.name}`}
                   frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                   className="absolute inset-0"
-                  loading="lazy"
                 />
               </div>
             ) : videoThumbnail && (
@@ -138,7 +228,6 @@ export function MobileExerciseCard({
                   alt={videoThumbnail.description}
                   fill
                   className="object-cover opacity-90"
-                  data-ai-hint={videoThumbnail.imageHint}
                 />
                 <div className="absolute inset-0 flex items-center justify-center bg-black/10">
                   <div className="bg-background/90 p-4 rounded-full border border-border shadow-2xl">
@@ -154,15 +243,13 @@ export function MobileExerciseCard({
                 {setTypesInOrder.map((setType) => {
                     const count = setCounts[setType];
                     if (!count || count === 0) return null;
-
                     const config = setTypeConfig[setType];
-                    const Icon = config.icon;
                     return (
                       <Badge
                         key={setType}
                         className={cn("text-[11px] py-1.5 px-4 font-black gap-2 rounded-full uppercase tracking-tighter border-none shadow-sm h-8", config.className)}
                       >
-                        <Icon className="h-3.5 w-3.5" />
+                        <config.icon className="h-3.5 w-3.5" />
                         {config.label} ({count})
                       </Badge>
                     );
@@ -170,31 +257,28 @@ export function MobileExerciseCard({
               </div>
             </div>
 
-            {/* Container das Variáveis - Adaptável para temas Light/Dark */}
             <div className="bg-muted dark:bg-[#1a1a1e] p-6 rounded-[24px] space-y-6 shadow-inner border border-border/5">
               <div className="grid grid-cols-3 gap-3">
                 <EditSetsDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
-                  <div className="space-y-2 cursor-pointer group">
+                  <div className="space-y-2 cursor-pointer">
                     <p className="text-[11px] font-bold text-muted-foreground dark:text-white/60 text-center uppercase tracking-tight">Série</p>
-                    <div className="bg-[#ffa726] text-black font-black rounded-xl h-14 flex items-center justify-center gap-2 border-none transition-transform active:scale-95 shadow-md text-lg relative">
+                    <div className="bg-[#ffa726] text-black font-black rounded-xl h-14 flex items-center justify-center shadow-md text-lg relative">
                       {exercise.sets.length}
                       <Pencil className="h-4 w-4 absolute bottom-2 right-2 opacity-60"/>
                     </div>
                   </div>
                 </EditSetsDialog>
-
                 <div className="space-y-2">
                   <p className="text-[11px] font-bold text-muted-foreground dark:text-white/60 text-center uppercase tracking-tight">Repetições</p>
                   <Input 
-                    className="bg-[#c5e1a5] text-black font-black text-center h-14 border-none rounded-xl focus-visible:ring-primary/40 shadow-md text-lg"
+                    className="bg-[#c5e1a5] text-black font-black text-center h-14 border-none rounded-xl shadow-md text-lg"
                     defaultValue={exercise.repsRange}
                   />
                 </div>
-
                 <div className="space-y-2">
                   <p className="text-[11px] font-bold text-muted-foreground dark:text-white/60 text-center uppercase tracking-tight">Intervalo</p>
                   <Input 
-                    className="bg-[#4caf50] text-black font-black text-center h-14 border-none rounded-xl focus-visible:ring-primary/40 shadow-md text-lg"
+                    className="bg-[#4caf50] text-black font-black text-center h-14 border-none rounded-xl shadow-md text-lg"
                     defaultValue={exercise.sets[0]?.interval || '40'}
                   />
                 </div>
@@ -204,17 +288,18 @@ export function MobileExerciseCard({
                 <div className="space-y-2">
                   <p className="text-[11px] font-bold text-muted-foreground dark:text-white/60 text-center uppercase tracking-tight">Cadência</p>
                   <Input 
-                    className="bg-[#0097a7] text-white font-black text-center h-14 border-none rounded-xl focus-visible:ring-primary/40 shadow-md text-lg"
+                    className="bg-[#0097a7] text-white font-black text-center h-14 border-none rounded-xl shadow-md text-lg"
                     defaultValue="2.3"
                   />
                 </div>
-
                 <div className="space-y-2">
-                  <p className="text-[11px] font-bold text-muted-foreground dark:text-white/60 text-center uppercase tracking-tight">Observação</p>
                   <EditObservationDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
-                    <Button className="w-full bg-[#0097a7] hover:bg-[#00838f] text-white rounded-xl h-14 gap-2 font-black shadow-md border-none">
-                      <MessageSquare className="h-6 w-6"/>
-                    </Button>
+                    <div className="space-y-2 cursor-pointer">
+                      <p className="text-[11px] font-bold text-muted-foreground dark:text-white/60 text-center uppercase tracking-tight">Observação</p>
+                      <Button className="w-full bg-[#0097a7] hover:bg-[#00838f] text-white rounded-xl h-14 gap-2 font-black shadow-md border-none">
+                        <MessageSquare className="h-6 w-6"/>
+                      </Button>
+                    </div>
                   </EditObservationDialog>
                 </div>
               </div>
@@ -222,19 +307,15 @@ export function MobileExerciseCard({
 
             <div className="pt-6 border-t border-border/10 space-y-6">
                <div className="space-y-2">
-                  <div className="flex items-center justify-between px-1">
-                    <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Método</p>
-                  </div>
+                  <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Método</p>
                   <Select defaultValue="padrao">
-                      <SelectTrigger className="rounded-xl bg-muted/20 border-border/40 h-14 text-[13px] font-bold text-foreground focus:ring-primary/20 shadow-sm px-4">
+                      <SelectTrigger className="rounded-xl bg-muted/20 border-border/40 h-14 text-[13px] font-bold text-foreground">
                           <SelectValue placeholder="Selecione o método..." />
                       </SelectTrigger>
-                      <SelectContent className="bg-popover border-border rounded-xl">
+                      <SelectContent className="rounded-xl">
                           <SelectItem value="padrao" className="font-bold">PADRÃO</SelectItem>
                           <SelectItem value="biset" className="font-bold">BISET</SelectItem>
                           <SelectItem value="triset" className="font-bold">TRISET</SelectItem>
-                          <SelectItem value="dropset" className="font-bold">DROPSET</SelectItem>
-                          <SelectItem value="rest-pause" className="font-bold">REST-PAUSE</SelectItem>
                       </SelectContent>
                   </Select>
                </div>
@@ -243,10 +324,10 @@ export function MobileExerciseCard({
                  <Button 
                    variant="outline" 
                    className={cn(
-                     "w-full rounded-2xl h-14 gap-3 font-black uppercase tracking-widest text-[11px] shadow-sm transition-all",
+                     "w-full rounded-2xl h-14 gap-3 font-black uppercase tracking-widest text-[11px]",
                      substitutionCount > 0 
-                       ? "text-primary bg-primary/10 border-primary shadow-primary/10" 
-                       : "text-primary border-primary/40 hover:bg-primary/5"
+                       ? "text-primary bg-primary/10 border-primary" 
+                       : "text-primary border-primary/40"
                    )}
                  >
                    <Shuffle className="h-5 w-5" />
@@ -258,9 +339,7 @@ export function MobileExerciseCard({
             {combinationType && (
               <div className="flex items-center gap-3 pt-4 border-t border-border/10">
                 <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
-                   {CombinationIcon && (
-                      <CombinationIcon className={cn("h-4.5 w-4.5", combinationIconClassName)} />
-                    )}
+                   {CombinationIcon && <CombinationIcon className={cn("h-4.5 w-4.5", combinationIconClassName)} />}
                 </div>
                 <span className="text-[11px] font-black text-primary uppercase tracking-[0.2em]">
                   COMBINADO ({combinationType})
