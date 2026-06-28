@@ -58,6 +58,7 @@ export type Exercise = {
   wodDetails?: WodDetails;
   isCardio?: boolean;
   cardioDetails?: CardioDetails;
+  isWarmup?: boolean;
 };
 
 export type CombinationType = 'biset' | 'triset' | 'superserie' | 'hiit';

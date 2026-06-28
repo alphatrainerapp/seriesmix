@@ -176,15 +176,18 @@ export function MobileExerciseCard({
     <AccordionItem value={`item-${exercise.id}`} className="border-none mb-3">
       <div className={cn(
         "w-full rounded-[16px] border border-border/40 bg-muted/40 dark:bg-[#2a2a2e] transition-all shadow-sm overflow-hidden",
-        exercise.groupId && "border-primary/40"
+        (exercise.groupId || exercise.isWarmup) && "border-primary/40"
       )}>
         {/* Header Minimizado */}
         <div className="flex items-center justify-between px-5 h-[64px]">
-          <ExerciseSearchDialog onSelect={handleUpdateName}>
-            <span className="font-bold text-[15px] text-foreground dark:text-white truncate pr-4 cursor-pointer">
-              {exercise.name}
-            </span>
-          </ExerciseSearchDialog>
+          <div className="flex items-center gap-2 overflow-hidden">
+            {exercise.isWarmup && <Flame className="h-4 w-4 text-orange-500 shrink-0" />}
+            <ExerciseSearchDialog onSelect={handleUpdateName}>
+              <span className="font-bold text-[15px] text-foreground dark:text-white truncate pr-4 cursor-pointer">
+                {exercise.name}
+              </span>
+            </ExerciseSearchDialog>
+          </div>
           
           <div className="flex items-center gap-3 shrink-0">
             <button className="text-[#ff7043] p-2">
@@ -245,7 +248,10 @@ export function MobileExerciseCard({
             </div>
 
             <div className="bg-muted dark:bg-[#1a1a1e] p-6 rounded-[24px] space-y-6 shadow-inner border border-border/5">
-              <div className="grid grid-cols-3 gap-3">
+              <div className={cn(
+                "grid gap-3",
+                exercise.isWarmup ? "grid-cols-3" : "grid-cols-3"
+              )}>
                 <EditSetsDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
                   <div className="space-y-2 cursor-pointer">
                     <p className="text-[11px] font-bold text-muted-foreground dark:text-white/60 text-center uppercase tracking-tight">Série</p>
@@ -271,19 +277,27 @@ export function MobileExerciseCard({
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <p className="text-[11px] font-bold text-muted-foreground dark:text-white/60 text-center uppercase tracking-tight">Cadência</p>
-                  <Input 
-                    className="bg-[#0097a7] text-white font-black text-center h-14 border-none rounded-xl shadow-md text-lg"
-                    defaultValue="2.3"
-                  />
-                </div>
+              <div className={cn(
+                "grid gap-4",
+                exercise.isWarmup ? "grid-cols-1" : "grid-cols-2"
+              )}>
+                {!exercise.isWarmup && (
+                  <div className="space-y-2">
+                    <p className="text-[11px] font-bold text-muted-foreground dark:text-white/60 text-center uppercase tracking-tight">Cadência</p>
+                    <Input 
+                      className="bg-[#0097a7] text-white font-black text-center h-14 border-none rounded-xl shadow-md text-lg"
+                      defaultValue="2.3"
+                    />
+                  </div>
+                )}
                 <div className="space-y-2">
                   <EditObservationDialog exercise={exercise} onUpdateExercise={onUpdateExercise}>
                     <div className="space-y-2 cursor-pointer">
                       <p className="text-[11px] font-bold text-muted-foreground dark:text-white/60 text-center uppercase tracking-tight">Observação</p>
-                      <Button className="w-full bg-[#0097a7] hover:bg-[#00838f] text-white rounded-xl h-14 gap-2 font-black shadow-md border-none">
+                      <Button className={cn(
+                        "w-full text-white rounded-xl h-14 gap-2 font-black shadow-md border-none",
+                        exercise.isWarmup ? "bg-orange-500 hover:bg-orange-600" : "bg-[#0097a7] hover:bg-[#00838f]"
+                      )}>
                         <MessageSquare className="h-6 w-6"/>
                       </Button>
                     </div>
@@ -323,13 +337,19 @@ export function MobileExerciseCard({
                </SubstitutionDialog>
             </div>
 
-            {combinationType && (
+            {(combinationType || exercise.isWarmup) && (
               <div className="flex items-center gap-3 pt-4 border-t border-border/10">
-                <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
-                   {CombinationIcon && <CombinationIcon className={cn("h-4.5 w-4.5", combinationIconClassName)} />}
+                <div className={cn(
+                  "h-9 w-9 rounded-full flex items-center justify-center border",
+                  exercise.isWarmup ? "bg-orange-500/10 border-orange-500/20 text-orange-500" : "bg-primary/10 border-primary/20 text-primary"
+                )}>
+                   {exercise.isWarmup ? <Flame className="h-4.5 w-4.5" /> : (CombinationIcon && <CombinationIcon className={cn("h-4.5 w-4.5", combinationIconClassName)} />)}
                 </div>
-                <span className="text-[11px] font-black text-primary uppercase tracking-[0.2em]">
-                  COMBINADO ({combinationType})
+                <span className={cn(
+                  "text-[11px] font-black uppercase tracking-[0.2em]",
+                  exercise.isWarmup ? "text-orange-500" : "text-primary"
+                )}>
+                  {exercise.isWarmup ? "AQUECIMENTO" : `COMBINADO (${combinationType})`}
                 </span>
               </div>
             )}

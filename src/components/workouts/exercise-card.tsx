@@ -131,9 +131,12 @@ export function ExerciseCard({
         </TableCell>
         <TableCell className="font-medium p-2 min-w-[200px]">
           <div className="flex items-center gap-3">
-            {isFirstInGroup && (
-               <div className="flex items-center justify-center w-6 h-6 bg-primary/20 text-primary rounded-full shrink-0">
-                  <Link2 className="h-3.5 w-3.5"/>
+            {(isFirstInGroup || exercise.isWarmup) && (
+               <div className={cn(
+                 "flex items-center justify-center w-6 h-6 rounded-full shrink-0",
+                 exercise.isWarmup ? "bg-orange-500/20 text-orange-500" : "bg-primary/20 text-primary"
+               )}>
+                  {exercise.isWarmup ? <Flame className="h-3.5 w-3.5"/> : <Link2 className="h-3.5 w-3.5"/>}
                 </div>
             )}
             <ExerciseSearchDialog onSelect={handleUpdateName}>
@@ -224,8 +227,12 @@ export function ExerciseCard({
         </TableCell>
         <TableCell className="w-[55px] px-0.5 pt-3 text-center">
           <Input
-            className="w-full text-center bg-[hsl(var(--chart-4))] text-black font-black border-none h-9 text-[12px] rounded-lg px-0 shadow-sm"
-            defaultValue="2.2"
+            className={cn(
+              "w-full text-center text-black font-black border-none h-9 text-[12px] rounded-lg px-0 shadow-sm",
+              exercise.isWarmup ? "bg-muted opacity-30 cursor-not-allowed" : "bg-[hsl(var(--chart-4))]"
+            )}
+            defaultValue={exercise.isWarmup ? "--" : "2.2"}
+            disabled={exercise.isWarmup}
           />
         </TableCell>
         <TableCell className="w-[45px] p-1 pt-3 text-center">

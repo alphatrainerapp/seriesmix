@@ -31,6 +31,10 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
+  DropdownMenuPortal,
 } from '@/components/ui/dropdown-menu';
 import { 
   Plus, 
@@ -111,7 +115,8 @@ const WorkoutTabContent = memo(({
   onUpdateWorkoutDataWithCombination,
   onAddWod,
   onAddCardio,
-  onAddRegularExercise
+  onAddRegularExercise,
+  onAddWarmup
 }: { 
   tabId: string;
   workout: WorkoutState;
@@ -123,6 +128,7 @@ const WorkoutTabContent = memo(({
   onAddWod: (tabId: string) => void;
   onAddCardio: (type: 'aerobico' | 'hiit', tabId: string) => void;
   onAddRegularExercise: (name: string, tabId: string) => void;
+  onAddWarmup: (name: string, tabId: string) => void;
 }) => {
   const [isSorting, setIsSorting] = useState(false);
 
@@ -341,16 +347,42 @@ const WorkoutTabContent = memo(({
                 <Zap className="h-4 w-4 mr-2 text-primary" />
                 Protocolo WOD
               </DropdownMenuItem>
+              
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger className="rounded-lg p-4 cursor-pointer font-bold uppercase text-[10px] tracking-widest">
+                  <Flame className="h-4 w-4 mr-2 text-orange-600" />
+                  Aquecimento
+                </DropdownMenuSubTrigger>
+                <DropdownMenuPortal>
+                  <DropdownMenuSubContent className="rounded-xl p-2 shadow-xl">
+                    <DropdownMenuItem 
+                      className="rounded-lg p-3 cursor-pointer font-bold uppercase text-[10px] tracking-widest"
+                      onClick={() => onAddWarmup('Mobilidade de Ombros', tabId)}
+                    >
+                      Mobilidade de Ombros
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      className="rounded-lg p-3 cursor-pointer font-bold uppercase text-[10px] tracking-widest"
+                      onClick={() => onAddWarmup('Mobilidade de Quadril no Banco', tabId)}
+                    >
+                      Mobilidade de Quadril
+                    </DropdownMenuItem>
+                    <ExerciseSearchDialog onSelect={(name) => onAddWarmup(name, tabId)}>
+                      <DropdownMenuItem 
+                        className="rounded-lg p-3 cursor-pointer font-bold uppercase text-[10px] tracking-widest"
+                        onSelect={(e) => e.preventDefault()}
+                      >
+                        Outro Aquecimento...
+                      </DropdownMenuItem>
+                    </ExerciseSearchDialog>
+                  </DropdownMenuSubContent>
+                </DropdownMenuPortal>
+              </DropdownMenuSub>
+
               <ExerciseSearchDialog onSelect={(name) => onAddRegularExercise(name, tabId)}>
                 <DropdownMenuItem className="rounded-lg p-4 cursor-pointer font-bold uppercase text-[10px] tracking-widest" onSelect={(e) => e.preventDefault()}>
                   <Dumbbell className="h-4 w-4 mr-2 text-primary" />
                   Exercício
-                </DropdownMenuItem>
-              </ExerciseSearchDialog>
-              <ExerciseSearchDialog onSelect={(name) => onAddRegularExercise(name, tabId)}>
-                <DropdownMenuItem className="rounded-lg p-4 cursor-pointer font-bold uppercase text-[10px] tracking-widest" onSelect={(e) => e.preventDefault()}>
-                  <Flame className="h-4 w-4 mr-2 text-orange-600" />
-                  Aquecimento
                 </DropdownMenuItem>
               </ExerciseSearchDialog>
             </DropdownMenuContent>
@@ -527,6 +559,30 @@ export default function Home() {
     });
   };
 
+  const handleAddWarmup = (name: string, tabId: string) => {
+    const newEx: Exercise = {
+      id: Date.now(),
+      name,
+      preExhaustion: true,
+      isWarmup: true,
+      sets: [
+        { id: 1, type: 'aquecimento', unit: 'reps', reps: '15', interval: '30', rir: '' }
+      ],
+      repsRange: '15',
+    };
+    setWorkouts(prev => ({
+      ...prev,
+      [tabId]: {
+        ...prev[tabId],
+        data: [...prev[tabId].data, newEx]
+      }
+    }));
+    toast({
+      title: "Aquecimento Adicionado",
+      description: `${name} foi inserido no início do seu treino.`,
+    });
+  };
+
   return (
     <div className="app-container py-8 text-foreground transition-all duration-300">
       <div className="flex flex-col lg:flex-row gap-8 items-start w-full">
@@ -563,6 +619,7 @@ export default function Home() {
                 onAddWod={handleAddWod}
                 onAddCardio={handleAddCardio}
                 onAddRegularExercise={handleAddRegularExercise}
+                onAddWarmup={handleAddWarmup}
               />
             </div>
           </Tabs>

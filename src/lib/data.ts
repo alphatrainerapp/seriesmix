@@ -25,6 +25,8 @@ export const systemExercises: SystemExercise[] = [
   { name: 'Flexora em Pé', category: 'Posterior de Coxa (Isquiotibiais)', imageHint: 'standing leg curl' },
   { name: 'Mesa Flexora Unilateral', category: 'Posterior de Coxa (Isquiotibiais)', imageHint: 'unilateral leg curl' },
   { name: 'Cadeira Flexora Unilateral', category: 'Posterior de Coxa (Isquiotibiais)', imageHint: 'seated unilateral leg curl' },
+  { name: 'Mobilidade de Ombros', category: 'Aquecimento', imageHint: 'shoulder mobility' },
+  { name: 'Mobilidade de Quadril no Banco', category: 'Aquecimento', imageHint: 'hip mobility' },
 ];
 
 export const mockWorkout: Exercise[] = [
@@ -32,6 +34,7 @@ export const mockWorkout: Exercise[] = [
     id: 1,
     name: 'Mobilidade de quadril no banco 2x20s',
     preExhaustion: true,
+    isWarmup: true,
     sets: [
       { id: 1, type: 'aquecimento', unit: 'time', reps: '20s', interval: '30', rir: '' },
       { id: 2, type: 'preparatoria', unit: 'time', reps: '20s', interval: '30', rir: '' },
@@ -45,6 +48,7 @@ export const mockWorkout: Exercise[] = [
     id: 2,
     name: 'Mobilidade tornozelo no solo 2x15',
     preExhaustion: false,
+    isWarmup: true,
     sets: [
       { id: 1, type: 'preparatoria', unit: 'reps', reps: '15', interval: '30', rir: '' },
       { id: 2, type: 'preparatoria', unit: 'reps', reps: '15', interval: '30', rir: '' },
