@@ -1,4 +1,3 @@
-
 'use client';
 
 import {
@@ -281,7 +280,7 @@ const WorkoutTabContent = memo(({
           onUpdateCombinationTypes={(types) => onUpdateWorkoutDataWithCombination(types, tabId)}
         >
           <button className="flex flex-col items-center justify-center gap-2 py-4 rounded-xl border border-border bg-card hover:bg-muted/50 transition-all active:scale-95 shadow-sm">
-            <LayoutGrid className="h-6 w-6 text-primary" />
+            <Combine className="h-6 w-6 text-primary" />
             <span className="text-[10px] font-black uppercase tracking-tight text-primary">Combinar</span>
           </button>
         </CombineExercisesDialog>
@@ -661,4 +660,3 @@ export default function Home() {
     </div>
   );
 }
-

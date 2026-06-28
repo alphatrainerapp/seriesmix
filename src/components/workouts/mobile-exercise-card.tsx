@@ -1,4 +1,3 @@
-
 'use client';
 
 import {
@@ -68,7 +67,7 @@ const combinationIconConfig: {
 } = {
   biset: { icon: Dumbbell, className: 'text-blue-500' },
   triset: { icon: Dumbbell, className: 'text-blue-500' },
-  superserie: { icon: Link2, className: 'text-emerald-500' },
+  superserie: { icon: Link2, className: 'text-green-500' },
   hiit: { icon: Timer, className: 'text-orange-500' },
 };
 
