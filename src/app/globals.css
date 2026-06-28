@@ -50,17 +50,17 @@ body {
   .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
-    --card: 240 10% 7%;
+    --card: 0 0% 20%; /* #333333 */
     --card-foreground: 0 0% 98%;
-    --workout-card: 240 10% 10%;
-    --exercise-card: 240 10% 15%;
+    --workout-card: 0 0% 20%; /* #333333 */
+    --exercise-card: 0 0% 23%; /* #3b3b3b */
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
     --primary: 180 96% 34%;
     --primary-foreground: 0 0% 100%;
     --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
+    --muted: 0 0% 23%; /* #3b3b3b para blocos internos */
     --muted-foreground: 240 5% 64.9%;
     --accent: 240 3.7% 15.9%;
     --accent-foreground: 0 0% 98%;
