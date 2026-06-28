@@ -57,13 +57,11 @@ export function MobileActionFooter() {
     icon: Icon, 
     label, 
     onClick, 
-    variant = "default",
     colorClass = "text-primary"
   }: { 
     icon: React.ElementType, 
     label: string, 
     onClick: () => void,
-    variant?: "default" | "theme",
     colorClass?: string
   }) => (
     <button 
@@ -104,23 +102,37 @@ export function MobileActionFooter() {
           </SheetTrigger>
           <SheetContent 
             side="bottom" 
-            className="rounded-t-[32px] border-none bg-background p-0 h-[70vh] overflow-hidden"
+            className="rounded-t-[32px] border-none bg-background p-0 h-[75vh] overflow-hidden shadow-2xl"
           >
-            <div className="mx-auto w-12 h-1.5 bg-muted/40 rounded-full mt-3 mb-2" />
+            <div className="mx-auto w-12 h-1.5 bg-muted/40 rounded-full mt-3 mb-1" />
             
-            <SheetHeader className="px-8 pt-6 pb-2 text-left">
+            <SheetHeader className="px-8 pt-6 pb-4 text-left border-b border-border/10">
               <div className="flex items-center justify-between">
                 <SheetTitle className="text-2xl font-black uppercase italic tracking-tighter">Ações do Treino</SheetTitle>
-                <button 
-                  onClick={() => setIsOpen(false)}
-                  className="h-10 w-10 rounded-full bg-muted/30 flex items-center justify-center"
-                >
-                  <X className="h-5 w-5 text-muted-foreground" />
-                </button>
+                
+                <div className="flex items-center gap-2">
+                  {/* Simplificated Theme Toggle at the Top */}
+                  <button 
+                    onClick={toggleTheme}
+                    className={cn(
+                      "h-12 w-12 rounded-full flex items-center justify-center transition-all active:scale-90 shadow-sm",
+                      theme === 'light' ? "bg-indigo-500/10 text-indigo-600" : "bg-yellow-500/10 text-yellow-500"
+                    )}
+                  >
+                    {theme === 'light' ? <Moon className="h-6 w-6" /> : <Sun className="h-6 w-6" />}
+                  </button>
+
+                  <button 
+                    onClick={() => setIsOpen(false)}
+                    className="h-12 w-12 rounded-full bg-muted/30 flex items-center justify-center active:scale-90"
+                  >
+                    <X className="h-6 w-6 text-muted-foreground" />
+                  </button>
+                </div>
               </div>
             </SheetHeader>
 
-            <div className="px-4 pt-4 pb-12 space-y-2 h-full overflow-y-auto no-scrollbar">
+            <div className="px-4 pt-4 pb-20 space-y-2 h-full overflow-y-auto no-scrollbar">
               <ActionItem 
                 icon={FolderPlus} 
                 label="Salvar como Modelo" 
@@ -146,39 +158,6 @@ export function MobileActionFooter() {
                 label="Ir para Área do Aluno" 
                 onClick={() => handleAction('Direcionando...')}
               />
-              
-              <div className="py-4 px-4">
-                <Separator className="bg-border/40" />
-              </div>
-
-              <button 
-                className="flex items-center justify-between w-full p-5 active:bg-muted/50 transition-colors rounded-2xl bg-muted/10 border border-border/20"
-                onClick={toggleTheme}
-              >
-                <div className="flex items-center gap-4">
-                  <div className={cn(
-                    "p-2.5 rounded-xl",
-                    theme === 'light' ? "bg-indigo-500/10 text-indigo-500" : "bg-yellow-500/10 text-yellow-500"
-                  )}>
-                    {theme === 'light' ? <Moon className="h-6 w-6" /> : <Sun className="h-6 w-6" />}
-                  </div>
-                  <div className="text-left">
-                    <span className="font-black text-sm uppercase tracking-widest text-foreground block leading-none">Alterar Tema</span>
-                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">Ativar modo {theme === 'light' ? 'escuro' : 'claro'}</span>
-                  </div>
-                </div>
-                <div className={cn(
-                  "h-10 w-14 rounded-full relative p-1 transition-colors",
-                  theme === 'light' ? "bg-slate-300" : "bg-primary"
-                )}>
-                  <div className={cn(
-                    "h-8 w-8 rounded-full bg-white shadow-md transition-transform flex items-center justify-center",
-                    theme === 'light' ? "translate-x-0" : "translate-x-4"
-                  )}>
-                     {theme === 'light' ? <Moon className="h-4 w-4 text-indigo-500" /> : <Sun className="h-4 w-4 text-yellow-500" />}
-                  </div>
-                </div>
-              </button>
             </div>
           </SheetContent>
         </Sheet>
