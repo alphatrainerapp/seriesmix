@@ -317,35 +317,40 @@ export function MobileExerciseCard({
               </div>
             </div>
 
-            <div className="pt-6 border-t border-border/10 space-y-6">
+            <div className="pt-6 border-t border-border/10 grid grid-cols-2 gap-4">
                <div className="space-y-2">
-                  <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Método</p>
+                  <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.1em] pl-1">TROCAS</p>
+                  <SubstitutionDialog exercise={exercise} onSave={handleSaveSubstitutions}>
+                    <Button 
+                      variant="outline" 
+                      className={cn(
+                        "w-full rounded-2xl h-12 gap-2 font-black uppercase tracking-tight text-[11px] border-primary/30",
+                        substitutionCount > 0 
+                          ? "text-primary bg-primary/5 border-primary" 
+                          : "text-primary/70 border-primary/20"
+                      )}
+                    >
+                      <Shuffle className="h-3.5 w-3.5" />
+                      TROCAS ({substitutionCount})
+                    </Button>
+                  </SubstitutionDialog>
+               </div>
+
+               <div className="space-y-2">
+                  <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.1em] pl-1">MÉTODO</p>
                   <Select defaultValue="padrao">
-                      <SelectTrigger className="rounded-xl bg-muted/20 dark:bg-[#3b3b3b] border-border/40 h-14 text-[13px] font-bold text-foreground">
-                          <SelectValue placeholder="Selecione o método..." />
+                      <SelectTrigger className="rounded-2xl bg-muted/40 dark:bg-[#3b3b3b] border-none h-12 text-[12px] font-bold text-foreground px-4 shadow-none">
+                          <SelectValue placeholder="Padrão" />
                       </SelectTrigger>
                       <SelectContent className="rounded-xl">
-                          <SelectItem value="padrao" className="font-bold">PADRÃO</SelectItem>
-                          <SelectItem value="biset" className="font-bold">BISET</SelectItem>
-                          <SelectItem value="triset" className="font-bold">TRISET</SelectItem>
+                          <SelectItem value="padrao" className="font-bold">Padrão</SelectItem>
+                          <SelectItem value="biset" className="font-bold">Biset</SelectItem>
+                          <SelectItem value="triset" className="font-bold">Triset</SelectItem>
+                          <SelectItem value="dropset" className="font-bold">Dropset</SelectItem>
+                          <SelectItem value="rest-pause" className="font-bold">Rest-Pause</SelectItem>
                       </SelectContent>
                   </Select>
                </div>
-
-               <SubstitutionDialog exercise={exercise} onSave={handleSaveSubstitutions}>
-                 <Button 
-                   variant="outline" 
-                   className={cn(
-                     "w-full rounded-2xl h-14 gap-3 font-black uppercase tracking-widest text-[11px]",
-                     substitutionCount > 0 
-                       ? "text-primary bg-primary/10 border-primary" 
-                       : "text-primary border-primary/40"
-                   )}
-                 >
-                   <Shuffle className="h-5 w-5" />
-                   Trocas ({substitutionCount})
-                 </Button>
-               </SubstitutionDialog>
             </div>
           </div>
         </AccordionContent>
