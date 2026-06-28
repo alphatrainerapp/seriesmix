@@ -40,7 +40,6 @@ export interface WodDetails {
 export interface CardioDetails {
   type: 'aerobico' | 'hiit';
   description: string;
-  videoOption?: string;
 }
 
 export type Exercise = {

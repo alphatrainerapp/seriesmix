@@ -117,7 +117,7 @@ export function MobileExerciseCard({
             </span>
             <div className="flex items-center gap-3 shrink-0">
               <button className="text-[#ff7043] p-2">
-                <X className="h-5 w-5" />
+                <Trash2 className="h-5 w-5" />
               </button>
               <AccordionTrigger className="p-0 hover:no-underline [&>svg]:h-5 [&>svg]:w-5 text-muted-foreground dark:text-white/40" />
             </div>
@@ -127,45 +127,31 @@ export function MobileExerciseCard({
             <div className="space-y-6 pt-4">
               {/* Nome */}
               <div className="space-y-1.5">
-                <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight pl-1">Nome:</label>
+                <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight pl-1">Protocolo:</label>
                 <div className="bg-muted dark:bg-[#1a1a1e] p-4 rounded-xl">
                   <Input 
                     value={exercise.name}
                     onChange={(e) => onUpdateExercise({...exercise, name: e.target.value})}
                     className="bg-transparent border-none p-0 h-auto font-bold text-foreground focus-visible:ring-0"
+                    readOnly
                   />
-                </div>
-              </div>
-
-              {/* Opção de Vídeo */}
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight pl-1">Escolha a opção de vídeo:</label>
-                <div className="bg-muted dark:bg-[#1a1a1e] p-4 rounded-xl">
-                  <Select defaultValue={cardioDetails.videoOption}>
-                    <SelectTrigger className="bg-transparent border-none p-0 h-auto font-bold text-foreground focus:ring-0 shadow-none">
-                      <SelectValue placeholder="Selecione" />
-                    </SelectTrigger>
-                    <SelectContent className="rounded-xl">
-                      <SelectItem value="selecione" className="font-bold">Selecione</SelectItem>
-                      <SelectItem value="video-1" className="font-bold">Execução Básica</SelectItem>
-                    </SelectContent>
-                  </Select>
                 </div>
               </div>
 
               {/* Tipo de Exercício */}
               <div className="space-y-1.5">
-                <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight pl-1">Tipo de Exercício:</label>
+                <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight pl-1">Tipo de Cardio:</label>
                 <div className="bg-muted dark:bg-[#1a1a1e] p-4 rounded-xl">
-                  <span className="font-bold text-foreground capitalize">
-                    {cardioDetails.type}
+                  <span className="font-bold text-foreground capitalize flex items-center gap-2">
+                    {cardioDetails.type === 'hiit' ? <Zap className="h-4 w-4 text-orange-500" /> : <Activity className="h-4 w-4 text-blue-500" />}
+                    {cardioDetails.type.toUpperCase()}
                   </span>
                 </div>
               </div>
 
               {/* Descrição */}
               <div className="space-y-1.5">
-                <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight pl-1">Descrição</label>
+                <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight pl-1">Descrição do Protocolo</label>
                 <div className="bg-muted dark:bg-[#1a1a1e] p-4 rounded-xl min-h-[120px]">
                   <Textarea 
                     value={cardioDetails.description}
@@ -175,6 +161,7 @@ export function MobileExerciseCard({
                     })}
                     className="bg-transparent border-none p-0 h-auto font-bold text-foreground focus-visible:ring-0 resize-none min-h-[100px] leading-relaxed"
                     placeholder="Descreva o protocolo..."
+                    readOnly
                   />
                 </div>
               </div>
@@ -201,7 +188,7 @@ export function MobileExerciseCard({
           
           <div className="flex items-center gap-3 shrink-0">
             <button className="text-[#ff7043] p-2">
-              <X className="h-5 w-5" />
+              <Trash2 className="h-5 w-5" />
             </button>
             <AccordionTrigger className="p-0 hover:no-underline [&>svg]:h-5 [&>svg]:w-5 text-muted-foreground dark:text-white/40" />
           </div>

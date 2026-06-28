@@ -293,12 +293,12 @@ const WorkoutTabContent = memo(({
       <div className="block md:hidden">
         {workout.data.length > 0 ? (
           <Accordion type="single" collapsible className="flex flex-col gap-3 w-full">
-            {workout.data.map((exercise) => (
+            {workout.data.map((currentExercise) => (
               <MobileExerciseCard
-                key={`${exercise.id}-mobile-${tabId}`}
-                exercise={exercise}
+                key={`${currentExercise.id}-mobile-${tabId}`}
+                exercise={currentExercise}
                 onUpdateExercise={(ex) => onUpdateExercise(ex, tabId)}
-                combinationType={exercise.groupId ? workout.combinationTypes[exercise.groupId] : undefined}
+                combinationType={currentExercise.groupId ? workout.combinationTypes[currentExercise.groupId] : undefined}
               />
             ))}
           </Accordion>
@@ -479,15 +479,14 @@ export default function Home() {
   const handleAddCardio = (type: 'aerobico' | 'hiit', tabId: string) => {
     const newEx: Exercise = {
       id: Date.now(),
-      name: type === 'aerobico' ? 'Novo Aeróbico' : 'Novo HIIT',
+      name: type === 'aerobico' ? 'Aeróbico: Pace Progressivo' : 'HIIT: Protocolo Tabata',
       preExhaustion: false,
       isCardio: true,
       cardioDetails: {
         type,
         description: type === 'aerobico' 
-          ? 'Alternar velocidade a cada km\n1 km Pace 5:40"\n1 km Pace 5:10"\nAté final'
-          : 'Protocolo HIIT: 30s Esforço Máximo / 30s Descanso Ativo.',
-        videoOption: 'selecione'
+          ? 'Iniciar com 5min de aquecimento leve.\nDepois 20min alternando 1km em pace confortável e 1km em pace moderado/forte.\nFinalizar com 5min de volta à calma.'
+          : 'Aquecimento: 2min de trote leve.\nProtocolo principal: 20 segundos de esforço máximo seguidos de 10 segundos de descanso passivo.\nRepetir o ciclo 8 vezes (total 4 minutos).\nFinalizar com 2min de caminhada.',
       },
       sets: [],
       repsRange: ''
@@ -500,8 +499,8 @@ export default function Home() {
       }
     }));
     toast({
-      title: "Cardio Adicionado",
-      description: `Protocolo de ${type} criado com sucesso.`,
+      title: "Protocolo Carregado",
+      description: `Protocolo de ${type} adicionado com sucesso.`,
     });
   };
 
