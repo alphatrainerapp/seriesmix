@@ -67,7 +67,6 @@ type WorkoutState = {
   combinationTypes: Record<string, CombinationType>;
 };
 
-// Barra de ações final baseada na imagem de referência
 const WorkoutActionsFooter = () => (
   <div className="flex flex-wrap items-center gap-3 mt-12 pb-10 border-t pt-8 mobile-content-wrapper hidden md:flex">
     <Button className="bg-[#ffa726] hover:bg-[#fb8c00] text-white rounded-full px-6 h-10 font-bold gap-2 border-none shadow-sm uppercase text-[11px] tracking-widest">
@@ -107,7 +106,6 @@ const WorkoutActionsFooter = () => (
   </div>
 );
 
-// Componente isolado para o conteúdo do treino
 const WorkoutTabContent = memo(({ 
   tabId, 
   workout, 
@@ -144,17 +142,18 @@ const WorkoutTabContent = memo(({
         const mins = parseInt(parts[0]);
         totalSeconds += (isNaN(mins) ? 15 : mins) * 60;
       } else if (ex.isCardio) {
-        totalSeconds += 20 * 60; // Assume 20 min padrão para cardio
+        totalSeconds += 20 * 60; // 20 min padrão para cardio
       } else if (ex.sets && ex.sets.length > 0) {
         const numSets = ex.sets.length;
-        const setExecutionTime = 60;
+        // Diferenciação de tempo de execução: Treino (60s) vs Aquecimento (45s)
+        const setExecutionTime = ex.isWarmup ? 45 : 60;
         const intervalTime = parseInt(ex.sets[0]?.interval) || 60;
         totalSeconds += (numSets * setExecutionTime) + ((numSets - 1) * intervalTime);
       }
     });
     
     if (workout.data.length > 0) {
-      totalSeconds += 300; 
+      totalSeconds += 300; // Margem de 5 min para setup/transição
     }
 
     return Math.ceil(totalSeconds / 60);
@@ -246,7 +245,6 @@ const WorkoutTabContent = memo(({
 
   return (
     <div className="mt-8 animate-in fade-in-50 duration-500 mobile-content-wrapper space-y-4">
-      {/* Header Info Card baseado na imagem */}
       <div className="bg-card border border-border rounded-2xl p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 shadow-sm">
         <div className="space-y-4">
           <h2 className="text-3xl font-black tracking-tighter uppercase italic">
@@ -273,7 +271,6 @@ const WorkoutTabContent = memo(({
         </div>
       </div>
 
-      {/* Action Buttons Grid baseado na imagem */}
       <div className="grid grid-cols-3 gap-3">
         <CombineExercisesDialog 
           exercises={workout.data} 
