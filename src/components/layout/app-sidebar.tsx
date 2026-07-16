@@ -55,17 +55,16 @@ export function AppSidebar() {
   const userAvatar = PlaceHolderImages.find((img) => img.id === 'user-avatar');
 
   return (
-    <Sidebar className="border-r-0 bg-[#0a0a0a] text-white">
+    <Sidebar className="border-r-0 bg-[#0a0a0a] text-white" collapsible="icon">
       <SidebarHeader className="p-6">
         <div className="flex flex-col gap-0.5">
           <div className="flex items-baseline gap-1">
-            <span className="text-2xl font-black italic tracking-tighter italic">ALAN LUIZ</span>
+            <span className="text-2xl font-black italic tracking-tighter italic text-white">ALAN LUIZ</span>
           </div>
           <span className="text-[9px] font-bold tracking-[0.3em] text-primary uppercase -mt-1">
             PERSONAL TRAINER
           </span>
         </div>
-        <SidebarTrigger className="absolute right-2 top-6 text-white/40 hover:text-white md:hidden" />
       </SidebarHeader>
 
       <SidebarContent className="px-2">
