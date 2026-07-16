@@ -8,10 +8,11 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarTrigger,
   SidebarGroup,
   SidebarGroupLabel,
   SidebarGroupContent,
+  SidebarRail,
+  useSidebar,
 } from '@/components/ui/sidebar';
 import {
   Home,
@@ -32,6 +33,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { cn } from '@/lib/utils';
 
 const functionsItems = [
   { href: '/home', label: 'Home', icon: Home },
@@ -52,26 +54,34 @@ const settingsItems = [
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const { state } = useSidebar();
+  const isCollapsed = state === 'collapsed';
   const userAvatar = PlaceHolderImages.find((img) => img.id === 'user-avatar');
 
   return (
     <Sidebar className="border-r-0 bg-[#0a0a0a] text-white" collapsible="icon">
-      <SidebarHeader className="p-6">
-        <div className="flex flex-col gap-0.5">
+      <SidebarHeader className={cn("p-6 transition-all duration-300", isCollapsed && "p-4 items-center")}>
+        <div className="flex flex-col gap-0.5 overflow-hidden">
           <div className="flex items-baseline gap-1">
-            <span className="text-2xl font-black italic tracking-tighter italic text-white">ALAN LUIZ</span>
+            <span className={cn("text-2xl font-black italic tracking-tighter text-white whitespace-nowrap", isCollapsed && "text-xl")}>
+              {isCollapsed ? 'AL' : 'ALAN LUIZ'}
+            </span>
           </div>
-          <span className="text-[9px] font-bold tracking-[0.3em] text-primary uppercase -mt-1">
-            PERSONAL TRAINER
-          </span>
+          {!isCollapsed && (
+            <span className="text-[9px] font-bold tracking-[0.3em] text-primary uppercase -mt-1 whitespace-nowrap">
+              PERSONAL TRAINER
+            </span>
+          )}
         </div>
       </SidebarHeader>
 
       <SidebarContent className="px-2">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-white/40 font-black text-[11px] tracking-[0.2em] px-4 mb-2 uppercase">
-            FUNÇÕES
-          </SidebarGroupLabel>
+          {!isCollapsed && (
+            <SidebarGroupLabel className="text-white/40 font-black text-[11px] tracking-[0.2em] px-4 mb-2 uppercase">
+              FUNÇÕES
+            </SidebarGroupLabel>
+          )}
           <SidebarGroupContent>
             <SidebarMenu>
               {functionsItems.map((item) => (
@@ -79,14 +89,15 @@ export function AppSidebar() {
                   <SidebarMenuButton
                     asChild
                     isActive={pathname === item.href}
+                    tooltip={item.label}
                     className="hover:bg-white/5 active:bg-white/10 h-11 px-4 text-white group"
                   >
                     <Link href="#" className="flex items-center justify-between w-full">
                       <div className="flex items-center gap-3">
-                        <item.icon className="h-5 w-5 text-white/70 group-hover:text-white transition-colors" />
-                        <span className="font-bold text-[13px] tracking-tight">{item.label}</span>
+                        <item.icon className="h-5 w-5 text-white/70 group-hover:text-white transition-colors shrink-0" />
+                        <span className="font-bold text-[13px] tracking-tight group-data-[collapsible=icon]:hidden">{item.label}</span>
                       </div>
-                      {item.hasSubmenu && (
+                      {item.hasSubmenu && !isCollapsed && (
                         <ChevronRight className="h-4 w-4 text-white/30 group-hover:text-white transition-colors" />
                       )}
                     </Link>
@@ -98,9 +109,11 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroup className="mt-4">
-          <SidebarGroupLabel className="text-white/40 font-black text-[11px] tracking-[0.2em] px-4 mb-2 uppercase">
-            CONFIGURAÇÕES
-          </SidebarGroupLabel>
+          {!isCollapsed && (
+            <SidebarGroupLabel className="text-white/40 font-black text-[11px] tracking-[0.2em] px-4 mb-2 uppercase">
+              CONFIGURAÇÕES
+            </SidebarGroupLabel>
+          )}
           <SidebarGroupContent>
             <SidebarMenu>
               {settingsItems.map((item) => (
@@ -108,11 +121,12 @@ export function AppSidebar() {
                   <SidebarMenuButton
                     asChild
                     isActive={pathname === item.href}
+                    tooltip={item.label}
                     className="hover:bg-white/5 active:bg-white/10 h-11 px-4 text-white group"
                   >
                     <Link href="#" className="flex items-center gap-3">
-                      <item.icon className="h-5 w-5 text-white/70 group-hover:text-white transition-colors" />
-                      <span className="font-bold text-[13px] tracking-tight">{item.label}</span>
+                      <item.icon className="h-5 w-5 text-white/70 group-hover:text-white transition-colors shrink-0" />
+                      <span className="font-bold text-[13px] tracking-tight group-data-[collapsible=icon]:hidden">{item.label}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -123,8 +137,8 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="p-4 mt-auto border-t border-white/5">
-        <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors cursor-pointer group">
-          <Avatar className="h-9 w-9 border border-white/10">
+        <div className={cn("flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors cursor-pointer group overflow-hidden", isCollapsed && "justify-center p-1")}>
+          <Avatar className="h-8 w-8 border border-white/10 shrink-0">
             {userAvatar && (
               <AvatarImage
                 src={userAvatar.imageUrl}
@@ -140,9 +154,12 @@ export function AppSidebar() {
               alan.luiz@personal.com
             </p>
           </div>
-          <ChevronDown className="h-4 w-4 text-white/20 group-hover:text-white group-data-[collapsible=icon]:hidden" />
+          {!isCollapsed && (
+            <ChevronDown className="h-4 w-4 text-white/20 group-hover:text-white" />
+          )}
         </div>
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   );
 }

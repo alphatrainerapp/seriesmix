@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Target, CalendarDays, User, Pencil, ShieldCheck, Menu } from 'lucide-react';
+import { Target, CalendarDays, User, Pencil, ShieldCheck, PanelLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Badge } from '../ui/badge';
@@ -55,7 +55,7 @@ const StudentProfile = () => {
     <div className="flex flex-col items-center mb-6 w-full px-2">
       <div className="flex w-full justify-between items-center mb-6">
         <div className="flex items-center gap-3">
-          <SidebarTrigger className="h-10 w-10 md:hidden bg-muted/50 rounded-xl" />
+          <SidebarTrigger className="h-10 w-10 bg-muted/50 rounded-xl" />
           <h2 className="text-xl font-black uppercase tracking-tighter italic">Perfil do Aluno</h2>
         </div>
         <Button variant="ghost" size="sm" className="h-10 px-4 rounded-xl gap-2 font-bold text-primary hover:bg-primary/5">
@@ -157,7 +157,7 @@ export function TrainingPlanHeader() {
                 </div>
             </div>
             <div className="flex items-center gap-3">
-              <SidebarTrigger className="h-10 w-10 bg-muted/50 rounded-xl" />
+              <SidebarTrigger className="h-10 w-10 bg-muted/50 rounded-xl hover:bg-primary/10 hover:text-primary transition-colors" />
               <Button variant="ghost" className="rounded-xl gap-2 font-bold text-muted-foreground">
                 Histórico de Medidas
               </Button>
