@@ -15,7 +15,8 @@ import {
   SlidersHorizontal, 
   Dumbbell, 
   Timer, 
-  Shuffle
+  Shuffle,
+  Play
 } from 'lucide-react';
 import type { Exercise, Set, SetType, CombinationType } from '@/lib/types';
 import {
@@ -146,8 +147,16 @@ export function ExerciseCard({
             </ExerciseSearchDialog>
           </div>
         </TableCell>
-        <TableCell className="p-2 pt-3 w-[160px]">
+        <TableCell className="p-2 pt-3 w-[200px]">
           <div className="flex items-center gap-1.5">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-8 w-8 bg-primary hover:bg-primary/90 text-white rounded-lg shadow-sm shrink-0"
+            >
+              <Play className="w-4 h-4 fill-white" />
+            </Button>
+
             <SubstitutionDialog exercise={exercise} onSave={handleSaveSubstitutions}>
               <div className="relative group cursor-pointer">
                 <Button 

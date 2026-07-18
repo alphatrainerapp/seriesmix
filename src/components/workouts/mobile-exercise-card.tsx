@@ -20,7 +20,8 @@ import {
   Activity,
   Pencil,
   Shuffle,
-  ChevronDown
+  ChevronDown,
+  Play
 } from 'lucide-react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -320,18 +321,27 @@ export function MobileExerciseCard({
             <div className="pt-6 border-t border-border/10 grid grid-cols-2 gap-4">
                <div className="space-y-2">
                   <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.1em] pl-1">TROCAS</p>
-                  <SubstitutionDialog exercise={exercise} onSave={handleSaveSubstitutions}>
+                  <div className="flex items-center gap-2">
                     <Button 
-                      variant="outline" 
-                      className={cn(
-                        "w-full rounded-2xl h-12 gap-2 font-black uppercase tracking-tight text-[11px] border-primary",
-                        "text-primary hover:bg-primary/5 transition-all"
-                      )}
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-12 w-12 bg-primary hover:bg-primary/90 text-white rounded-2xl shadow-md shrink-0"
                     >
-                      <Shuffle className="h-3.5 w-3.5" />
-                      TROCAS ({substitutionCount})
+                      <Play className="h-5 w-5 fill-white" />
                     </Button>
-                  </SubstitutionDialog>
+                    <SubstitutionDialog exercise={exercise} onSave={handleSaveSubstitutions}>
+                      <Button 
+                        variant="outline" 
+                        className={cn(
+                          "flex-1 rounded-2xl h-12 gap-2 font-black uppercase tracking-tight text-[11px] border-primary",
+                          "text-primary hover:bg-primary/5 transition-all"
+                        )}
+                      >
+                        <Shuffle className="h-3.5 w-3.5" />
+                        TROCAS ({substitutionCount})
+                      </Button>
+                    </SubstitutionDialog>
+                  </div>
                </div>
 
                <div className="space-y-2">
