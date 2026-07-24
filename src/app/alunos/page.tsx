@@ -121,13 +121,13 @@ const studentsData: StudentData[] = [
 const StatusIcon = ({ status }: { status: AttendanceStatus }) => {
   switch (status) {
     case 'completed':
-      return <div className="h-1.5 w-1.5 rounded-full bg-[#00bfa5]" />;
+      return <CheckCircle2 className="h-4.5 w-4.5 text-[#00bfa5]" />;
     case 'missed':
-      return <div className="h-1.5 w-1.5 rounded-full bg-red-500" />;
+      return <XCircle className="h-4.5 w-4.5 text-red-500/80" />;
     case 'today':
-      return <div className="h-1.5 w-1.5 rounded-full bg-[#ffa726]" />;
+      return <Circle className="h-4.5 w-4.5 text-[#ffa726] stroke-[2.5]" />;
     default:
-      return <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/20" />;
+      return <Circle className="h-4.5 w-4.5 text-muted-foreground/20 stroke-[1.5]" />;
   }
 };
 
@@ -185,15 +185,15 @@ const DesktopStudentRow = ({ student }: { student: StudentData }) => {
         </div>
 
         {/* Treinos (Resumo Semanal) */}
-        <div className="w-[240px] flex flex-col gap-3 items-center">
+        <div className="w-[260px] flex flex-col gap-3 items-center">
           <div className="flex gap-2">
             {[1, 2, 3, 4].map(num => (
               <div 
                 key={num}
                 className={cn(
                   "h-8 w-8 rounded-lg flex items-center justify-center text-[11px] font-black border transition-all",
-                  num <= student.completedCount 
-                    ? "bg-muted text-muted-foreground/40 border-transparent" 
+                  num <= student.currentWeek 
+                    ? "bg-primary text-white border-transparent" 
                     : "bg-white border-border text-muted-foreground/30 shadow-sm"
                 )}
               >
@@ -201,13 +201,26 @@ const DesktopStudentRow = ({ student }: { student: StudentData }) => {
               </div>
             ))}
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             {student.weeklyAttendance.map((day, idx) => (
               <div key={idx} className="flex flex-col items-center gap-1">
                 <StatusIcon status={day.status} />
-                <span className="text-[7px] font-black text-muted-foreground/30">{day.day.substring(0,1)}</span>
+                <span className={cn(
+                  "text-[7px] font-black",
+                  day.status === 'today' ? "text-[#ffa726]" : "text-muted-foreground/30"
+                )}>{day.day.substring(0,1)}</span>
               </div>
             ))}
+          </div>
+          <div className="flex items-center gap-1.5 text-[9px] font-black whitespace-nowrap mt-1">
+            <span className="text-muted-foreground uppercase">{student.completedCount}/{student.totalExpected} TREINOS REALIZADOS</span>
+            <span className="text-muted-foreground/20">•</span>
+            <span className={cn(
+              "uppercase italic",
+              student.percent >= 80 ? "text-[#00bfa5]" : student.percent >= 50 ? "text-[#ffa726]" : "text-red-500"
+            )}>
+              {student.percent}% DE FREQUÊNCIA
+            </span>
           </div>
         </div>
 
@@ -322,12 +335,12 @@ const MobileStudentCard = ({ student }: { student: StudentData }) => {
           ))}
         </div>
 
-        {/* Rodapé do Card: Estatísticas */}
-        <div className="flex items-center gap-2 text-sm font-black px-1">
-          <span className="text-muted-foreground uppercase text-[10px] tracking-widest">{student.completedCount}/{student.totalExpected} treinos realizados</span>
+        {/* Rodapé do Card: Estatísticas fiéis à imagem */}
+        <div className="flex items-center gap-1.5 text-[10px] font-black px-1 mt-2">
+          <span className="text-muted-foreground uppercase tracking-tight">{student.completedCount}/{student.totalExpected} TREINOS REALIZADOS</span>
           <span className="text-muted-foreground/20">•</span>
           <span className={cn(
-            "text-[12px] italic uppercase tracking-tighter",
+            "uppercase italic tracking-tight",
             student.percent >= 80 ? "text-[#00bfa5]" : student.percent >= 50 ? "text-[#ffa726]" : "text-red-500"
           )}>
             {student.percent}% DE FREQUÊNCIA
@@ -412,7 +425,7 @@ export default function AlunosPage() {
               <span className="flex-1 text-[10px] font-black text-muted-foreground uppercase tracking-widest px-4">Observações</span>
               <span className="w-[120px] text-center text-[10px] font-black text-muted-foreground uppercase tracking-widest">Plano</span>
               <span className="w-[100px] text-center text-[10px] font-black text-muted-foreground uppercase tracking-widest">Situação</span>
-              <span className="w-[240px] text-center text-[10px] font-black text-muted-foreground uppercase tracking-widest">Treinos</span>
+              <span className="w-[260px] text-center text-[10px] font-black text-muted-foreground uppercase tracking-widest">Treinos</span>
               <span className="w-[180px] text-right text-[10px] font-black text-muted-foreground uppercase tracking-widest">Ações</span>
             </div>
             
