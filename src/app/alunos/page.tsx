@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { 
   Search, 
-  ChevronRight, 
+  ChevronDown, 
   CheckCircle2, 
   XCircle, 
   Circle,
@@ -12,7 +12,15 @@ import {
   Copy,
   Pause,
   Home,
-  Archive
+  Archive,
+  Mail,
+  MessageCircle,
+  Users,
+  UserX,
+  Clock,
+  AlertTriangle,
+  ChevronRight,
+  MoreHorizontal
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -32,6 +40,7 @@ interface StudentData {
   avatar: string;
   currentWeek: number;
   totalWeeks: number;
+  observations: string;
   weeklyAttendance: { day: string; status: AttendanceStatus }[];
   completedCount: number;
   totalExpected: number;
@@ -47,6 +56,7 @@ const studentsData: StudentData[] = [
     avatar: 'https://picsum.photos/seed/anajulia/200/200',
     currentWeek: 3,
     totalWeeks: 4,
+    observations: 'Foco em superiores e cardio 3x na semana',
     weeklyAttendance: [
       { day: 'SEG', status: 'completed' },
       { day: 'TER', status: 'completed' },
@@ -63,11 +73,12 @@ const studentsData: StudentData[] = [
   {
     id: '2',
     name: 'Antonio Henrique',
-    plan: 'Mensal',
+    plan: 'Anual 12+2',
     status: 'active',
     avatar: 'https://picsum.photos/seed/antonio/200/200',
-    currentWeek: 4,
-    totalWeeks: 4,
+    currentWeek: 13,
+    totalWeeks: 14,
+    observations: 'Joelho valgo, escoliose lombar',
     weeklyAttendance: [
       { day: 'SEG', status: 'completed' },
       { day: 'TER', status: 'completed' },
@@ -83,12 +94,13 @@ const studentsData: StudentData[] = [
   },
   {
     id: '3',
-    name: 'Fabiele Costa',
-    plan: 'Anual 12+2',
+    name: 'Anadelis de Oliveira',
+    plan: 'free',
     status: 'active',
-    avatar: 'https://picsum.photos/seed/fabiele/200/200',
-    currentWeek: 3,
-    totalWeeks: 14,
+    avatar: 'https://picsum.photos/seed/anadelis/200/200',
+    currentWeek: 2,
+    totalWeeks: 3,
+    observations: '--',
     weeklyAttendance: [
       { day: 'SEG', status: 'completed' },
       { day: 'TER', status: 'missed' },
@@ -109,13 +121,13 @@ const studentsData: StudentData[] = [
 const StatusIcon = ({ status }: { status: AttendanceStatus }) => {
   switch (status) {
     case 'completed':
-      return <CheckCircle2 className="h-6 w-6 text-[#00bfa5] fill-[#00bfa5]/10" />;
+      return <div className="h-1.5 w-1.5 rounded-full bg-[#00bfa5]" />;
     case 'missed':
-      return <XCircle className="h-6 w-6 text-red-500/80" />;
+      return <div className="h-1.5 w-1.5 rounded-full bg-red-500" />;
     case 'today':
-      return <Circle className="h-6 w-6 text-[#ffa726] stroke-[2.5]" />;
+      return <div className="h-1.5 w-1.5 rounded-full bg-[#ffa726]" />;
     default:
-      return <Circle className="h-6 w-6 text-muted-foreground/20 stroke-[1.5]" />;
+      return <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/20" />;
   }
 };
 
@@ -128,7 +140,112 @@ const ActionButton = ({ icon: Icon, label }: { icon: React.ElementType, label: s
   </button>
 );
 
-const StudentCard = ({ student }: { student: StudentData }) => {
+const DesktopStudentRow = ({ student }: { student: StudentData }) => {
+  const [isExpanded, setIsExpanded] = React.useState(false);
+
+  return (
+    <div className="flex flex-col border-b border-border/5 group">
+      <div className="flex items-center gap-4 py-4 px-6 hover:bg-muted/20 transition-colors">
+        {/* Aluno */}
+        <div className="w-[200px] flex items-center gap-4 shrink-0">
+          <Avatar className="h-12 w-12 border border-border/50">
+            <AvatarImage src={student.avatar} />
+            <AvatarFallback>{student.name.substring(0,2)}</AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col min-w-0">
+            <span className="font-bold text-sm text-foreground/80 truncate leading-tight">{student.name}</span>
+            <button className="text-[10px] font-bold text-muted-foreground/60 hover:text-primary transition-colors text-left uppercase tracking-tight mt-0.5">Visualizar perfil</button>
+          </div>
+        </div>
+
+        {/* Observações */}
+        <div className="flex-1 min-w-[200px]">
+          <p className="text-[12px] text-muted-foreground leading-snug line-clamp-2 italic px-4">
+            {student.observations}
+          </p>
+        </div>
+
+        {/* Plano */}
+        <div className="w-[120px] flex flex-col items-center gap-1.5">
+          <Badge className={cn(
+            "text-[9px] font-black uppercase tracking-widest px-3 h-5 border-none",
+            student.plan === 'free' ? "bg-orange-400 text-white" : 
+            student.plan.includes('Anual') ? "bg-orange-500 text-white" : "bg-orange-300 text-white"
+          )}>
+            {student.plan}
+          </Badge>
+          <span className="text-[11px] font-bold text-muted-foreground/40">{student.currentWeek}/{student.totalWeeks}</span>
+        </div>
+
+        {/* Situação */}
+        <div className="w-[100px] flex justify-center">
+          <Badge className="bg-emerald-500/10 text-emerald-600 border-none rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-widest">
+            Ativo
+          </Badge>
+        </div>
+
+        {/* Treinos (Resumo Semanal) */}
+        <div className="w-[240px] flex flex-col gap-3 items-center">
+          <div className="flex gap-2">
+            {[1, 2, 3, 4].map(num => (
+              <div 
+                key={num}
+                className={cn(
+                  "h-8 w-8 rounded-lg flex items-center justify-center text-[11px] font-black border transition-all",
+                  num <= student.completedCount 
+                    ? "bg-muted text-muted-foreground/40 border-transparent" 
+                    : "bg-white border-border text-muted-foreground/30 shadow-sm"
+                )}
+              >
+                {num}
+              </div>
+            ))}
+          </div>
+          <div className="flex gap-2">
+            {student.weeklyAttendance.map((day, idx) => (
+              <div key={idx} className="flex flex-col items-center gap-1">
+                <StatusIcon status={day.status} />
+                <span className="text-[7px] font-black text-muted-foreground/30">{day.day.substring(0,1)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Ações */}
+        <div className="w-[180px] flex items-center justify-end gap-3">
+          <Button className="bg-[#00bfa5] hover:bg-[#00bfa5]/90 text-white h-9 rounded-full px-6 gap-2 font-black text-[10px] uppercase tracking-widest border-none shadow-sm shadow-[#00bfa5]/20">
+            <span className="hidden xl:inline">chamar</span>
+            <MessageCircle className="h-4 w-4 fill-white" />
+          </Button>
+          <button 
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="h-10 w-10 flex items-center justify-center rounded-full hover:bg-muted/50 transition-all active:scale-90"
+          >
+            <ChevronDown className={cn(
+              "h-6 w-6 text-muted-foreground/40 transition-transform duration-300",
+              isExpanded && "rotate-180 text-primary"
+            )} />
+          </button>
+        </div>
+      </div>
+
+      {/* Painel Expansível */}
+      {isExpanded && (
+        <div className="bg-muted/30 p-6 flex justify-center animate-in slide-in-from-top-2 duration-300 border-t border-border/5">
+          <div className="grid grid-cols-5 gap-3 max-w-4xl w-full">
+            <ActionButton icon={Pencil} label="Editar" />
+            <ActionButton icon={Copy} label="Duplicar" />
+            <ActionButton icon={Pause} label="Pausar Plano" />
+            <ActionButton icon={Home} label="Área Do Aluno" />
+            <ActionButton icon={Archive} label="Arquivar" />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const MobileStudentCard = ({ student }: { student: StudentData }) => {
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   return (
@@ -195,7 +312,12 @@ const StudentCard = ({ student }: { student: StudentData }) => {
               )}>
                 {day.day}
               </span>
-              <StatusIcon status={day.status} />
+              <div className="flex items-center justify-center h-6 w-6">
+                 {day.status === 'completed' && <CheckCircle2 className="h-5 w-5 text-[#00bfa5] fill-[#00bfa5]/10" />}
+                 {day.status === 'missed' && <XCircle className="h-5 w-5 text-red-500/80" />}
+                 {day.status === 'today' && <Circle className="h-5 w-5 text-[#ffa726] stroke-[2.5]" />}
+                 {day.status === 'future' && <Circle className="h-5 w-5 text-muted-foreground/20 stroke-[1.5]" />}
+              </div>
             </div>
           ))}
         </div>
@@ -232,15 +354,47 @@ export default function AlunosPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300 pb-20">
-      {/* Header */}
-      <div className="app-container py-8 bg-card/30 backdrop-blur-md sticky top-0 z-20 border-b border-border/10">
-        <div className="flex flex-col gap-6 mobile-content-wrapper">
-          <div className="space-y-1">
-            <h1 className="text-3xl font-black tracking-tighter text-foreground uppercase italic">Alunos</h1>
-            <p className="text-muted-foreground text-[13px] font-bold uppercase tracking-tight">Gestão de performance e frequência</p>
+      {/* Top Header Filter Counts */}
+      <div className="app-container pt-8 pb-4 border-b border-border/5">
+        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-6">
+          <div className="flex items-center flex-wrap gap-x-6 gap-y-3">
+             <button className="flex items-center gap-2 text-[11px] font-black text-muted-foreground uppercase hover:text-primary transition-colors">
+                <Users className="h-4 w-4" /> Todos <span className="text-muted-foreground/40">200</span>
+             </button>
+             <button className="flex items-center gap-2 text-[11px] font-black text-primary uppercase border-b-2 border-primary pb-1">
+                <Users className="h-4 w-4" /> Ativos <span className="text-primary/60">16</span>
+             </button>
+             <button className="flex items-center gap-2 text-[11px] font-black text-muted-foreground uppercase hover:text-primary transition-colors">
+                <UserX className="h-4 w-4" /> Inativos <span className="text-muted-foreground/40">2</span>
+             </button>
+             <button className="flex items-center gap-2 text-[11px] font-black text-muted-foreground uppercase hover:text-primary transition-colors">
+                <Clock className="h-4 w-4" /> Pendentes <span className="text-muted-foreground/40">0</span>
+             </button>
+             <button className="flex items-center gap-2 text-[11px] font-black text-muted-foreground uppercase hover:text-primary transition-colors">
+                <AlertTriangle className="h-4 w-4" /> Vencidos <span className="text-muted-foreground/40">0</span>
+             </button>
+             <button className="flex items-center gap-2 text-[11px] font-black text-muted-foreground uppercase hover:text-primary transition-colors">
+                <Archive className="h-4 w-4" /> Arquivados <span className="text-muted-foreground/40">182</span>
+             </button>
           </div>
-          
-          <div className="relative group">
+
+          <div className="flex items-center gap-3">
+             <Button variant="outline" size="icon" className="h-10 w-12 rounded-xl bg-card border-border shadow-sm">
+                <Mail className="h-4 w-4 text-muted-foreground" />
+             </Button>
+             <Button className="bg-[#00bfa5] hover:bg-[#00a894] text-white rounded-xl h-10 px-6 font-black uppercase text-[10px] tracking-widest gap-2 shadow-lg shadow-[#00bfa5]/20 border-none">
+                <Plus className="h-4 w-4" />
+                Novo Aluno
+             </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="app-container py-8">
+        <div className="flex flex-col gap-8">
+          {/* Barra de Pesquisa */}
+          <div className="relative group mobile-content-wrapper">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
             <Input 
               placeholder="Pesquisar aluno..." 
@@ -249,27 +403,45 @@ export default function AlunosPage() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-        </div>
-      </div>
 
-      {/* Lista */}
-      <div className="app-container py-8">
-        <div className="space-y-5 mobile-content-wrapper">
-          {studentsData.map((student) => (
-            <StudentCard key={student.id} student={student} />
-          ))}
-        </div>
+          {/* Desktop Table View */}
+          <div className="hidden lg:block bg-card rounded-3xl border border-border/40 shadow-sm overflow-hidden">
+            {/* Table Header */}
+            <div className="flex items-center gap-4 bg-muted/20 py-4 px-6 border-b border-border/5">
+              <span className="w-[200px] text-[10px] font-black text-muted-foreground uppercase tracking-widest shrink-0">Aluno</span>
+              <span className="flex-1 text-[10px] font-black text-muted-foreground uppercase tracking-widest px-4">Observações</span>
+              <span className="w-[120px] text-center text-[10px] font-black text-muted-foreground uppercase tracking-widest">Plano</span>
+              <span className="w-[100px] text-center text-[10px] font-black text-muted-foreground uppercase tracking-widest">Situação</span>
+              <span className="w-[240px] text-center text-[10px] font-black text-muted-foreground uppercase tracking-widest">Treinos</span>
+              <span className="w-[180px] text-right text-[10px] font-black text-muted-foreground uppercase tracking-widest">Ações</span>
+            </div>
+            
+            {/* Table Body */}
+            <div className="flex flex-col">
+              {studentsData.map((student) => (
+                <DesktopStudentRow key={student.id} student={student} />
+              ))}
+            </div>
+          </div>
 
-        {/* Info Final */}
-        <div className="mt-12 text-center mobile-content-wrapper">
-          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em]">
-            FIM DA LISTA • {studentsData.length} ALUNOS ATIVOS
-          </p>
+          {/* Mobile Card View */}
+          <div className="lg:hidden space-y-5 mobile-content-wrapper">
+            {studentsData.map((student) => (
+              <MobileStudentCard key={student.id} student={student} />
+            ))}
+          </div>
+
+          {/* Info Final */}
+          <div className="mt-8 text-center">
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em]">
+              FIM DA LISTA • {studentsData.length} ALUNOS ATIVOS
+            </p>
+          </div>
         </div>
       </div>
 
       {/* FAB Mobile */}
-      <div className="fixed bottom-10 right-8 z-50 md:hidden">
+      <div className="fixed bottom-10 right-8 z-50 lg:hidden">
         <Button size="icon" className="h-14 w-14 rounded-2xl bg-primary shadow-2xl shadow-primary/40 text-white active:scale-90 transition-transform">
           <Plus className="h-7 w-7" />
         </Button>
