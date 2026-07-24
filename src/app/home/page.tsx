@@ -37,11 +37,35 @@ import { cn } from '@/lib/utils';
 
 // --- Dados Mockados ---
 
-const activeStudentsData = [
-  { month: 'fev', value: 20 },
-  { month: 'mar', value: 20 },
-  { month: 'abr', value: 19 },
-];
+const activeStudentsDataSets = {
+  '3M': [
+    { month: 'fev', value: 20 },
+    { month: 'mar', value: 20 },
+    { month: 'abr', value: 19 },
+  ],
+  '6M': [
+    { month: 'nov', value: 15 },
+    { month: 'dez', value: 18 },
+    { month: 'jan', value: 17 },
+    { month: 'fev', value: 20 },
+    { month: 'mar', value: 20 },
+    { month: 'abr', value: 19 },
+  ],
+  '12M': [
+    { month: 'mai', value: 12 },
+    { month: 'jun', value: 14 },
+    { month: 'jul', value: 13 },
+    { month: 'ago', value: 16 },
+    { month: 'set', value: 15 },
+    { month: 'out', value: 14 },
+    { month: 'nov', value: 15 },
+    { month: 'dez', value: 18 },
+    { month: 'jan', value: 17 },
+    { month: 'fev', value: 20 },
+    { month: 'mar', value: 20 },
+    { month: 'abr', value: 19 },
+  ],
+};
 
 const workoutStatusData = [
   { name: 'Montados', value: 7, color: '#00bfa5' },
@@ -124,6 +148,9 @@ const PlanProgressBar = ({ plan }: { plan: typeof plansDistribution[0] }) => {
 };
 
 export default function HomePage() {
+  const [activePeriod, setActivePeriod] = React.useState<keyof typeof activeStudentsDataSets>('3M');
+  const activeStudentsData = activeStudentsDataSets[activePeriod];
+
   return (
     <div className="app-container py-6 min-h-screen bg-background text-foreground transition-colors duration-300">
       <DashboardHeader />
@@ -147,16 +174,17 @@ export default function HomePage() {
               <div className="flex items-start justify-between mb-10">
                 <div className="space-y-1">
                   <h3 className="text-[20px] font-black text-foreground uppercase italic tracking-tight">Alunos ativos</h3>
-                  <p className="text-sm text-muted-foreground font-medium">Últimos 6 Meses</p>
+                  <p className="text-sm text-muted-foreground font-medium">Histórico de Performance</p>
                 </div>
                 <div className="flex bg-muted/40 p-1 rounded-xl">
-                  {['3M', '6M', '12M'].map((p) => (
+                  {(['3M', '6M', '12M'] as const).map((p) => (
                     <Button 
                       key={p} 
                       variant="ghost" 
+                      onClick={() => setActivePeriod(p)}
                       className={cn(
                         "h-8 px-4 text-[10px] font-black rounded-lg transition-all",
-                        p === '3M' ? "bg-blue-600 text-white shadow-md" : "text-muted-foreground hover:bg-muted"
+                        activePeriod === p ? "bg-blue-600 text-white shadow-md" : "text-muted-foreground hover:bg-muted"
                       )}
                     >
                       {p}
