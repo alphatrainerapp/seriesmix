@@ -336,21 +336,6 @@ export default function HomePage() {
               </div>
             </Tabs>
           </Card>
-
-          <Card className="bg-primary/5 border border-primary/20 p-8 rounded-[28px] shadow-inner-sm">
-             <div className="flex flex-col items-center text-center space-y-4">
-                <div className="h-14 w-14 rounded-full bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/20">
-                  <Plus className="h-8 w-8" />
-                </div>
-                <div className="space-y-1">
-                  <h4 className="font-black text-foreground uppercase tracking-tight italic">Novo Aluno?</h4>
-                  <p className="text-xs text-muted-foreground font-medium leading-relaxed px-4">Cadastre um novo aluno e comece a prescrever treinos agora.</p>
-                </div>
-                <Button className="w-full bg-primary hover:bg-primary/90 text-white rounded-xl h-11 font-black uppercase text-[11px] tracking-widest shadow-lg shadow-primary/20 mt-2">
-                  CADASTRAR ALUNO
-                </Button>
-             </div>
-          </Card>
         </div>
       </div>
       
