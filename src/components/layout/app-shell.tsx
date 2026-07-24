@@ -10,7 +10,7 @@ import { ThemeToggle } from '../theme-toggle';
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="bg-background min-h-screen relative">
-      <SidebarProvider defaultOpen={true}>
+      <SidebarProvider defaultOpen={false}>
         <AppSidebar />
         <SidebarInset>
           {children}

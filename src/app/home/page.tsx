@@ -44,7 +44,7 @@ const activeStudentsData = [
 
 const workoutStatusData = [
   { name: 'Montados', value: 7, color: '#00bfa5' },
-  { name: 'Pendentes', value: 5, color: '#e0e0e0' },
+  { name: 'Pendentes', value: 5, color: 'hsl(var(--muted))' },
 ];
 
 const plansData = [
@@ -96,7 +96,7 @@ const DashboardHeader = () => {
 
 export default function HomePage() {
   return (
-    <div className="app-container py-6 min-h-screen bg-background text-foreground">
+    <div className="app-container py-6 min-h-screen bg-background text-foreground transition-colors duration-300">
       <DashboardHeader />
 
       <div className="space-y-1 mb-8">
@@ -113,7 +113,7 @@ export default function HomePage() {
         
         {/* Coluna Esquerda - Gráfico Principal */}
         <div className="lg:col-span-8 space-y-6">
-          <Card className="bg-card border-none p-6 rounded-[24px] shadow-sm">
+          <Card className="bg-card border border-border/40 p-6 rounded-[24px] shadow-sm">
             <div className="flex items-center justify-between mb-8">
               <h3 className="text-xl font-black text-foreground uppercase italic tracking-tight">Alunos ativos</h3>
               <Button variant="ghost" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground gap-2">
@@ -153,7 +153,7 @@ export default function HomePage() {
           </Card>
 
           {/* Treinos Donut e Lista */}
-          <Card className="bg-card border-none p-6 rounded-[24px] shadow-sm">
+          <Card className="bg-card border border-border/40 p-6 rounded-[24px] shadow-sm">
             <h3 className="text-xl font-black text-foreground uppercase italic tracking-tight mb-6">Treinos</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div className="h-[240px] relative">
@@ -195,7 +195,7 @@ export default function HomePage() {
                   { name: 'Fabiele Costa Pinheiro', week: 1, avatar: null },
                   { name: 'teste app', week: 1, avatar: null },
                 ].map((student, i) => (
-                  <div key={i} className="flex items-center justify-between gap-4 p-3 rounded-2xl bg-muted/30 border border-border">
+                  <div key={i} className="flex items-center justify-between gap-4 p-3 rounded-2xl bg-muted/30 border border-border/40">
                     <div className="flex items-center gap-3">
                       <Avatar className="h-10 w-10">
                         <AvatarFallback className="bg-muted text-muted-foreground text-xs font-black">SN</AvatarFallback>
@@ -218,7 +218,7 @@ export default function HomePage() {
         {/* Coluna Direita */}
         <div className="lg:col-span-4 space-y-6">
           {/* Hoje - Treinou / Não Treinou */}
-          <Card className="bg-card border-none p-6 rounded-[24px] shadow-sm">
+          <Card className="bg-card border border-border/40 p-6 rounded-[24px] shadow-sm">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-sm font-black text-muted-foreground uppercase tracking-widest">Hoje</h3>
               <ChevronDown className="h-4 w-4 text-muted-foreground" />
@@ -258,7 +258,7 @@ export default function HomePage() {
           </Card>
 
           {/* Planos distribution */}
-          <Card className="bg-card border-none p-6 rounded-[24px] shadow-sm">
+          <Card className="bg-card border border-border/40 p-6 rounded-[24px] shadow-sm">
             <h3 className="text-xl font-black text-foreground uppercase italic tracking-tight mb-8">Planos</h3>
             
             <div className="h-[180px] w-full mb-8">
@@ -296,7 +296,7 @@ export default function HomePage() {
         <Button size="icon" className="h-12 w-12 rounded-full bg-primary shadow-xl shadow-primary/20">
           <Plus className="h-6 w-6 text-white" />
         </Button>
-        <Button size="icon" className="h-12 w-12 rounded-full bg-muted/50 backdrop-blur-xl border border-border shadow-xl">
+        <Button size="icon" className="h-12 w-12 rounded-full bg-muted/50 backdrop-blur-xl border border-border/40 shadow-xl">
           <MessageCircle className="h-6 w-6 text-foreground" />
         </Button>
       </div>

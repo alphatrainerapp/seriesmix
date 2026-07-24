@@ -56,28 +56,28 @@ const settingsItems = [
 export function AppSidebar() {
   const pathname = usePathname();
   const { state, setOpen, isMobile } = useSidebar();
-  const [isHovering, setIsHovering] = React.useState(false);
+  const [isAutoExpanded, setIsAutoExpanded] = React.useState(false);
+  
   const isCollapsed = state === 'collapsed';
   const userAvatar = PlaceHolderImages.find((img) => img.id === 'user-avatar');
 
-  // Lógica para expandir no hover se estiver colapsado
   const handleMouseEnter = () => {
     if (isCollapsed && !isMobile) {
       setOpen(true);
-      setIsHovering(true);
+      setIsAutoExpanded(true);
     }
   };
 
   const handleMouseLeave = () => {
-    if (isHovering && !isMobile) {
+    if (isAutoExpanded && !isMobile) {
       setOpen(false);
-      setIsHovering(false);
+      setIsAutoExpanded(false);
     }
   };
 
   return (
     <Sidebar 
-      className="border-r-0 bg-[#0a0a0a] text-white transition-all duration-300 ease-in-out" 
+      className="border-r-0 bg-[#0a0a0a] text-white transition-all duration-300 ease-in-out z-50" 
       collapsible="icon"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
