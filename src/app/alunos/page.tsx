@@ -8,8 +8,6 @@ import {
   XCircle, 
   Circle,
   Plus,
-  Bell,
-  Menu
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -49,7 +47,7 @@ const studentsData: StudentData[] = [
       { day: 'TER', status: 'completed' },
       { day: 'QUA', status: 'missed' },
       { day: 'QUI', status: 'today' },
-      { day: 'SEX', status: 'missed' },
+      { day: 'SEX', status: 'future' },
       { day: 'SÁB', status: 'future' },
       { day: 'DOM', status: 'future' },
     ],
@@ -99,48 +97,6 @@ const studentsData: StudentData[] = [
     totalExpected: 4,
     percent: 25
   },
-  {
-    id: '4',
-    name: 'Fabio Gameiro',
-    plan: 'Anual 12+2',
-    status: 'active',
-    avatar: 'https://picsum.photos/seed/fabiog/200/200',
-    currentWeek: 2,
-    totalWeeks: 14,
-    weeklyAttendance: [
-      { day: 'SEG', status: 'completed' },
-      { day: 'TER', status: 'completed' },
-      { day: 'QUA', status: 'future' },
-      { day: 'QUI', status: 'today' },
-      { day: 'SEX', status: 'future' },
-      { day: 'SÁB', status: 'future' },
-      { day: 'DOM', status: 'future' },
-    ],
-    completedCount: 2,
-    totalExpected: 2,
-    percent: 100
-  },
-  {
-    id: '5',
-    name: 'Fer Garcia',
-    plan: 'Mensal',
-    status: 'inactive',
-    avatar: 'https://picsum.photos/seed/fergarcia/200/200',
-    currentWeek: 1,
-    totalWeeks: 4,
-    weeklyAttendance: [
-      { day: 'SEG', status: 'future' },
-      { day: 'TER', status: 'future' },
-      { day: 'QUA', status: 'future' },
-      { day: 'QUI', status: 'future' },
-      { day: 'SEX', status: 'future' },
-      { day: 'SÁB', status: 'future' },
-      { day: 'DOM', status: 'future' },
-    ],
-    completedCount: 0,
-    totalExpected: 0,
-    percent: 0
-  },
 ];
 
 // --- Sub-componentes ---
@@ -150,98 +106,87 @@ const StatusIcon = ({ status }: { status: AttendanceStatus }) => {
     case 'completed':
       return <CheckCircle2 className="h-6 w-6 text-[#00bfa5] fill-[#00bfa5]/10" />;
     case 'missed':
-      return <XCircle className="h-6 w-6 text-red-500" />;
+      return <XCircle className="h-6 w-6 text-red-500/80" />;
     case 'today':
       return <Circle className="h-6 w-6 text-[#ffa726] stroke-[2.5]" />;
     default:
-      return <Circle className="h-6 w-6 text-muted-foreground/30 stroke-[1.5]" />;
+      return <Circle className="h-6 w-6 text-muted-foreground/20 stroke-[1.5]" />;
   }
 };
 
 const StudentCard = ({ student }: { student: StudentData }) => {
   return (
-    <div className="bg-card border border-border/40 rounded-[24px] p-5 md:p-7 shadow-sm transition-all hover:shadow-md group flex flex-col md:flex-row gap-6 md:items-center">
-      {/* Coluna Esquerda: Info Básica */}
-      <div className="flex flex-col items-center text-center min-w-[140px] gap-2">
+    <div className="bg-card border border-border/40 rounded-[28px] p-5 md:p-7 shadow-sm transition-all hover:shadow-md group flex flex-col gap-6 relative overflow-hidden">
+      {/* Topo: Identificação */}
+      <div className="flex items-center gap-4">
         <div className="relative">
-          <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
+          <Avatar className="h-14 w-14 border-2 border-background shadow-md">
             <AvatarImage src={student.avatar} alt={student.name} />
             <AvatarFallback>{student.name.substring(0, 2)}</AvatarFallback>
           </Avatar>
           <div className={cn(
-            "absolute bottom-1 right-1 h-4 w-4 rounded-full border-2 border-background",
+            "absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-background",
             student.status === 'active' ? "bg-emerald-500" : "bg-red-500"
           )} />
         </div>
-        <div className="space-y-1">
-          <h3 className="font-bold text-base text-foreground leading-tight">{student.name}</h3>
-          <Badge variant="outline" className="bg-orange-500/10 text-orange-600 border-none rounded-full px-4 text-[10px] font-bold uppercase tracking-wider h-6">
+        <div className="flex-1 min-w-0">
+          <h3 className="font-black text-lg text-foreground leading-tight truncate uppercase italic tracking-tight">
+            {student.name}
+          </h3>
+          <Badge variant="outline" className="mt-1 bg-orange-500/10 text-orange-600 border-none rounded-full px-3 text-[9px] font-black uppercase tracking-widest h-5">
             {student.plan}
           </Badge>
         </div>
+        <ChevronRight className="h-6 w-6 text-muted-foreground/20 group-hover:text-primary transition-colors" />
       </div>
 
-      {/* Coluna Central: Progresso e Frequência */}
-      <div className="flex-1 space-y-6">
-        {/* Progresso de Semanas */}
-        <div className="space-y-3">
-          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Progresso do Plano (Semanas)</p>
-          <div className="flex flex-wrap gap-2">
-            {[1, 2, 3, 4].map((num) => (
-              <div 
-                key={num}
-                className={cn(
-                  "h-10 w-12 sm:w-14 rounded-lg flex items-center justify-center text-sm font-bold transition-all border",
-                  student.currentWeek === num 
-                    ? "bg-[#00bfa5] border-[#00bfa5] text-white shadow-lg shadow-[#00bfa5]/20 scale-105" 
-                    : "bg-muted/30 border-transparent text-muted-foreground"
-                )}
-              >
-                {num}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Breakdown de Frequência */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-             <p className="text-[10px] font-black text-[#00bfa5] uppercase tracking-widest">
-                Semana Atual <span className="text-muted-foreground/60 mx-1">•</span> {student.currentWeek} de {student.totalWeeks}
-             </p>
-          </div>
-          
-          <div className="flex justify-between max-w-lg">
-            {student.weeklyAttendance.map((day, idx) => (
-              <div key={idx} className="flex flex-col items-center gap-2">
-                <span className={cn(
-                  "text-[9px] font-black tracking-widest",
-                  day.status === 'today' ? "text-[#ffa726]" : "text-muted-foreground/60"
-                )}>
-                  {day.day}
-                </span>
-                <StatusIcon status={day.status} />
-              </div>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-2 text-sm font-bold">
-            <span className="text-muted-foreground">{student.completedCount}/{student.totalExpected} treinos</span>
-            <span className="text-muted-foreground/30">•</span>
-            <span className={cn(
-              student.percent >= 80 ? "text-[#00bfa5]" : student.percent >= 50 ? "text-[#ffa726]" : "text-red-500"
-            )}>
-              {student.percent}%
-            </span>
-          </div>
+      {/* Meio: Progresso do Plano */}
+      <div className="space-y-3">
+        <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] px-1">Progresso do Plano (Semanas)</p>
+        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+          {[1, 2, 3, 4].map((num) => (
+            <div 
+              key={num}
+              className={cn(
+                "h-11 min-w-[50px] flex-1 rounded-xl flex items-center justify-center text-sm font-black transition-all border",
+                student.currentWeek === num 
+                  ? "bg-[#00bfa5] border-[#00bfa5] text-white shadow-lg shadow-[#00bfa5]/20" 
+                  : "bg-muted/30 border-transparent text-muted-foreground/40"
+              )}
+            >
+              {num}
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Coluna Direita: Ação */}
-      <div className="flex items-center justify-end md:pl-4">
-        <button className="h-10 w-10 rounded-full flex items-center justify-center hover:bg-muted/50 transition-colors">
-          <ChevronRight className="h-6 w-6 text-muted-foreground/40 group-hover:text-primary transition-colors" />
-        </button>
+      {/* Baixo: Frequência da Semana */}
+      <div className="space-y-4 pt-2">
+        <div className="flex justify-between items-center px-1">
+          {student.weeklyAttendance.map((day, idx) => (
+            <div key={idx} className="flex flex-col items-center gap-2">
+              <span className={cn(
+                "text-[9px] font-black tracking-widest",
+                day.status === 'today' ? "text-[#ffa726]" : "text-muted-foreground/40"
+              )}>
+                {day.day}
+              </span>
+              <StatusIcon status={day.status} />
+            </div>
+          ))}
+        </div>
+
+        {/* Rodapé do Card: Estatísticas */}
+        <div className="flex items-center gap-2 text-sm font-black px-1">
+          <span className="text-muted-foreground uppercase text-[10px] tracking-widest">{student.completedCount}/{student.totalExpected} treinos realizados</span>
+          <span className="text-muted-foreground/20">•</span>
+          <span className={cn(
+            "text-[12px] italic uppercase tracking-tighter",
+            student.percent >= 80 ? "text-[#00bfa5]" : student.percent >= 50 ? "text-[#ffa726]" : "text-red-500"
+          )}>
+            {student.percent}% DE FREQUÊNCIA
+          </span>
+        </div>
       </div>
     </div>
   );
@@ -252,19 +197,19 @@ export default function AlunosPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300 pb-20">
-      {/* Header Fiel à Referência */}
-      <div className="app-container py-8 border-b border-border/10 bg-card/30 backdrop-blur-md sticky top-0 z-20">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+      {/* Header */}
+      <div className="app-container py-8 bg-card/30 backdrop-blur-md sticky top-0 z-20 border-b border-border/10">
+        <div className="flex flex-col gap-6 mobile-content-wrapper">
           <div className="space-y-1">
-            <h1 className="text-3xl font-bold tracking-tight text-foreground">Alunos</h1>
-            <p className="text-muted-foreground text-sm font-medium">Acompanhe o progresso e a frequência semanal dos seus alunos.</p>
+            <h1 className="text-3xl font-black tracking-tighter text-foreground uppercase italic">Alunos</h1>
+            <p className="text-muted-foreground text-[13px] font-bold uppercase tracking-tight">Gestão de performance e frequência</p>
           </div>
           
-          <div className="relative w-full md:w-96 group">
+          <div className="relative group">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
             <Input 
-              placeholder="Buscar aluno..." 
-              className="h-12 pl-12 rounded-2xl bg-card border-border/40 shadow-sm focus-visible:ring-primary/20 text-sm"
+              placeholder="Pesquisar aluno..." 
+              className="h-12 pl-12 rounded-2xl bg-card border-border/40 shadow-sm focus-visible:ring-primary/20 text-sm font-bold"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -272,29 +217,28 @@ export default function AlunosPage() {
         </div>
       </div>
 
-      {/* Lista de Alunos */}
+      {/* Lista */}
       <div className="app-container py-8">
-        <div className="space-y-4 max-w-5xl mx-auto">
+        <div className="space-y-5 mobile-content-wrapper">
           {studentsData.map((student) => (
             <StudentCard key={student.id} student={student} />
           ))}
         </div>
 
-        {/* Footer Info */}
-        <div className="mt-10 text-center">
-          <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
-            Exibindo {studentsData.length} guerreiros ativos no plano
+        {/* Info Final */}
+        <div className="mt-12 text-center mobile-content-wrapper">
+          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em]">
+            FIM DA LISTA • {studentsData.length} ALUNOS ATIVOS
           </p>
         </div>
       </div>
 
-      {/* Floating Action Button Mobile */}
-      <div className="fixed bottom-8 right-8 z-50 md:hidden">
-        <Button size="icon" className="h-14 w-14 rounded-2xl bg-primary shadow-2xl text-white active:scale-90 transition-transform">
+      {/* FAB Mobile */}
+      <div className="fixed bottom-10 right-8 z-50 md:hidden">
+        <Button size="icon" className="h-14 w-14 rounded-2xl bg-primary shadow-2xl shadow-primary/40 text-white active:scale-90 transition-transform">
           <Plus className="h-7 w-7" />
         </Button>
       </div>
     </div>
   );
 }
-
