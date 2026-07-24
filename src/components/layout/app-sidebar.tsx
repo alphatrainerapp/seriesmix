@@ -40,7 +40,7 @@ const functionsItems = [
   { href: '/alunos', label: 'Alunos', icon: Users },
   { href: '/enviar-treino', label: 'Enviar Treino', icon: Send },
   { href: '/financeiro', label: 'Financeiro', icon: CreditCard, hasSubmenu: true },
-  { href: '/treinos', label: 'Treinos/Exercícios', icon: Dumbbell, hasSubmenu: true },
+  { href: '/', label: 'Treinos/Exercícios', icon: Dumbbell, hasSubmenu: true },
   { href: '/aplicativo', label: 'Aplicativo', icon: Smartphone },
   { href: '/periodizacao', label: 'Periodização', icon: BarChart3 },
   { href: '/planos', label: 'Planos', icon: List },
@@ -92,7 +92,7 @@ export function AppSidebar() {
                     tooltip={item.label}
                     className="hover:bg-white/5 active:bg-white/10 h-11 px-4 text-white group"
                   >
-                    <Link href="#" className="flex items-center justify-between w-full">
+                    <Link href={item.href} className="flex items-center justify-between w-full">
                       <div className="flex items-center gap-3">
                         <item.icon className="h-5 w-5 text-white/70 group-hover:text-white transition-colors shrink-0" />
                         <span className="font-bold text-[13px] tracking-tight group-data-[collapsible=icon]:hidden">{item.label}</span>
@@ -124,7 +124,7 @@ export function AppSidebar() {
                     tooltip={item.label}
                     className="hover:bg-white/5 active:bg-white/10 h-11 px-4 text-white group"
                   >
-                    <Link href="#" className="flex items-center gap-3">
+                    <Link href={item.href} className="flex items-center gap-3">
                       <item.icon className="h-5 w-5 text-white/70 group-hover:text-white transition-colors shrink-0" />
                       <span className="font-bold text-[13px] tracking-tight group-data-[collapsible=icon]:hidden">{item.label}</span>
                     </Link>
@@ -163,3 +163,4 @@ export function AppSidebar() {
     </Sidebar>
   );
 }
+
