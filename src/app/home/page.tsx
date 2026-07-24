@@ -29,6 +29,7 @@ import {
   Pie,
   Cell,
   Label,
+  LabelList,
   Separator
 } from 'recharts';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -166,7 +167,7 @@ export default function HomePage() {
 
               <div className="h-[200px] w-full mb-12">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={activeStudentsData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+                  <BarChart data={activeStudentsData} margin={{ top: 20, right: 0, left: -20, bottom: 0 }}>
                     <XAxis 
                       dataKey="month" 
                       axisLine={false} 
@@ -184,7 +185,17 @@ export default function HomePage() {
                       fill="#2563eb" 
                       radius={[4, 4, 0, 0]} 
                       barSize={45}
-                    />
+                    >
+                      <LabelList 
+                        dataKey="value" 
+                        position="top" 
+                        fill="currentColor" 
+                        fontSize={12} 
+                        fontWeight="900" 
+                        offset={10} 
+                        className="italic"
+                      />
+                    </Bar>
                   </BarChart>
                 </ResponsiveContainer>
               </div>
