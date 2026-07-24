@@ -8,13 +8,15 @@ import {
   Trophy, 
   Plus, 
   MessageCircle,
-  Hand
+  Hand,
+  Users
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Progress } from '@/components/ui/progress';
 import { 
   BarChart, 
   Bar, 
@@ -26,20 +28,18 @@ import {
   PieChart,
   Pie,
   Cell,
-  Label
+  Label,
+  Separator
 } from 'recharts';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { cn } from '@/lib/utils';
 
-// --- Dados Mockados para os Gráficos ---
+// --- Dados Mockados ---
 
 const activeStudentsData = [
-  { month: 'Fev', value: 20 },
-  { month: 'Mar', value: 20 },
-  { month: 'Abr', value: 19 },
-  { month: 'Mai', value: 21 },
-  { month: 'Jun', value: 16 },
-  { month: 'Jul', value: 17 },
+  { month: 'fev', value: 20 },
+  { month: 'mar', value: 20 },
+  { month: 'abr', value: 19 },
 ];
 
 const workoutStatusData = [
@@ -47,16 +47,16 @@ const workoutStatusData = [
   { name: 'Pendentes', value: 5, color: 'hsl(var(--muted))' },
 ];
 
-const plansData = [
-  { name: 'Sem plano', value: 0, color: '#ffa726' },
-  { name: 'Mensal', value: 2, color: '#90a4ae' },
-  { name: 'Trimestral', value: 5, color: '#00bfa5' },
-  { name: 'Semestral', value: 3, color: '#90a4ae' },
-  { name: 'free', value: 3, color: '#ffa726' },
-  { name: 'Anual 12+2', value: 3, color: '#90a4ae' },
+const plansDistribution = [
+  { name: 'Sem plano', value: 0, max: 10, color: '#ffa726', initial: 'S' },
+  { name: 'Mensal', value: 0, max: 10, color: '#90a4ae', initial: 'M' },
+  { name: 'Trimestral', value: 2, max: 10, color: '#ffa726', initial: 'T' },
+  { name: 'Semestral', value: 6, max: 10, color: '#90a4ae', initial: 'S' },
+  { name: 'free', value: 7, max: 10, color: '#ffa726', initial: 'f' },
+  { name: 'Anual 12+2', value: 1, max: 10, color: '#90a4ae', initial: 'A' },
 ];
 
-// --- Sub-componentes do Dashboard ---
+// --- Sub-componentes ---
 
 const DashboardHeader = () => {
   const userAvatar = PlaceHolderImages.find(img => img.id === 'user-avatar');
@@ -94,6 +94,34 @@ const DashboardHeader = () => {
   );
 };
 
+const PlanProgressBar = ({ plan }: { plan: typeof plansDistribution[0] }) => {
+  const percentage = (plan.value / plan.max) * 100;
+  return (
+    <div className="flex items-center gap-4 group">
+      <div 
+        className="h-8 w-8 rounded-full flex items-center justify-center text-white text-[12px] font-black shrink-0 shadow-sm transition-transform group-hover:scale-110" 
+        style={{ backgroundColor: plan.color }}
+      >
+        {plan.initial}
+      </div>
+      <div className="flex-1 space-y-1">
+        <div className="flex justify-between items-center mb-0.5">
+          <span className="text-[12px] font-bold text-muted-foreground uppercase tracking-tight">{plan.name}</span>
+        </div>
+        <div className="relative h-6 w-full bg-muted/30 rounded-full overflow-hidden border border-border/5">
+          <div 
+            className="absolute top-0 left-0 h-full bg-blue-600 transition-all duration-500 rounded-full flex items-center justify-center"
+            style={{ width: `${Math.max(percentage, 8)}%` }}
+          >
+            {plan.value > 0 && <span className="text-[10px] font-black text-white ml-2">{plan.value}</span>}
+          </div>
+          {plan.value === 0 && <span className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 text-[10px] font-black text-muted-foreground/40">0</span>}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function HomePage() {
   return (
     <div className="app-container py-6 min-h-screen bg-background text-foreground transition-colors duration-300">
@@ -109,61 +137,83 @@ export default function HomePage() {
         </h1>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-20">
         
-        {/* Coluna Esquerda - Gráfico Principal */}
+        {/* Coluna Esquerda - Unified Stats Card */}
         <div className="lg:col-span-8 space-y-6">
-          <Card className="bg-card border border-border/40 p-6 rounded-[24px] shadow-sm">
-            <div className="flex items-center justify-between mb-8">
-              <h3 className="text-xl font-black text-foreground uppercase italic tracking-tight">Alunos ativos</h3>
-              <Button variant="ghost" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground gap-2">
-                Últimos 6 Meses <ChevronDown className="h-3 w-3" />
-              </Button>
-            </div>
-            <div className="h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={activeStudentsData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <CartesianGrid vertical={false} stroke="currentColor" strokeOpacity={0.05} />
-                  <XAxis 
-                    dataKey="month" 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tick={{ fill: 'currentColor', fillOpacity: 0.5, fontSize: 10, fontWeight: 'bold' }} 
-                    dy={10}
-                  />
-                  <YAxis 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tick={{ fill: 'currentColor', fillOpacity: 0.5, fontSize: 10, fontWeight: 'bold' }} 
-                  />
-                  <Tooltip 
-                    cursor={{ fill: 'currentColor', fillOpacity: 0.05 }}
-                    contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '12px', color: 'hsl(var(--foreground))' }}
-                  />
-                  <Bar 
-                    dataKey="value" 
-                    fill="#00bfa5" 
-                    radius={[8, 8, 0, 0]} 
-                    barSize={60}
-                    label={{ position: 'top', fill: '#00bfa5', fontSize: 10, fontWeight: 'black', dy: -10 }}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
+          <Card className="bg-card border border-border/40 rounded-[28px] shadow-sm overflow-hidden">
+            <div className="p-8">
+              <div className="flex items-start justify-between mb-10">
+                <div className="space-y-1">
+                  <h3 className="text-[20px] font-black text-foreground uppercase italic tracking-tight">Alunos ativos</h3>
+                  <p className="text-sm text-muted-foreground font-medium">Últimos 6 Meses</p>
+                </div>
+                <div className="flex bg-muted/40 p-1 rounded-xl">
+                  {['3M', '6M', '12M'].map((p) => (
+                    <Button 
+                      key={p} 
+                      variant="ghost" 
+                      className={cn(
+                        "h-8 px-4 text-[10px] font-black rounded-lg transition-all",
+                        p === '3M' ? "bg-blue-600 text-white shadow-md" : "text-muted-foreground hover:bg-muted"
+                      )}
+                    >
+                      {p}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="h-[200px] w-full mb-12">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={activeStudentsData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+                    <XAxis 
+                      dataKey="month" 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{ fill: 'currentColor', fillOpacity: 0.4, fontSize: 11, fontWeight: 'bold' }} 
+                      dy={10}
+                    />
+                    <YAxis hide />
+                    <Tooltip 
+                      cursor={{ fill: 'currentColor', fillOpacity: 0.05 }}
+                      contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '12px', color: 'hsl(var(--foreground))' }}
+                    />
+                    <Bar 
+                      dataKey="value" 
+                      fill="#2563eb" 
+                      radius={[4, 4, 0, 0]} 
+                      barSize={45}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+
+              <div className="h-px bg-border/20 w-full mb-10" />
+
+              <div className="space-y-8">
+                <h3 className="text-[16px] font-black text-foreground uppercase italic tracking-tight">Distribuição por plano</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+                  {plansDistribution.map((plan, i) => (
+                    <PlanProgressBar key={i} plan={plan} />
+                  ))}
+                </div>
+              </div>
             </div>
           </Card>
 
-          {/* Treinos Donut e Lista */}
-          <Card className="bg-card border border-border/40 p-6 rounded-[24px] shadow-sm">
-            <h3 className="text-xl font-black text-foreground uppercase italic tracking-tight mb-6">Treinos</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <div className="h-[240px] relative">
+          {/* Resumo de Treinos Donut */}
+          <Card className="bg-card border border-border/40 p-8 rounded-[28px] shadow-sm">
+            <h3 className="text-xl font-black text-foreground uppercase italic tracking-tight mb-8">Treinos pendentes</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+              <div className="h-[260px] relative">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
                       data={workoutStatusData}
-                      innerRadius={70}
-                      outerRadius={90}
-                      paddingAngle={5}
+                      innerRadius={80}
+                      outerRadius={100}
+                      paddingAngle={8}
                       dataKey="value"
                     >
                       {workoutStatusData.map((entry, index) => (
@@ -173,39 +223,31 @@ export default function HomePage() {
                         value="12" 
                         position="center" 
                         fill="currentColor" 
-                        style={{ fontSize: '32px', fontWeight: '900', fontStyle: 'italic' }} 
+                        style={{ fontSize: '38px', fontWeight: '900', fontStyle: 'italic' }} 
                       />
                     </Pie>
                     <Tooltip />
                   </PieChart>
                 </ResponsiveContainer>
-                <div className="absolute top-1/2 left-[80%] -translate-y-1/2 space-y-4 hidden md:block">
-                  <div className="text-right">
-                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest leading-none">41.7%</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-[10px] font-black text-primary uppercase tracking-widest leading-none">58.3%</p>
-                  </div>
-                </div>
               </div>
 
-              <div className="space-y-3 max-h-[240px] overflow-y-auto no-scrollbar pr-2">
+              <div className="space-y-4 max-h-[260px] overflow-y-auto no-scrollbar pr-2">
                 {[
-                  { name: 'Suellen Nunes dos Santos Souza', week: 1, avatar: null },
-                  { name: 'Fabiele Costa Pinheiro', week: 1, avatar: null },
-                  { name: 'teste app', week: 1, avatar: null },
+                  { name: 'Suellen Nunes dos Santos Souza', week: 1 },
+                  { name: 'Fabiele Costa Pinheiro', week: 1 },
+                  { name: 'Ricardo Oliveira Silva', week: 2 },
                 ].map((student, i) => (
-                  <div key={i} className="flex items-center justify-between gap-4 p-3 rounded-2xl bg-muted/30 border border-border/40">
+                  <div key={i} className="flex items-center justify-between gap-4 p-4 rounded-[20px] bg-muted/20 border border-border/20 transition-all hover:border-primary/30">
                     <div className="flex items-center gap-3">
                       <Avatar className="h-10 w-10">
-                        <AvatarFallback className="bg-muted text-muted-foreground text-xs font-black">SN</AvatarFallback>
+                        <AvatarFallback className="bg-muted text-muted-foreground text-[10px] font-black">ST</AvatarFallback>
                       </Avatar>
                       <div className="min-w-0">
-                        <p className="text-xs font-black text-foreground uppercase truncate">{student.name}</p>
-                        <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Semana: {student.week}</p>
+                        <p className="text-[12px] font-black text-foreground uppercase truncate">{student.name}</p>
+                        <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest">Semana: {student.week}</p>
                       </div>
                     </div>
-                    <Button size="sm" className="bg-orange-400 hover:bg-orange-500 text-black font-black text-[9px] uppercase tracking-widest h-8 px-4 rounded-full border-none shadow-sm">
+                    <Button className="bg-orange-500 hover:bg-orange-600 text-white font-black text-[9px] uppercase tracking-widest h-8 px-5 rounded-full border-none shadow-sm">
                       Montar
                     </Button>
                   </div>
@@ -215,39 +257,38 @@ export default function HomePage() {
           </Card>
         </div>
 
-        {/* Coluna Direita */}
+        {/* Coluna Direita - Hoje */}
         <div className="lg:col-span-4 space-y-6">
-          {/* Hoje - Treinou / Não Treinou */}
-          <Card className="bg-card border border-border/40 p-6 rounded-[24px] shadow-sm">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-sm font-black text-muted-foreground uppercase tracking-widest">Hoje</h3>
-              <ChevronDown className="h-4 w-4 text-muted-foreground" />
+          <Card className="bg-card border border-border/40 p-8 rounded-[28px] shadow-sm">
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="text-sm font-black text-muted-foreground uppercase tracking-[0.2em]">Resumo de Hoje</h3>
+              <Users className="h-4 w-4 text-muted-foreground/40" />
             </div>
 
             <Tabs defaultValue="treinou" className="w-full">
-              <TabsList className="grid grid-cols-2 bg-muted p-1 rounded-xl h-11 mb-8">
-                <TabsTrigger value="nao-treinou" className="rounded-lg text-[10px] font-black uppercase tracking-widest data-[state=active]:bg-background data-[state=active]:text-foreground">Não Treinou</TabsTrigger>
-                <TabsTrigger value="treinou" className="rounded-lg text-[10px] font-black uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-white">Treinou</TabsTrigger>
+              <TabsList className="grid grid-cols-2 bg-muted/40 p-1.5 rounded-[16px] h-12 mb-10">
+                <TabsTrigger value="nao-treinou" className="rounded-xl text-[10px] font-black uppercase tracking-widest data-[state=active]:bg-background data-[state=active]:text-foreground">Não Treinou</TabsTrigger>
+                <TabsTrigger value="treinou" className="rounded-xl text-[10px] font-black uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-white">Treinou</TabsTrigger>
               </TabsList>
               
-              <div className="flex flex-col items-center mb-8">
-                <span className="text-7xl font-black text-primary italic leading-none">2</span>
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mt-2">Alunos que treinaram</p>
+              <div className="flex flex-col items-center mb-10">
+                <span className="text-8xl font-black text-primary italic leading-none shadow-primary/10">2</span>
+                <p className="text-[11px] font-black text-muted-foreground uppercase tracking-[0.2em] mt-4">Concluíram o treino</p>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-5">
                 {[
                   { name: 'Eduarda Borges dos Santos', week: 4, trophy: true },
                   { name: 'Vinícius Fernandes de Jesus', week: 1, trophy: false },
                 ].map((s, i) => (
-                  <div key={i} className="flex items-center justify-between group cursor-pointer">
+                  <div key={i} className="flex items-center justify-between group cursor-pointer p-2 rounded-xl transition-colors hover:bg-muted/10">
                     <div className="flex items-center gap-3">
-                      <Avatar className="h-9 w-9">
-                        <AvatarFallback className="bg-muted text-muted-foreground text-xs font-black">E</AvatarFallback>
+                      <Avatar className="h-10 w-10 border border-border/10">
+                        <AvatarFallback className="bg-muted text-muted-foreground text-[10px] font-black">AL</AvatarFallback>
                       </Avatar>
                       <div>
-                        <p className="text-xs font-black text-foreground uppercase leading-tight group-hover:text-primary transition-colors">{s.name}</p>
-                        <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-0.5">Semana: {s.week}</p>
+                        <p className="text-[13px] font-black text-foreground uppercase leading-tight group-hover:text-primary transition-colors">{s.name}</p>
+                        <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-1">Semana: {s.week}</p>
                       </div>
                     </div>
                     {s.trophy && <Trophy className="h-4 w-4 text-yellow-500 fill-yellow-500/20" />}
@@ -257,47 +298,30 @@ export default function HomePage() {
             </Tabs>
           </Card>
 
-          {/* Planos distribution */}
-          <Card className="bg-card border border-border/40 p-6 rounded-[24px] shadow-sm">
-            <h3 className="text-xl font-black text-foreground uppercase italic tracking-tight mb-8">Planos</h3>
-            
-            <div className="h-[180px] w-full mb-8">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={plansData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
-                  <XAxis 
-                    dataKey="name" 
-                    hide
-                  />
-                  <Bar dataKey="value" radius={[4, 4, 0, 0]} barSize={40}>
-                    {plansData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-
-            <div className="grid grid-cols-2 gap-y-4 gap-x-2">
-              {plansData.map((plan, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <div className="h-4 w-4 rounded-md flex items-center justify-center text-[8px] font-black text-black uppercase" style={{ backgroundColor: plan.color }}>
-                    {plan.name[0]}
-                  </div>
-                  <span className="text-[9px] font-black text-foreground uppercase tracking-widest truncate">{plan.name}</span>
+          <Card className="bg-primary/5 border border-primary/20 p-8 rounded-[28px] shadow-inner-sm">
+             <div className="flex flex-col items-center text-center space-y-4">
+                <div className="h-14 w-14 rounded-full bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/20">
+                  <Plus className="h-8 w-8" />
                 </div>
-              ))}
-            </div>
+                <div className="space-y-1">
+                  <h4 className="font-black text-foreground uppercase tracking-tight italic">Novo Aluno?</h4>
+                  <p className="text-xs text-muted-foreground font-medium leading-relaxed px-4">Cadastre um novo aluno e comece a prescrever treinos agora.</p>
+                </div>
+                <Button className="w-full bg-primary hover:bg-primary/90 text-white rounded-xl h-11 font-black uppercase text-[11px] tracking-widest shadow-lg shadow-primary/20 mt-2">
+                  CADASTRAR ALUNO
+                </Button>
+             </div>
           </Card>
         </div>
       </div>
       
-      {/* Botões de Ação Flutuantes / Rodapé */}
-      <div className="fixed bottom-6 right-6 flex flex-col gap-3">
-        <Button size="icon" className="h-12 w-12 rounded-full bg-primary shadow-xl shadow-primary/20">
-          <Plus className="h-6 w-6 text-white" />
+      {/* Ações Flutuantes Desktop */}
+      <div className="fixed bottom-8 right-8 flex flex-col gap-4 hidden md:flex">
+        <Button size="icon" className="h-14 w-14 rounded-full bg-primary shadow-2xl shadow-primary/30 active:scale-90 transition-transform">
+          <Plus className="h-7 w-7 text-white" />
         </Button>
-        <Button size="icon" className="h-12 w-12 rounded-full bg-muted/50 backdrop-blur-xl border border-border/40 shadow-xl">
-          <MessageCircle className="h-6 w-6 text-foreground" />
+        <Button size="icon" className="h-14 w-14 rounded-full bg-card backdrop-blur-xl border border-border/40 shadow-2xl active:scale-90 transition-transform">
+          <MessageCircle className="h-7 w-7 text-foreground" />
         </Button>
       </div>
     </div>
