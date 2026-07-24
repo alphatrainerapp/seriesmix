@@ -164,102 +164,8 @@ export default function HomePage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-20">
         
-        {/* CARD 1: RESUMO DE HOJE (Ordem 1 no Mobile, Coluna Direita no Desktop) */}
-        <Card className="order-1 lg:order-2 lg:col-span-4 bg-card border border-border/40 p-8 rounded-[28px] shadow-sm lg:row-span-2">
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="text-sm font-black text-muted-foreground uppercase tracking-[0.2em]">Resumo de Hoje</h3>
-            <Users className="h-4 w-4 text-muted-foreground/40" />
-          </div>
-
-          <Tabs defaultValue="treinou" className="w-full">
-            <TabsList className="grid grid-cols-2 bg-muted/40 p-1.5 rounded-[16px] h-12 mb-10">
-              <TabsTrigger value="nao-treinou" className="rounded-xl text-[10px] font-black uppercase tracking-widest data-[state=active]:bg-background data-[state=active]:text-foreground">Não Treinou</TabsTrigger>
-              <TabsTrigger value="treinou" className="rounded-xl text-[10px] font-black uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-white">Treinou</TabsTrigger>
-            </TabsList>
-            
-            <div className="flex flex-col items-center mb-10">
-              <span className="text-8xl font-black text-primary italic leading-none shadow-primary/10">2</span>
-              <p className="text-[11px] font-black text-muted-foreground uppercase tracking-[0.2em] mt-4">Concluíram o treino</p>
-            </div>
-
-            <div className="space-y-5">
-              {[
-                { name: 'Eduarda Borges dos Santos', week: 4, trophy: true },
-                { name: 'Vinícius Fernandes de Jesus', week: 1, trophy: false },
-              ].map((s, i) => (
-                <div key={i} className="flex items-center justify-between group cursor-pointer p-2 rounded-xl transition-colors hover:bg-muted/10">
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-10 w-10 border border-border/10">
-                      <AvatarFallback className="bg-muted text-muted-foreground text-[10px] font-black">AL</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="text-[13px] font-black text-foreground uppercase leading-tight group-hover:text-primary transition-colors">{s.name}</p>
-                      <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-1">Semana: {s.week}</p>
-                    </div>
-                  </div>
-                  {s.trophy && <Trophy className="h-4 w-4 text-yellow-500 fill-yellow-500/20" />}
-                </div>
-              ))}
-            </div>
-          </Tabs>
-        </Card>
-
-        {/* CARD 2: TREINOS PENDENTES (Ordem 2 no Mobile, Abaixo de Alunos Ativos no Desktop) */}
-        <Card className="order-2 lg:order-3 lg:col-span-8 bg-card border border-border/40 p-8 rounded-[28px] shadow-sm">
-          <h3 className="text-xl font-black text-foreground uppercase italic tracking-tight mb-8">Treinos pendentes</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-            <div className="h-[260px] relative">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={workoutStatusData}
-                    innerRadius={80}
-                    outerRadius={100}
-                    paddingAngle={8}
-                    dataKey="value"
-                  >
-                    {workoutStatusData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
-                    ))}
-                    <Label 
-                      value="12" 
-                      position="center" 
-                      fill="currentColor" 
-                      style={{ fontSize: '38px', fontWeight: '900', fontStyle: 'italic' }} 
-                    />
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-
-            <div className="space-y-4 max-h-[260px] overflow-y-auto no-scrollbar pr-2">
-              {[
-                { name: 'Suellen Nunes dos Santos Souza', week: 1 },
-                { name: 'Fabiele Costa Pinheiro', week: 1 },
-                { name: 'Ricardo Oliveira Silva', week: 2 },
-              ].map((student, i) => (
-                <div key={i} className="flex items-center justify-between gap-4 p-4 rounded-[20px] bg-muted/20 border border-border/20 transition-all hover:border-primary/30">
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-10 w-10">
-                      <AvatarFallback className="bg-muted text-muted-foreground text-[10px] font-black">ST</AvatarFallback>
-                    </Avatar>
-                    <div className="min-w-0">
-                      <p className="text-[12px] font-black text-foreground uppercase truncate">{student.name}</p>
-                      <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest">Semana: {student.week}</p>
-                    </div>
-                  </div>
-                  <Button className="bg-orange-500 hover:bg-orange-600 text-white font-black text-[9px] uppercase tracking-widest h-8 px-5 rounded-full border-none shadow-sm">
-                    Montar
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Card>
-
-        {/* CARD 3: ALUNOS ATIVOS E PLANOS (Ordem 3 no Mobile, Topo Esquerda no Desktop) */}
-        <Card className="order-3 lg:order-1 lg:col-span-8 bg-card border border-border/40 rounded-[28px] shadow-sm overflow-hidden">
+        {/* CARD 3: ALUNOS ATIVOS E PLANOS (Ordem 1 no Mobile, Topo Esquerda no Desktop) */}
+        <Card className="order-1 lg:order-1 lg:col-span-8 bg-card border border-border/40 rounded-[28px] shadow-sm overflow-hidden">
           <div className="p-8">
             <div className="flex items-start justify-between mb-10">
               <div className="space-y-1">
@@ -327,6 +233,100 @@ export default function HomePage() {
                   <PlanProgressBar key={i} plan={plan} />
                 ))}
               </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* CARD 1: RESUMO DE HOJE (Ordem 2 no Mobile, Coluna Direita no Desktop) */}
+        <Card className="order-2 lg:order-2 lg:col-span-4 bg-card border border-border/40 p-8 rounded-[28px] shadow-sm lg:row-span-2">
+          <div className="flex items-center justify-between mb-8">
+            <h3 className="text-sm font-black text-muted-foreground uppercase tracking-[0.2em]">Resumo de Hoje</h3>
+            <Users className="h-4 w-4 text-muted-foreground/40" />
+          </div>
+
+          <Tabs defaultValue="treinou" className="w-full">
+            <TabsList className="grid grid-cols-2 bg-muted/40 p-1.5 rounded-[16px] h-12 mb-10">
+              <TabsTrigger value="nao-treinou" className="rounded-xl text-[10px] font-black uppercase tracking-widest data-[state=active]:bg-background data-[state=active]:text-foreground">Não Treinou</TabsTrigger>
+              <TabsTrigger value="treinou" className="rounded-xl text-[10px] font-black uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-white">Treinou</TabsTrigger>
+            </TabsList>
+            
+            <div className="flex flex-col items-center mb-10">
+              <span className="text-8xl font-black text-primary italic leading-none shadow-primary/10">2</span>
+              <p className="text-[11px] font-black text-muted-foreground uppercase tracking-[0.2em] mt-4">Concluíram o treino</p>
+            </div>
+
+            <div className="space-y-5">
+              {[
+                { name: 'Eduarda Borges dos Santos', week: 4, trophy: true },
+                { name: 'Vinícius Fernandes de Jesus', week: 1, trophy: false },
+              ].map((s, i) => (
+                <div key={i} className="flex items-center justify-between group cursor-pointer p-2 rounded-xl transition-colors hover:bg-muted/10">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="h-10 w-10 border border-border/10">
+                      <AvatarFallback className="bg-muted text-muted-foreground text-[10px] font-black">AL</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="text-[13px] font-black text-foreground uppercase leading-tight group-hover:text-primary transition-colors">{s.name}</p>
+                      <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-1">Semana: {s.week}</p>
+                    </div>
+                  </div>
+                  {s.trophy && <Trophy className="h-4 w-4 text-yellow-500 fill-yellow-500/20" />}
+                </div>
+              ))}
+            </div>
+          </Tabs>
+        </Card>
+
+        {/* CARD 2: TREINOS PENDENTES (Ordem 3 no Mobile, Abaixo de Alunos Ativos no Desktop) */}
+        <Card className="order-3 lg:order-3 lg:col-span-8 bg-card border border-border/40 p-8 rounded-[28px] shadow-sm">
+          <h3 className="text-xl font-black text-foreground uppercase italic tracking-tight mb-8">Treinos pendentes</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+            <div className="h-[260px] relative">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={workoutStatusData}
+                    innerRadius={80}
+                    outerRadius={100}
+                    paddingAngle={8}
+                    dataKey="value"
+                  >
+                    {workoutStatusData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
+                    ))}
+                    <Label 
+                      value="12" 
+                      position="center" 
+                      fill="currentColor" 
+                      style={{ fontSize: '38px', fontWeight: '900', fontStyle: 'italic' }} 
+                    />
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="space-y-4 max-h-[260px] overflow-y-auto no-scrollbar pr-2">
+              {[
+                { name: 'Suellen Nunes dos Santos Souza', week: 1 },
+                { name: 'Fabiele Costa Pinheiro', week: 1 },
+                { name: 'Ricardo Oliveira Silva', week: 2 },
+              ].map((student, i) => (
+                <div key={i} className="flex items-center justify-between gap-4 p-4 rounded-[20px] bg-muted/20 border border-border/20 transition-all hover:border-primary/30">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="h-10 w-10">
+                      <AvatarFallback className="bg-muted text-muted-foreground text-[10px] font-black">ST</AvatarFallback>
+                    </Avatar>
+                    <div className="min-w-0">
+                      <p className="text-[12px] font-black text-foreground uppercase truncate">{student.name}</p>
+                      <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest">Semana: {student.week}</p>
+                    </div>
+                  </div>
+                  <Button className="bg-orange-500 hover:bg-orange-600 text-white font-black text-[9px] uppercase tracking-widest h-8 px-5 rounded-full border-none shadow-sm">
+                    Montar
+                  </Button>
+                </div>
+              ))}
             </div>
           </div>
         </Card>
