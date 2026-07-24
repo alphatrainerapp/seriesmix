@@ -3,18 +3,13 @@
 import * as React from 'react';
 import { 
   Search, 
-  Plus, 
-  User, 
-  MessageSquare,
-  Users,
-  CheckCircle2,
-  XCircle,
-  Clock,
-  AlertTriangle,
-  Archive,
-  ChevronDown,
-  Mail,
-  MoreVertical
+  ChevronRight, 
+  CheckCircle2, 
+  XCircle, 
+  Circle,
+  Plus,
+  Bell,
+  Menu
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -22,275 +17,284 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
-// --- Dados Mockados Estendidos ---
+// --- Tipagens e Dados Mockados ---
 
-const studentsData = [
-  { 
-    id: '1', 
-    name: 'Alan', 
-    status: 'active', 
-    plan: 'free', 
-    planProgress: '1/1',
-    observations: 'bb',
-    workouts: [false, false, false, false],
-    whatsappActive: false,
-    avatar: 'https://picsum.photos/seed/alan/200/200'
+type AttendanceStatus = 'completed' | 'missed' | 'today' | 'future';
+
+interface StudentData {
+  id: string;
+  name: string;
+  plan: string;
+  status: 'active' | 'inactive';
+  avatar: string;
+  currentWeek: number;
+  totalWeeks: number;
+  weeklyAttendance: { day: string; status: AttendanceStatus }[];
+  completedCount: number;
+  totalExpected: number;
+  percent: number;
+}
+
+const studentsData: StudentData[] = [
+  {
+    id: '1',
+    name: 'Ana Júlia',
+    plan: 'Mensal',
+    status: 'active',
+    avatar: 'https://picsum.photos/seed/anajulia/200/200',
+    currentWeek: 3,
+    totalWeeks: 4,
+    weeklyAttendance: [
+      { day: 'SEG', status: 'completed' },
+      { day: 'TER', status: 'completed' },
+      { day: 'QUA', status: 'missed' },
+      { day: 'QUI', status: 'today' },
+      { day: 'SEX', status: 'missed' },
+      { day: 'SÁB', status: 'future' },
+      { day: 'DOM', status: 'future' },
+    ],
+    completedCount: 3,
+    totalExpected: 5,
+    percent: 60
   },
-  { 
-    id: '2', 
-    name: 'Alan Luiz pessoal', 
-    status: 'active', 
-    plan: 'Semestral', 
-    planProgress: '1/6',
-    observations: '',
-    workouts: [false, false, false, false],
-    whatsappActive: true,
-    avatar: 'https://picsum.photos/seed/alanluiz/200/200'
+  {
+    id: '2',
+    name: 'Antonio Henrique',
+    plan: 'Mensal',
+    status: 'active',
+    avatar: 'https://picsum.photos/seed/antonio/200/200',
+    currentWeek: 4,
+    totalWeeks: 4,
+    weeklyAttendance: [
+      { day: 'SEG', status: 'completed' },
+      { day: 'TER', status: 'completed' },
+      { day: 'QUA', status: 'completed' },
+      { day: 'QUI', status: 'completed' },
+      { day: 'SEX', status: 'completed' },
+      { day: 'SÁB', status: 'completed' },
+      { day: 'DOM', status: 'completed' },
+    ],
+    completedCount: 7,
+    totalExpected: 7,
+    percent: 100
   },
-  { 
-    id: '3', 
-    name: 'Anadelis de Oliveira', 
-    status: 'active', 
-    plan: 'free', 
-    planProgress: '2/3',
-    observations: '',
-    workouts: [true, true, false, false],
-    whatsappActive: true,
-    avatar: 'https://picsum.photos/seed/anadelis/200/200'
+  {
+    id: '3',
+    name: 'Fabiele Costa',
+    plan: 'Anual 12+2',
+    status: 'active',
+    avatar: 'https://picsum.photos/seed/fabiele/200/200',
+    currentWeek: 3,
+    totalWeeks: 14,
+    weeklyAttendance: [
+      { day: 'SEG', status: 'completed' },
+      { day: 'TER', status: 'missed' },
+      { day: 'QUA', status: 'missed' },
+      { day: 'QUI', status: 'today' },
+      { day: 'SEX', status: 'future' },
+      { day: 'SÁB', status: 'future' },
+      { day: 'DOM', status: 'future' },
+    ],
+    completedCount: 1,
+    totalExpected: 4,
+    percent: 25
   },
-  { 
-    id: '4', 
-    name: 'Eduarda', 
-    status: 'active', 
-    plan: 'Trimestral', 
-    planProgress: '2/3',
-    observations: '',
-    workouts: [false, false, false, false],
-    whatsappActive: true,
-    avatar: 'https://picsum.photos/seed/eduarda/200/200'
+  {
+    id: '4',
+    name: 'Fabio Gameiro',
+    plan: 'Anual 12+2',
+    status: 'active',
+    avatar: 'https://picsum.photos/seed/fabiog/200/200',
+    currentWeek: 2,
+    totalWeeks: 14,
+    weeklyAttendance: [
+      { day: 'SEG', status: 'completed' },
+      { day: 'TER', status: 'completed' },
+      { day: 'QUA', status: 'future' },
+      { day: 'QUI', status: 'today' },
+      { day: 'SEX', status: 'future' },
+      { day: 'SÁB', status: 'future' },
+      { day: 'DOM', status: 'future' },
+    ],
+    completedCount: 2,
+    totalExpected: 2,
+    percent: 100
   },
-  { 
-    id: '5', 
-    name: 'Fabiele Costa Pinheiro', 
-    status: 'active', 
-    plan: 'Anual 12+2', 
-    planProgress: '13/14',
-    observations: 'falsa magra, joelho valgo, escoliose lombar',
-    workouts: [false, false, false, false],
-    whatsappActive: true,
-    avatar: 'https://picsum.photos/seed/fabiele/200/200'
+  {
+    id: '5',
+    name: 'Fer Garcia',
+    plan: 'Mensal',
+    status: 'inactive',
+    avatar: 'https://picsum.photos/seed/fergarcia/200/200',
+    currentWeek: 1,
+    totalWeeks: 4,
+    weeklyAttendance: [
+      { day: 'SEG', status: 'future' },
+      { day: 'TER', status: 'future' },
+      { day: 'QUA', status: 'future' },
+      { day: 'QUI', status: 'future' },
+      { day: 'SEX', status: 'future' },
+      { day: 'SÁB', status: 'future' },
+      { day: 'DOM', status: 'future' },
+    ],
+    completedCount: 0,
+    totalExpected: 0,
+    percent: 0
   },
 ];
 
-const FilterTab = ({ 
-  label, 
-  count, 
-  icon: Icon, 
-  active, 
-  onClick,
-  colorClass
-}: { 
-  label: string, 
-  count: number, 
-  icon: any, 
-  active?: boolean, 
-  onClick: () => void,
-  colorClass?: string
-}) => (
-  <button 
-    onClick={onClick}
-    className={cn(
-      "flex items-center gap-2 px-4 py-3 border-b-2 transition-all whitespace-nowrap",
-      active 
-        ? "border-primary text-primary font-bold" 
-        : "border-transparent text-muted-foreground hover:text-foreground font-medium"
-    )}
-  >
-    <Icon className={cn("h-4 w-4", !active && "opacity-50", active && colorClass)} />
-    <span className="text-sm">{label}</span>
-    <span className={cn("text-xs", active ? "text-primary" : "text-muted-foreground")}>{count}</span>
-  </button>
-);
+// --- Sub-componentes ---
 
-const WorkoutIndicator = ({ completed, index }: { completed: boolean, index: number }) => (
-  <div className={cn(
-    "h-7 w-7 rounded-md flex items-center justify-center text-[10px] font-bold border transition-colors",
-    completed 
-      ? "bg-[#00bfa5] border-[#00bfa5] text-white shadow-sm" 
-      : "bg-muted/30 border-border text-muted-foreground"
-  )}>
-    {index + 1}
-  </div>
-);
+const StatusIcon = ({ status }: { status: AttendanceStatus }) => {
+  switch (status) {
+    case 'completed':
+      return <CheckCircle2 className="h-6 w-6 text-[#00bfa5] fill-[#00bfa5]/10" />;
+    case 'missed':
+      return <XCircle className="h-6 w-6 text-red-500" />;
+    case 'today':
+      return <Circle className="h-6 w-6 text-[#ffa726] stroke-[2.5]" />;
+    default:
+      return <Circle className="h-6 w-6 text-muted-foreground/30 stroke-[1.5]" />;
+  }
+};
+
+const StudentCard = ({ student }: { student: StudentData }) => {
+  return (
+    <div className="bg-card border border-border/40 rounded-[24px] p-5 md:p-7 shadow-sm transition-all hover:shadow-md group flex flex-col md:flex-row gap-6 md:items-center">
+      {/* Coluna Esquerda: Info Básica */}
+      <div className="flex flex-col items-center text-center min-w-[140px] gap-2">
+        <div className="relative">
+          <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
+            <AvatarImage src={student.avatar} alt={student.name} />
+            <AvatarFallback>{student.name.substring(0, 2)}</AvatarFallback>
+          </Avatar>
+          <div className={cn(
+            "absolute bottom-1 right-1 h-4 w-4 rounded-full border-2 border-background",
+            student.status === 'active' ? "bg-emerald-500" : "bg-red-500"
+          )} />
+        </div>
+        <div className="space-y-1">
+          <h3 className="font-bold text-base text-foreground leading-tight">{student.name}</h3>
+          <Badge variant="outline" className="bg-orange-500/10 text-orange-600 border-none rounded-full px-4 text-[10px] font-bold uppercase tracking-wider h-6">
+            {student.plan}
+          </Badge>
+        </div>
+      </div>
+
+      {/* Coluna Central: Progresso e Frequência */}
+      <div className="flex-1 space-y-6">
+        {/* Progresso de Semanas */}
+        <div className="space-y-3">
+          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Progresso do Plano (Semanas)</p>
+          <div className="flex flex-wrap gap-2">
+            {[1, 2, 3, 4].map((num) => (
+              <div 
+                key={num}
+                className={cn(
+                  "h-10 w-12 sm:w-14 rounded-lg flex items-center justify-center text-sm font-bold transition-all border",
+                  student.currentWeek === num 
+                    ? "bg-[#00bfa5] border-[#00bfa5] text-white shadow-lg shadow-[#00bfa5]/20 scale-105" 
+                    : "bg-muted/30 border-transparent text-muted-foreground"
+                )}
+              >
+                {num}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Breakdown de Frequência */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+             <p className="text-[10px] font-black text-[#00bfa5] uppercase tracking-widest">
+                Semana Atual <span className="text-muted-foreground/60 mx-1">•</span> {student.currentWeek} de {student.totalWeeks}
+             </p>
+          </div>
+          
+          <div className="flex justify-between max-w-lg">
+            {student.weeklyAttendance.map((day, idx) => (
+              <div key={idx} className="flex flex-col items-center gap-2">
+                <span className={cn(
+                  "text-[9px] font-black tracking-widest",
+                  day.status === 'today' ? "text-[#ffa726]" : "text-muted-foreground/60"
+                )}>
+                  {day.day}
+                </span>
+                <StatusIcon status={day.status} />
+              </div>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-2 text-sm font-bold">
+            <span className="text-muted-foreground">{student.completedCount}/{student.totalExpected} treinos</span>
+            <span className="text-muted-foreground/30">•</span>
+            <span className={cn(
+              student.percent >= 80 ? "text-[#00bfa5]" : student.percent >= 50 ? "text-[#ffa726]" : "text-red-500"
+            )}>
+              {student.percent}%
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Coluna Direita: Ação */}
+      <div className="flex items-center justify-end md:pl-4">
+        <button className="h-10 w-10 rounded-full flex items-center justify-center hover:bg-muted/50 transition-colors">
+          <ChevronRight className="h-6 w-6 text-muted-foreground/40 group-hover:text-primary transition-colors" />
+        </button>
+      </div>
+    </div>
+  );
+};
 
 export default function AlunosPage() {
-  const [activeFilter, setActiveFilter] = React.useState('ativos');
   const [search, setSearch] = React.useState('');
 
-  const filteredStudents = studentsData.filter(student => 
-    student.name.toLowerCase().includes(search.toLowerCase())
-  );
-
   return (
-    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
-      {/* Header Actions */}
-      <div className="app-container py-6 flex justify-end gap-3">
-        <Button variant="outline" size="icon" className="h-10 w-10 rounded-xl bg-card border-border shadow-sm">
-          <Mail className="h-5 w-5 text-muted-foreground" />
-        </Button>
-        <Button className="bg-[#00bfa5] hover:bg-[#00a894] text-white rounded-xl px-6 h-10 font-bold gap-2 shadow-lg shadow-[#00bfa5]/20 border-none">
-          <Plus className="h-5 w-5" />
-          Novo Aluno
-        </Button>
-      </div>
-
-      {/* Navigation Filters */}
-      <div className="border-b border-border/40 bg-card/30 backdrop-blur-sm sticky top-0 z-10">
-        <div className="app-container flex items-center overflow-x-auto no-scrollbar">
-          <FilterTab 
-            label="Todos" 
-            count={200} 
-            icon={Users} 
-            active={activeFilter === 'todos'} 
-            onClick={() => setActiveFilter('todos')} 
-          />
-          <FilterTab 
-            label="Ativos" 
-            count={16} 
-            icon={User} 
-            active={activeFilter === 'ativos'} 
-            colorClass="text-[#00bfa5]"
-            onClick={() => setActiveFilter('ativos')} 
-          />
-          <FilterTab 
-            label="Inativos" 
-            count={2} 
-            icon={XCircle} 
-            active={activeFilter === 'inativos'} 
-            onClick={() => setActiveFilter('inativos')} 
-          />
-          <FilterTab 
-            label="Pendentes" 
-            count={0} 
-            icon={Clock} 
-            active={activeFilter === 'pendentes'} 
-            onClick={() => setActiveFilter('pendentes')} 
-          />
-          <FilterTab 
-            label="Vencidos" 
-            count={0} 
-            icon={AlertTriangle} 
-            active={activeFilter === 'vencidos'} 
-            onClick={() => setActiveFilter('vencidos')} 
-          />
-          <FilterTab 
-            label="Arquivados" 
-            count={182} 
-            icon={Archive} 
-            active={activeFilter === 'arquivados'} 
-            onClick={() => setActiveFilter('arquivados')} 
-          />
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300 pb-20">
+      {/* Header Fiel à Referência */}
+      <div className="app-container py-8 border-b border-border/10 bg-card/30 backdrop-blur-md sticky top-0 z-20">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <div className="space-y-1">
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">Alunos</h1>
+            <p className="text-muted-foreground text-sm font-medium">Acompanhe o progresso e a frequência semanal dos seus alunos.</p>
+          </div>
+          
+          <div className="relative w-full md:w-96 group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            <Input 
+              placeholder="Buscar aluno..." 
+              className="h-12 pl-12 rounded-2xl bg-card border-border/40 shadow-sm focus-visible:ring-primary/20 text-sm"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
         </div>
       </div>
 
-      {/* Table Section */}
+      {/* Lista de Alunos */}
       <div className="app-container py-8">
-        <div className="bg-card rounded-2xl border border-border/40 shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="bg-muted/10 border-b border-border/40">
-                  <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Aluno</th>
-                  <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Observações</th>
-                  <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-muted-foreground text-center">Plano</th>
-                  <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-muted-foreground text-center">Situação</th>
-                  <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-muted-foreground text-center">Treinos</th>
-                  <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-muted-foreground text-right">Ações</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border/20">
-                {filteredStudents.map((student, idx) => (
-                  <tr key={student.id} className={cn("group transition-colors hover:bg-muted/5", idx % 2 === 1 && "bg-muted/5")}>
-                    <td className="px-6 py-5">
-                      <div className="flex items-center gap-4">
-                        <div className="flex flex-col items-center gap-1">
-                          <Avatar className="h-12 w-12 border-2 border-background shadow-md">
-                            <AvatarImage src={student.avatar} alt={student.name} />
-                            <AvatarFallback>{student.name.substring(0, 2)}</AvatarFallback>
-                          </Avatar>
-                          <button className="text-[10px] text-muted-foreground font-bold hover:text-primary transition-colors">Visualizar perfil</button>
-                        </div>
-                        <span className="font-bold text-sm text-foreground/80">{student.name}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-5">
-                      <p className="text-xs text-muted-foreground max-w-[200px] leading-relaxed">
-                        {student.observations || '--'}
-                      </p>
-                    </td>
-                    <td className="px-6 py-5 text-center">
-                      <div className="flex flex-col items-center gap-1.5">
-                        <Badge className="bg-orange-500 hover:bg-orange-600 text-white border-none rounded-full px-3 py-0.5 text-[9px] font-black uppercase tracking-wider">
-                          {student.plan}
-                        </Badge>
-                        <span className="text-[10px] font-bold text-muted-foreground">{student.planProgress}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-5 text-center">
-                      <Badge className="bg-emerald-500/10 text-emerald-600 border-none rounded-md px-3 py-1.5 text-[10px] font-black uppercase tracking-widest">
-                        ATIVO
-                      </Badge>
-                    </td>
-                    <td className="px-6 py-5">
-                      <div className="flex items-center justify-center gap-2">
-                        {student.workouts.map((completed, i) => (
-                          <WorkoutIndicator key={i} completed={completed} index={i} />
-                        ))}
-                      </div>
-                    </td>
-                    <td className="px-6 py-5 text-right">
-                      <div className="flex items-center justify-end gap-4">
-                        <Button 
-                          className={cn(
-                            "rounded-full h-8 px-5 text-[10px] font-black uppercase tracking-widest gap-2 shadow-sm",
-                            student.whatsappActive 
-                              ? "bg-[#00e676] hover:bg-[#00c853] text-white" 
-                              : "bg-muted text-muted-foreground"
-                          )}
-                        >
-                          chamar
-                          <svg className="h-3 w-3 fill-current" viewBox="0 0 24 24">
-                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.588-5.946 0-6.556 5.332-11.888 11.888-11.888 3.176 0 6.161 1.237 8.404 3.484 2.247 2.247 3.484 5.232 3.484 8.404 0 6.556-5.332 11.888-11.888 11.888-2.003 0-4.01-.505-5.834-1.464l-6.153 1.687zm6.333-3.032l.363.216c1.52.214 3.061.321 4.601.321 5.433 0 9.852-4.419 9.852-9.852 0-2.627-1.023-5.097-2.883-6.957-1.86-1.86-4.329-2.883-6.957-2.883-5.433 0-9.852 4.419-9.852 9.852 0 1.83.508 3.593 1.47 5.143l.235.377-1.103 4.025 4.274-1.171z" />
-                          </svg>
-                        </Button>
-                        <button className="text-muted-foreground hover:text-foreground p-1 transition-colors">
-                          <ChevronDown className="h-6 w-6" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <div className="space-y-4 max-w-5xl mx-auto">
+          {studentsData.map((student) => (
+            <StudentCard key={student.id} student={student} />
+          ))}
         </div>
 
-        {/* Footer info */}
-        <div className="mt-4 flex items-center justify-between text-[11px] font-bold text-muted-foreground uppercase tracking-widest px-2">
-          <span>Mostrando {filteredStudents.length} de 200 guerreiros</span>
-          <div className="flex gap-4">
-             <button className="hover:text-primary">Anterior</button>
-             <button className="hover:text-primary">Próximo</button>
-          </div>
+        {/* Footer Info */}
+        <div className="mt-10 text-center">
+          <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            Exibindo {studentsData.length} guerreiros ativos no plano
+          </p>
         </div>
       </div>
 
-      {/* Floating Messenger (simulating the chat icon in bottom right) */}
-      <div className="fixed bottom-8 right-8 z-50">
-        <Button size="icon" className="h-14 w-14 rounded-2xl bg-[#37474f] hover:bg-[#263238] shadow-2xl text-white">
-          <MessageSquare className="h-7 w-7" />
+      {/* Floating Action Button Mobile */}
+      <div className="fixed bottom-8 right-8 z-50 md:hidden">
+        <Button size="icon" className="h-14 w-14 rounded-2xl bg-primary shadow-2xl text-white active:scale-90 transition-transform">
+          <Plus className="h-7 w-7" />
         </Button>
       </div>
     </div>
   );
 }
+
