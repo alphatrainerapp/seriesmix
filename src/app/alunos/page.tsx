@@ -4,248 +4,291 @@ import * as React from 'react';
 import { 
   Search, 
   Plus, 
-  MoreVertical, 
   User, 
-  Calendar, 
-  Dumbbell, 
-  Send,
-  Filter,
+  MessageSquare,
   Users,
   CheckCircle2,
   XCircle,
-  ChevronRight
+  Clock,
+  AlertTriangle,
+  Archive,
+  ChevronDown,
+  Mail,
+  MoreVertical
 } from 'lucide-react';
-import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger 
-} from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 
-// --- Dados Mockados de Alunos ---
+// --- Dados Mockados Estendidos ---
 
 const studentsData = [
   { 
     id: '1', 
-    name: 'João Silva', 
+    name: 'Alan', 
     status: 'active', 
-    plan: 'Semestral', 
-    lastWorkout: '14/01/2024', 
-    email: 'joao.silva@email.com',
-    avatar: 'https://picsum.photos/seed/joao/200/200'
+    plan: 'free', 
+    planProgress: '1/1',
+    observations: 'bb',
+    workouts: [false, false, false, false],
+    whatsappActive: false,
+    avatar: 'https://picsum.photos/seed/alan/200/200'
   },
   { 
     id: '2', 
-    name: 'Eduarda Borges dos Santos', 
+    name: 'Alan Luiz pessoal', 
     status: 'active', 
-    plan: 'Trimestral', 
-    lastWorkout: '13/01/2024', 
-    email: 'eduarda.borges@email.com',
-    avatar: 'https://picsum.photos/seed/eduarda/200/200'
+    plan: 'Semestral', 
+    planProgress: '1/6',
+    observations: '',
+    workouts: [false, false, false, false],
+    whatsappActive: true,
+    avatar: 'https://picsum.photos/seed/alanluiz/200/200'
   },
   { 
     id: '3', 
-    name: 'Vinícius Fernandes de Jesus', 
+    name: 'Anadelis de Oliveira', 
     status: 'active', 
-    plan: 'Mensal', 
-    lastWorkout: '12/01/2024', 
-    email: 'vinicius.fernandes@email.com',
-    avatar: 'https://picsum.photos/seed/vinicius/200/200'
+    plan: 'free', 
+    planProgress: '2/3',
+    observations: '',
+    workouts: [true, true, false, false],
+    whatsappActive: true,
+    avatar: 'https://picsum.photos/seed/anadelis/200/200'
   },
   { 
     id: '4', 
-    name: 'Suellen Nunes dos Santos', 
-    status: 'inactive', 
-    plan: 'Anual 12+2', 
-    lastWorkout: '05/01/2024', 
-    email: 'suellen.nunes@email.com',
-    avatar: 'https://picsum.photos/seed/suellen/200/200'
+    name: 'Eduarda', 
+    status: 'active', 
+    plan: 'Trimestral', 
+    planProgress: '2/3',
+    observations: '',
+    workouts: [false, false, false, false],
+    whatsappActive: true,
+    avatar: 'https://picsum.photos/seed/eduarda/200/200'
   },
   { 
     id: '5', 
     name: 'Fabiele Costa Pinheiro', 
     status: 'active', 
-    plan: 'free', 
-    lastWorkout: '14/01/2024', 
-    email: 'fabiele.costa@email.com',
+    plan: 'Anual 12+2', 
+    planProgress: '13/14',
+    observations: 'falsa magra, joelho valgo, escoliose lombar',
+    workouts: [false, false, false, false],
+    whatsappActive: true,
     avatar: 'https://picsum.photos/seed/fabiele/200/200'
-  },
-  { 
-    id: '6', 
-    name: 'Ricardo Oliveira Silva', 
-    status: 'active', 
-    plan: 'Trimestral', 
-    lastWorkout: '10/01/2024', 
-    email: 'ricardo.oliveira@email.com',
-    avatar: 'https://picsum.photos/seed/ricardo/200/200'
   },
 ];
 
-const StudentCard = ({ student }: { student: typeof studentsData[0] }) => {
-  return (
-    <Card className="group bg-card border border-border/40 p-5 rounded-[24px] shadow-sm hover:border-primary/40 transition-all hover:shadow-md">
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-4">
-          <div className="relative">
-            <Avatar className="h-14 w-14 border-2 border-background shadow-lg">
-              <AvatarImage src={student.avatar} alt={student.name} />
-              <AvatarFallback>{student.name.substring(0, 2).toUpperCase()}</AvatarFallback>
-            </Avatar>
-            <div className={cn(
-              "absolute -bottom-1 -right-1 h-5 w-5 rounded-full border-4 border-card flex items-center justify-center",
-              student.status === 'active' ? "bg-emerald-500" : "bg-muted-foreground/40"
-            )}>
-              {student.status === 'active' ? (
-                <CheckCircle2 className="h-2.5 w-2.5 text-white" />
-              ) : (
-                <XCircle className="h-2.5 w-2.5 text-white" />
-              )}
-            </div>
-          </div>
-          <div className="min-w-0">
-            <h3 className="text-[15px] font-black text-foreground uppercase tracking-tight truncate leading-tight group-hover:text-primary transition-colors">
-              {student.name}
-            </h3>
-            <p className="text-[11px] text-muted-foreground font-bold truncate mt-0.5">{student.email}</p>
-          </div>
-        </div>
-        
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
-              <MoreVertical className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="rounded-xl border-border/40">
-            <DropdownMenuItem className="font-bold text-[11px] uppercase tracking-widest p-3">Editar Dados</DropdownMenuItem>
-            <DropdownMenuItem className="font-bold text-[11px] uppercase tracking-widest p-3">Ver Medidas</DropdownMenuItem>
-            <DropdownMenuItem className="font-bold text-[11px] uppercase tracking-widest p-3 text-destructive">Arquivar Aluno</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+const FilterTab = ({ 
+  label, 
+  count, 
+  icon: Icon, 
+  active, 
+  onClick,
+  colorClass
+}: { 
+  label: string, 
+  count: number, 
+  icon: any, 
+  active?: boolean, 
+  onClick: () => void,
+  colorClass?: string
+}) => (
+  <button 
+    onClick={onClick}
+    className={cn(
+      "flex items-center gap-2 px-4 py-3 border-b-2 transition-all whitespace-nowrap",
+      active 
+        ? "border-primary text-primary font-bold" 
+        : "border-transparent text-muted-foreground hover:text-foreground font-medium"
+    )}
+  >
+    <Icon className={cn("h-4 w-4", !active && "opacity-50", active && colorClass)} />
+    <span className="text-sm">{label}</span>
+    <span className={cn("text-xs", active ? "text-primary" : "text-muted-foreground")}>{count}</span>
+  </button>
+);
 
-      <div className="grid grid-cols-2 gap-3 mb-6">
-        <div className="bg-muted/30 p-3 rounded-xl border border-border/5">
-          <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-1">PLANO ATUAL</p>
-          <p className="text-[12px] font-black text-primary uppercase truncate">{student.plan}</p>
-        </div>
-        <div className="bg-muted/30 p-3 rounded-xl border border-border/5">
-          <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-1">ÚLTIMO TREINO</p>
-          <div className="flex items-center gap-1.5 text-foreground">
-            <Calendar className="h-3 w-3 opacity-40" />
-            <p className="text-[11px] font-black">{student.lastWorkout}</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-2">
-        <Button className="flex-1 bg-primary hover:bg-primary/90 text-white rounded-xl h-11 font-black uppercase text-[10px] tracking-widest gap-2 shadow-lg shadow-primary/10 transition-transform active:scale-95">
-          <User className="h-3.5 w-3.5" />
-          Perfil
-        </Button>
-        <Button variant="outline" className="flex-1 rounded-xl h-11 border-border hover:bg-muted/50 font-black uppercase text-[10px] tracking-widest gap-2 transition-transform active:scale-95">
-          <Send className="h-3.5 w-3.5" />
-          Treino
-        </Button>
-      </div>
-    </Card>
-  );
-};
+const WorkoutIndicator = ({ completed, index }: { completed: boolean, index: number }) => (
+  <div className={cn(
+    "h-7 w-7 rounded-md flex items-center justify-center text-[10px] font-bold border transition-colors",
+    completed 
+      ? "bg-[#00bfa5] border-[#00bfa5] text-white shadow-sm" 
+      : "bg-muted/30 border-border text-muted-foreground"
+  )}>
+    {index + 1}
+  </div>
+);
 
 export default function AlunosPage() {
+  const [activeFilter, setActiveFilter] = React.useState('ativos');
   const [search, setSearch] = React.useState('');
-  const [filter, setFilter] = React.useState('all');
 
-  const filteredStudents = studentsData.filter(student => {
-    const matchesSearch = student.name.toLowerCase().includes(search.toLowerCase());
-    const matchesFilter = filter === 'all' || student.status === filter;
-    return matchesSearch && matchesFilter;
-  });
+  const filteredStudents = studentsData.filter(student => 
+    student.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <div className="app-container py-8 min-h-screen bg-background text-foreground transition-colors duration-300">
-      
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2 text-primary">
-            <Users className="h-6 w-6" />
-            <span className="text-sm font-black uppercase italic tracking-tighter">Gestão de Alunos</span>
-          </div>
-          <h1 className="text-3xl md:text-4xl font-black text-foreground uppercase italic tracking-tighter">
-            Seus <span className="text-primary">Guerreiros</span>
-          </h1>
-        </div>
-
-        <Button className="bg-[#00bfa5] hover:bg-[#00a894] text-white rounded-2xl px-8 h-14 font-black text-xs gap-3 shadow-lg shadow-[#00bfa5]/20 border-none uppercase tracking-widest transition-all active:scale-95">
-          <Plus className="h-6 w-6" />
-          ADICIONAR NOVO ALUNO
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+      {/* Header Actions */}
+      <div className="app-container py-6 flex justify-end gap-3">
+        <Button variant="outline" size="icon" className="h-10 w-10 rounded-xl bg-card border-border shadow-sm">
+          <Mail className="h-5 w-5 text-muted-foreground" />
+        </Button>
+        <Button className="bg-[#00bfa5] hover:bg-[#00a894] text-white rounded-xl px-6 h-10 font-bold gap-2 shadow-lg shadow-[#00bfa5]/20 border-none">
+          <Plus className="h-5 w-5" />
+          Novo Aluno
         </Button>
       </div>
 
-      {/* Controls Section */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-8">
-        <div className="relative flex-1 max-w-xl">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-          <Input 
-            placeholder="Pesquisar por nome ou email..." 
-            className="h-14 pl-12 rounded-2xl bg-card border border-border/40 text-sm focus-visible:ring-primary/30 shadow-sm"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+      {/* Navigation Filters */}
+      <div className="border-b border-border/40 bg-card/30 backdrop-blur-sm sticky top-0 z-10">
+        <div className="app-container flex items-center overflow-x-auto no-scrollbar">
+          <FilterTab 
+            label="Todos" 
+            count={200} 
+            icon={Users} 
+            active={activeFilter === 'todos'} 
+            onClick={() => setActiveFilter('todos')} 
+          />
+          <FilterTab 
+            label="Ativos" 
+            count={16} 
+            icon={User} 
+            active={activeFilter === 'ativos'} 
+            colorClass="text-[#00bfa5]"
+            onClick={() => setActiveFilter('ativos')} 
+          />
+          <FilterTab 
+            label="Inativos" 
+            count={2} 
+            icon={XCircle} 
+            active={activeFilter === 'inativos'} 
+            onClick={() => setActiveFilter('inativos')} 
+          />
+          <FilterTab 
+            label="Pendentes" 
+            count={0} 
+            icon={Clock} 
+            active={activeFilter === 'pendentes'} 
+            onClick={() => setActiveFilter('pendentes')} 
+          />
+          <FilterTab 
+            label="Vencidos" 
+            count={0} 
+            icon={AlertTriangle} 
+            active={activeFilter === 'vencidos'} 
+            onClick={() => setActiveFilter('vencidos')} 
+          />
+          <FilterTab 
+            label="Arquivados" 
+            count={182} 
+            icon={Archive} 
+            active={activeFilter === 'arquivados'} 
+            onClick={() => setActiveFilter('arquivados')} 
           />
         </div>
-
-        <Tabs value={filter} onValueChange={setFilter} className="w-full lg:w-auto">
-          <TabsList className="grid grid-cols-3 bg-muted/40 p-1.5 rounded-[20px] h-14 w-full lg:w-[400px]">
-            <TabsTrigger 
-              value="all" 
-              className="rounded-xl text-[10px] font-black uppercase tracking-widest data-[state=active]:bg-background data-[state=active]:text-foreground shadow-none"
-            >
-              Todos ({studentsData.length})
-            </TabsTrigger>
-            <TabsTrigger 
-              value="active" 
-              className="rounded-xl text-[10px] font-black uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-white shadow-none"
-            >
-              Ativos ({studentsData.filter(s => s.status === 'active').length})
-            </TabsTrigger>
-            <TabsTrigger 
-              value="inactive" 
-              className="rounded-xl text-[10px] font-black uppercase tracking-widest data-[state=active]:bg-muted-foreground/20 data-[state=active]:text-foreground shadow-none"
-            >
-              Inativos ({studentsData.filter(s => s.status === 'inactive').length})
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
       </div>
 
-      {/* Grid Section */}
-      {filteredStudents.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-20">
-          {filteredStudents.map((student) => (
-            <StudentCard key={student.id} student={student} />
-          ))}
+      {/* Table Section */}
+      <div className="app-container py-8">
+        <div className="bg-card rounded-2xl border border-border/40 shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="bg-muted/10 border-b border-border/40">
+                  <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Aluno</th>
+                  <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-muted-foreground">Observações</th>
+                  <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-muted-foreground text-center">Plano</th>
+                  <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-muted-foreground text-center">Situação</th>
+                  <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-muted-foreground text-center">Treinos</th>
+                  <th className="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-muted-foreground text-right">Ações</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border/20">
+                {filteredStudents.map((student, idx) => (
+                  <tr key={student.id} className={cn("group transition-colors hover:bg-muted/5", idx % 2 === 1 && "bg-muted/5")}>
+                    <td className="px-6 py-5">
+                      <div className="flex items-center gap-4">
+                        <div className="flex flex-col items-center gap-1">
+                          <Avatar className="h-12 w-12 border-2 border-background shadow-md">
+                            <AvatarImage src={student.avatar} alt={student.name} />
+                            <AvatarFallback>{student.name.substring(0, 2)}</AvatarFallback>
+                          </Avatar>
+                          <button className="text-[10px] text-muted-foreground font-bold hover:text-primary transition-colors">Visualizar perfil</button>
+                        </div>
+                        <span className="font-bold text-sm text-foreground/80">{student.name}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-5">
+                      <p className="text-xs text-muted-foreground max-w-[200px] leading-relaxed">
+                        {student.observations || '--'}
+                      </p>
+                    </td>
+                    <td className="px-6 py-5 text-center">
+                      <div className="flex flex-col items-center gap-1.5">
+                        <Badge className="bg-orange-500 hover:bg-orange-600 text-white border-none rounded-full px-3 py-0.5 text-[9px] font-black uppercase tracking-wider">
+                          {student.plan}
+                        </Badge>
+                        <span className="text-[10px] font-bold text-muted-foreground">{student.planProgress}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-5 text-center">
+                      <Badge className="bg-emerald-500/10 text-emerald-600 border-none rounded-md px-3 py-1.5 text-[10px] font-black uppercase tracking-widest">
+                        ATIVO
+                      </Badge>
+                    </td>
+                    <td className="px-6 py-5">
+                      <div className="flex items-center justify-center gap-2">
+                        {student.workouts.map((completed, i) => (
+                          <WorkoutIndicator key={i} completed={completed} index={i} />
+                        ))}
+                      </div>
+                    </td>
+                    <td className="px-6 py-5 text-right">
+                      <div className="flex items-center justify-end gap-4">
+                        <Button 
+                          className={cn(
+                            "rounded-full h-8 px-5 text-[10px] font-black uppercase tracking-widest gap-2 shadow-sm",
+                            student.whatsappActive 
+                              ? "bg-[#00e676] hover:bg-[#00c853] text-white" 
+                              : "bg-muted text-muted-foreground"
+                          )}
+                        >
+                          chamar
+                          <svg className="h-3 w-3 fill-current" viewBox="0 0 24 24">
+                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.588-5.946 0-6.556 5.332-11.888 11.888-11.888 3.176 0 6.161 1.237 8.404 3.484 2.247 2.247 3.484 5.232 3.484 8.404 0 6.556-5.332 11.888-11.888 11.888-2.003 0-4.01-.505-5.834-1.464l-6.153 1.687zm6.333-3.032l.363.216c1.52.214 3.061.321 4.601.321 5.433 0 9.852-4.419 9.852-9.852 0-2.627-1.023-5.097-2.883-6.957-1.86-1.86-4.329-2.883-6.957-2.883-5.433 0-9.852 4.419-9.852 9.852 0 1.83.508 3.593 1.47 5.143l.235.377-1.103 4.025 4.274-1.171z" />
+                          </svg>
+                        </Button>
+                        <button className="text-muted-foreground hover:text-foreground p-1 transition-colors">
+                          <ChevronDown className="h-6 w-6" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      ) : (
-        <div className="flex flex-col items-center justify-center py-32 text-center opacity-40">
-          <Search className="h-16 w-16 mb-4 text-muted-foreground" />
-          <p className="text-xl font-black uppercase italic tracking-tighter">Nenhum aluno encontrado</p>
-          <p className="text-sm font-medium text-muted-foreground uppercase tracking-widest mt-2">Tente ajustar sua busca ou filtros</p>
-        </div>
-      )}
 
-      {/* Floating Action Mobile */}
-      <div className="fixed bottom-28 right-6 md:hidden z-50">
-        <Button size="icon" className="h-16 w-16 rounded-full bg-primary shadow-2xl shadow-primary/40 active:scale-90 transition-transform">
-          <Plus className="h-8 w-8 text-white" />
+        {/* Footer info */}
+        <div className="mt-4 flex items-center justify-between text-[11px] font-bold text-muted-foreground uppercase tracking-widest px-2">
+          <span>Mostrando {filteredStudents.length} de 200 guerreiros</span>
+          <div className="flex gap-4">
+             <button className="hover:text-primary">Anterior</button>
+             <button className="hover:text-primary">Próximo</button>
+          </div>
+        </div>
+      </div>
+
+      {/* Floating Messenger (simulating the chat icon in bottom right) */}
+      <div className="fixed bottom-8 right-8 z-50">
+        <Button size="icon" className="h-14 w-14 rounded-2xl bg-[#37474f] hover:bg-[#263238] shadow-2xl text-white">
+          <MessageSquare className="h-7 w-7" />
         </Button>
       </div>
     </div>
