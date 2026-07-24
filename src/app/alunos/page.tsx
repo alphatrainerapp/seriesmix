@@ -8,6 +8,11 @@ import {
   XCircle, 
   Circle,
   Plus,
+  Pencil,
+  Copy,
+  Pause,
+  Home,
+  Archive
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -114,7 +119,18 @@ const StatusIcon = ({ status }: { status: AttendanceStatus }) => {
   }
 };
 
+const ActionButton = ({ icon: Icon, label }: { icon: React.ElementType, label: string }) => (
+  <button className="flex flex-col items-center justify-center gap-2 p-3 bg-muted/60 hover:bg-muted/80 rounded-2xl transition-all active:scale-95 group border border-transparent hover:border-border/40">
+    <span className="text-[9px] font-black text-foreground/70 uppercase tracking-tighter text-center leading-none">
+      {label}
+    </span>
+    <Icon className="h-5 w-5 text-foreground/80 group-hover:text-primary transition-colors" />
+  </button>
+);
+
 const StudentCard = ({ student }: { student: StudentData }) => {
+  const [isExpanded, setIsExpanded] = React.useState(false);
+
   return (
     <div className="bg-card border border-border/40 rounded-[28px] p-5 md:p-7 shadow-sm transition-all hover:shadow-md group flex flex-col gap-6 relative overflow-hidden">
       {/* Topo: Identificação */}
@@ -137,7 +153,15 @@ const StudentCard = ({ student }: { student: StudentData }) => {
             {student.plan}
           </Badge>
         </div>
-        <ChevronRight className="h-6 w-6 text-muted-foreground/20 group-hover:text-primary transition-colors" />
+        <button 
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="h-11 w-11 flex items-center justify-center rounded-full hover:bg-muted/50 transition-all active:scale-90"
+        >
+          <ChevronRight className={cn(
+            "h-7 w-7 text-muted-foreground/30 transition-transform duration-300",
+            isExpanded && "rotate-90 text-primary"
+          )} />
+        </button>
       </div>
 
       {/* Meio: Progresso do Plano */}
@@ -188,6 +212,17 @@ const StudentCard = ({ student }: { student: StudentData }) => {
           </span>
         </div>
       </div>
+
+      {/* Painel de Ações Expansível */}
+      {isExpanded && (
+        <div className="pt-6 border-t border-border/10 grid grid-cols-5 gap-2 animate-in slide-in-from-top-2 duration-300">
+          <ActionButton icon={Pencil} label="Editar" />
+          <ActionButton icon={Copy} label="Duplicar" />
+          <ActionButton icon={Pause} label="Pausar Plano" />
+          <ActionButton icon={Home} label="Área Do Aluno" />
+          <ActionButton icon={Archive} label="Arquivar" />
+        </div>
+      )}
     </div>
   );
 };
