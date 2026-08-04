@@ -8,12 +8,12 @@ body {
 
 @layer base {
   :root {
-    --background: 0 0% 98%; /* Levemente mais cinza para contraste */
+    --background: 0 0% 98%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
     --workout-card: 0 0% 95%;
-    --exercise-card: 0 0% 94%; /* Mais contraste para o campo de nome */
+    --exercise-card: 0 0% 94%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
     --primary: 180 96% 34%;
@@ -26,65 +26,50 @@ body {
     --accent-foreground: 240 5.9% 10%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 88%; /* Borda mais definida */
-    --input: 240 5.9% 88%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
     --ring: 180 96% 34%;
     --radius: 0.75rem;
 
     --chart-1: 35 97% 58%;
-    --chart-2: 118 89% 85%;
-    --chart-3: 122 71% 54%;
+    --chart-2: 217 91% 60%;
+    --chart-3: 147 62% 46%;
     --chart-4: 182 93% 34%;
     --chart-5: 217 91% 60%;
 
-    --sidebar-background: 0 0% 5%; /* #0a0a0a para o menu lateral */
+    --sidebar-background: 240 10% 3.9%;
     --sidebar-foreground: 0 0% 100%;
-    --sidebar-border: 0 0% 15%;
-    --sidebar-accent: 0 0% 15%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 0 0% 100%;
     --sidebar-ring: 180 96% 34%;
-    
-    --tag-soft-blue-bg: 210 30% 95%;
-    --tag-soft-blue-fg: 210 90% 40%;
   }
   .dark {
-    --background: 0 0% 15%; /* #262626 - Fundo mais escuro */
+    --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
-    --card: 0 0% 20%; /* #333333 - Card um pouco mais claro */
+    --card: 240 10% 6%;
     --card-foreground: 0 0% 98%;
-    --workout-card: 0 0% 20%; /* #333333 */
-    --exercise-card: 0 0% 23%; /* #3b3b3b - Blocos internos */
-    --popover: 0 0% 20%;
+    --workout-card: 240 10% 8%;
+    --exercise-card: 240 10% 10%;
+    --popover: 240 10% 6%;
     --popover-foreground: 0 0% 98%;
     --primary: 180 96% 34%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 23%;
+    --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 23%; /* #3b3b3b */
+    --muted: 240 3.7% 15.9%;
     --muted-foreground: 240 5% 64.9%;
-    --accent: 0 0% 23%;
+    --accent: 240 3.7% 15.9%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 25%;
-    --input: 0 0% 25%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
     --ring: 180 96% 34%;
 
-    --chart-1: 35 97% 58%;
-    --chart-2: 217 91% 60%;
-    --chart-3: 147 62% 46%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-
-    --sidebar-background: 0 0% 4%; /* #0a0a0a */
+    --sidebar-background: 240 10% 2%;
     --sidebar-foreground: 0 0% 100%;
-    --sidebar-border: 0 0% 10%;
-    --sidebar-accent: 0 0% 10%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-ring: 175 75% 40%;
-
-    --tag-soft-blue-bg: 210 30% 15%;
-    --tag-soft-blue-fg: 210 90% 70%;
+    --sidebar-border: 240 3.7% 10%;
   }
 }
 
@@ -93,7 +78,7 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background text-foreground antialiased transition-colors duration-300;
     padding-bottom: env(safe-area-inset-bottom);
   }
 }
@@ -104,11 +89,11 @@ body {
   }
   
   .app-container {
-    @apply px-4 sm:px-8; /* Aumenta a margem lateral no mobile para estreitar o conteúdo */
+    @apply px-4 sm:px-8;
   }
 
   .mobile-content-wrapper {
-    @apply max-w-[480px] mx-auto; /* Estreita o conteúdo no mobile para parecer um app */
+    @apply max-w-[480px] mx-auto;
   }
 }
 
@@ -125,10 +110,6 @@ body {
   .app-container {
     max-width: 1800px;
   }
-}
-
-.header-treino {
-  @apply flex items-center justify-between mb-8 flex-wrap gap-4;
 }
 
 .no-scrollbar::-webkit-scrollbar {

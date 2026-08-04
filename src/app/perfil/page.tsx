@@ -2,24 +2,15 @@
 
 import * as React from 'react';
 import { 
-  User, 
-  Mail, 
   Calendar, 
   Phone, 
-  Fingerprint, 
-  Lock, 
-  ShieldCheck, 
   Camera,
   Check,
   X,
   Crown,
   Settings,
-  HelpCircle,
-  Clock,
   MessageSquare,
-  ChevronDown,
   Save,
-  RotateCcw,
   Eye,
   IdCard,
   Pencil
@@ -27,8 +18,6 @@ import {
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -76,7 +65,7 @@ const ProfileField = ({
 }) => (
   <div className="space-y-1 w-full group">
     <div className="flex items-center gap-1 pl-1">
-      <label className="text-[10px] font-black uppercase tracking-widest text-white/50">{label}</label>
+      <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{label}</label>
       {required && <span className="text-red-500">*</span>}
     </div>
     <div className="relative">
@@ -84,9 +73,9 @@ const ProfileField = ({
         type={type}
         defaultValue={value}
         placeholder={placeholder}
-        className="h-11 bg-[#1a1a1a] border-none rounded-xl font-bold text-sm focus-visible:ring-primary/30 pr-10"
+        className="h-11 bg-muted/40 border-none rounded-xl font-bold text-sm focus-visible:ring-primary/30 pr-10"
       />
-      {Icon && <Icon className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30 group-focus-within:text-primary transition-colors" />}
+      {Icon && <Icon className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/30 group-focus-within:text-primary transition-colors" />}
     </div>
   </div>
 );
@@ -101,12 +90,12 @@ const PlanValue = ({ val }: { val: string }) => {
 
 export default function PerfilPage() {
   return (
-    <div className="min-h-screen bg-[#050505] text-foreground p-6 md:p-10">
+    <div className="min-h-screen bg-background p-6 md:p-10 transition-colors duration-300">
       <div className="max-w-[1600px] mx-auto space-y-10">
         
         {/* TÍTULO DA PÁGINA */}
         <div className="space-y-1">
-          <h1 className="text-4xl font-serif font-black text-white">Minha Conta</h1>
+          <h1 className="text-4xl font-serif font-black text-foreground">Minha Conta</h1>
           <p className="text-muted-foreground text-sm font-medium">Gerencie seu plano, configurações e preferências do sistema.</p>
         </div>
 
@@ -114,17 +103,17 @@ export default function PerfilPage() {
           
           {/* COLUNA ESQUERDA: PERFIL */}
           <div className="lg:col-span-3 space-y-4">
-            <Card className="bg-[#0f0f0f] border-none rounded-[28px] p-6 shadow-2xl">
+            <Card className="bg-card border-border/40 rounded-[28px] p-6 shadow-2xl">
               <div className="flex flex-col gap-6">
                 <div className="flex items-center justify-between gap-4">
-                  <div className="h-16 w-16 bg-[#1a1a1a] rounded-xl flex items-center justify-center border border-white/5">
-                    <div className="h-8 w-8 border-2 border-white/40 rounded-sm rotate-45 flex items-center justify-center">
-                       <div className="h-4 w-4 bg-white/20" />
+                  <div className="h-16 w-16 bg-muted/50 rounded-xl flex items-center justify-center border border-border/5">
+                    <div className="h-8 w-8 border-2 border-primary/40 rounded-sm rotate-45 flex items-center justify-center">
+                       <div className="h-4 w-4 bg-primary/20" />
                     </div>
                   </div>
                   <Button className="bg-[#00bfa5] hover:bg-[#00a894] text-white rounded-xl h-10 px-4 font-black uppercase text-[10px] tracking-widest gap-2 shadow-lg shadow-[#00bfa5]/20 border-none">
                     <Camera className="h-4 w-4" />
-                    Escolha sua foto
+                    Trocar Foto
                   </Button>
                 </div>
 
@@ -133,12 +122,12 @@ export default function PerfilPage() {
                   <ProfileField label="Email" value="master@alphatrainer.com.br" required />
                   
                   <div className="space-y-1 w-full">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-white/50 pl-1">Sou um(a)</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground pl-1">Sou um(a)</label>
                     <Select defaultValue="academia">
-                      <SelectTrigger className="h-11 bg-[#1a1a1a] border-none rounded-xl font-bold text-sm focus:ring-primary/30 text-white">
+                      <SelectTrigger className="h-11 bg-muted/40 border-none rounded-xl font-bold text-sm focus:ring-primary/30">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-[#1a1a1a] border-white/5">
+                      <SelectContent>
                         <SelectItem value="academia">Academia</SelectItem>
                         <SelectItem value="personal">Personal Trainer</SelectItem>
                       </SelectContent>
@@ -151,12 +140,12 @@ export default function PerfilPage() {
                   <ProfileField label="Senha" value="********" type="password" icon={Eye} />
 
                   <div className="space-y-1 w-full">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-white/50 pl-1">Tipo de conta</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground pl-1">Tipo de conta</label>
                     <Select defaultValue="admin">
-                      <SelectTrigger className="h-11 bg-[#1a1a1a] border-none rounded-xl font-bold text-sm focus:ring-primary/30 text-white">
+                      <SelectTrigger className="h-11 bg-muted/40 border-none rounded-xl font-bold text-sm focus:ring-primary/30">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-[#1a1a1a] border-white/5">
+                      <SelectContent>
                         <SelectItem value="admin">Administrador</SelectItem>
                         <SelectItem value="usuario">Usuário Comum</SelectItem>
                       </SelectContent>
@@ -164,10 +153,10 @@ export default function PerfilPage() {
                   </div>
 
                   <div className="space-y-1 w-full">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-white/50 pl-1">Texto para convite</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground pl-1">Texto para convite</label>
                     <Textarea 
                       defaultValue="Olá bem vindo(a) ao meu time, agora vamos buscar resultados reais e"
-                      className="bg-[#1a1a1a] border-none rounded-xl font-bold text-xs focus-visible:ring-primary/30 min-h-[80px] resize-none"
+                      className="bg-muted/40 border-none rounded-xl font-bold text-xs focus-visible:ring-primary/30 min-h-[80px] resize-none"
                     />
                   </div>
 
@@ -176,7 +165,7 @@ export default function PerfilPage() {
                       <Save className="h-4 w-4" />
                       Salvar
                     </Button>
-                    <Button className="bg-[#1a1a1a] hover:bg-red-500/20 text-red-500 rounded-xl h-12 font-black uppercase text-[10px] tracking-widest gap-2 border border-red-500/20">
+                    <Button variant="outline" className="rounded-xl h-12 font-black uppercase text-[10px] tracking-widest gap-2 text-destructive border-destructive/20 hover:bg-destructive/10">
                       <X className="h-4 w-4" />
                       Limpar
                     </Button>
@@ -190,15 +179,15 @@ export default function PerfilPage() {
           <div className="lg:col-span-9 space-y-8">
             
             {/* TABELA DE PLANOS */}
-            <Card className="bg-[#0f0f0f] border-none rounded-[28px] overflow-hidden shadow-2xl">
+            <Card className="bg-card border-border/40 rounded-[28px] overflow-hidden shadow-2xl">
               <div className="overflow-x-auto no-scrollbar">
                 <table className="w-full border-collapse">
                   <thead>
-                    <tr className="border-b border-white/5">
+                    <tr className="border-b border-border/10">
                       <th className="p-6 text-left min-w-[200px]">
                         <div className="flex items-center gap-3">
                           <Crown className="h-6 w-6 text-yellow-500 fill-yellow-500/20" />
-                          <span className="text-lg font-black uppercase italic tracking-tighter text-white">Planos e Recursos</span>
+                          <span className="text-lg font-black uppercase italic tracking-tighter text-foreground">Planos e Recursos</span>
                         </div>
                       </th>
                       {planHeaders.map((h, i) => (
@@ -219,8 +208,8 @@ export default function PerfilPage() {
                   </thead>
                   <tbody>
                     {planFeatures.map((feature, idx) => (
-                      <tr key={idx} className="group hover:bg-white/[0.02] transition-colors border-b border-white/5 last:border-none">
-                        <td className="p-4 px-6 font-bold text-sm text-white/80">
+                      <tr key={idx} className="group hover:bg-muted/30 transition-colors border-b border-border/10 last:border-none">
+                        <td className="p-4 px-6 font-bold text-sm text-foreground/80">
                           {feature.label}
                         </td>
                         {feature.values.map((val, vIdx) => (
@@ -241,52 +230,52 @@ export default function PerfilPage() {
             </Card>
 
             {/* CONFIGURAÇÕES DO SISTEMA */}
-            <Card className="bg-[#0f0f0f] border-none rounded-[28px] p-8 shadow-2xl space-y-10">
+            <Card className="bg-card border-border/40 rounded-[28px] p-8 shadow-2xl space-y-10">
               <div className="flex items-center gap-3">
                 <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                   <Settings className="h-5 w-5" />
                 </div>
-                <h3 className="text-xl font-black uppercase italic tracking-tighter text-white">Configurações do Sistema</h3>
+                <h3 className="text-xl font-black uppercase italic tracking-tighter text-foreground">Configurações do Sistema</h3>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Vencimento */}
-                <div className="bg-[#1a1a1a] rounded-2xl p-6 space-y-4">
+                <div className="bg-muted/30 rounded-2xl p-6 space-y-4 border border-border/5">
                   <div className="flex items-start gap-4">
-                    <div className="h-10 w-10 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-500 shrink-0">
+                    <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
                       <Calendar className="h-5 w-5" />
                     </div>
                     <div className="space-y-1">
-                      <p className="font-bold text-sm text-white">Vencimento dos alunos</p>
-                      <p className="text-[11px] text-white/40 leading-relaxed">Defina como será controlado o vencimento dos seus alunos.</p>
+                      <p className="font-bold text-sm text-foreground">Vencimento dos alunos</p>
+                      <p className="text-[11px] text-muted-foreground leading-relaxed">Defina como será controlado o vencimento dos seus alunos.</p>
                     </div>
                   </div>
                   <RadioGroup defaultValue="periodizacao" className="grid grid-cols-1 gap-3 pt-2">
                     <div className="flex items-center gap-3">
-                      <RadioGroupItem value="periodizacao" id="r1" className="border-cyan-500 text-cyan-500" />
-                      <label htmlFor="r1" className="text-xs font-bold text-white/80 cursor-pointer">Pela data final da periodização</label>
+                      <RadioGroupItem value="periodizacao" id="r1" className="border-primary text-primary" />
+                      <label htmlFor="r1" className="text-xs font-bold text-foreground/80 cursor-pointer">Pela data final da periodização</label>
                     </div>
                     <div className="flex items-center gap-3">
-                      <RadioGroupItem value="plano" id="r2" className="border-cyan-500 text-cyan-500" />
-                      <label htmlFor="r2" className="text-xs font-bold text-white/80 cursor-pointer">Pela data do plano contratado</label>
+                      <RadioGroupItem value="plano" id="r2" className="border-primary text-primary" />
+                      <label htmlFor="r2" className="text-xs font-bold text-foreground/80 cursor-pointer">Pela data do plano contratado</label>
                     </div>
                   </RadioGroup>
                 </div>
 
                 {/* Dias de Tolerância */}
-                <div className="bg-[#1a1a1a] rounded-2xl p-6 space-y-4">
+                <div className="bg-muted/30 rounded-2xl p-6 space-y-4 border border-border/5">
                   <div className="flex items-start gap-4">
-                    <div className="h-10 w-10 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-500 shrink-0">
+                    <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
                       <Calendar className="h-5 w-5" />
                     </div>
                     <div className="space-y-1">
-                      <p className="font-bold text-sm text-white">Dias de tolerância</p>
-                      <p className="text-[11px] text-white/40 leading-relaxed">Mesmo após o vencimento, o aluno continuará com acesso durante esse período.</p>
+                      <p className="font-bold text-sm text-foreground">Dias de tolerância</p>
+                      <p className="text-[11px] text-muted-foreground leading-relaxed">Mesmo após o vencimento, o aluno continuará com acesso durante esse período.</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 pt-2">
-                    <Input className="w-16 h-10 bg-black/40 border-white/10 rounded-lg text-center font-bold" defaultValue="7" />
-                    <span className="text-xs font-bold text-white/60">dias</span>
+                    <Input className="w-16 h-10 bg-background/50 border-border/40 rounded-lg text-center font-bold" defaultValue="7" />
+                    <span className="text-xs font-bold text-muted-foreground">dias</span>
                   </div>
                 </div>
               </div>
@@ -299,27 +288,27 @@ export default function PerfilPage() {
                   { label: "Enviar aviso antes do vencimento", desc: "Notificar o aluno sobre o vencimento do plano.", checked: true },
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-4">
-                    <Switch defaultChecked={item.checked} className="mt-1 data-[state=checked]:bg-cyan-500" />
+                    <Switch defaultChecked={item.checked} className="mt-1" />
                     <div className="space-y-1">
-                      <p className="text-xs font-bold text-white">{item.label}</p>
-                      <p className="text-[10px] text-white/30 leading-tight">{item.desc}</p>
+                      <p className="text-xs font-bold text-foreground">{item.label}</p>
+                      <p className="text-[10px] text-muted-foreground leading-tight">{item.desc}</p>
                       {i === 2 && (
                         <div className="flex items-center gap-3 mt-3">
-                           <div className="flex items-center gap-2 bg-black/40 px-3 py-2 rounded-lg border border-white/5">
-                             <Calendar className="h-3 w-3 text-white/40" />
-                             <span className="text-[10px] font-black uppercase text-white/60">Dias para aviso:</span>
+                           <div className="flex items-center gap-2 bg-muted/50 px-3 py-2 rounded-lg border border-border/10">
+                             <Calendar className="h-3 w-3 text-muted-foreground" />
+                             <span className="text-[10px] font-black uppercase text-muted-foreground">Dias para aviso:</span>
                              <Select defaultValue="5">
-                                <SelectTrigger className="h-6 w-12 bg-transparent border-none p-0 focus:ring-0 text-white font-bold">
+                                <SelectTrigger className="h-6 w-12 bg-transparent border-none p-0 focus:ring-0 font-bold">
                                   <SelectValue />
                                 </SelectTrigger>
-                                <SelectContent className="bg-[#1a1a1a] border-white/5">
+                                <SelectContent>
                                    <SelectItem value="3">3</SelectItem>
                                    <SelectItem value="5">5</SelectItem>
                                    <SelectItem value="7">7</SelectItem>
                                 </SelectContent>
                              </Select>
                            </div>
-                           <span className="text-xs font-bold text-white/40">dias</span>
+                           <span className="text-xs font-bold text-muted-foreground">dias</span>
                         </div>
                       )}
                     </div>
@@ -328,19 +317,19 @@ export default function PerfilPage() {
               </div>
 
               {/* Mensagem para o aluno */}
-              <div className="space-y-3 bg-[#1a1a1a] p-6 rounded-2xl border border-white/5">
+              <div className="space-y-3 bg-muted/40 p-6 rounded-2xl border border-border/10">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <MessageSquare className="h-4 w-4 text-cyan-500" />
-                    <span className="text-[10px] font-black uppercase tracking-widest text-white/60">Mensagem para o aluno</span>
+                    <MessageSquare className="h-4 w-4 text-primary" />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Mensagem para o aluno</span>
                   </div>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-white/20 hover:text-white">
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-primary">
                     <Pencil className="h-4 w-4" />
                   </Button>
                 </div>
                 <Textarea 
                   defaultValue="Seu plano foi encerrado. Entre em contato com seu treinador para renovar seu acompanhamento."
-                  className="bg-transparent border-none p-0 text-xs font-bold text-white/80 focus-visible:ring-0 min-h-[60px] resize-none leading-relaxed"
+                  className="bg-transparent border-none p-0 text-xs font-bold text-foreground focus-visible:ring-0 min-h-[60px] resize-none leading-relaxed"
                 />
               </div>
             </Card>
