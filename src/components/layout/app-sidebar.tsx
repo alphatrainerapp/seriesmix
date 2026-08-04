@@ -30,7 +30,7 @@ import {
   ChevronRight,
   ChevronDown,
 } from 'lucide-react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -55,6 +55,7 @@ const settingsItems = [
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { state, setOpen, isMobile } = useSidebar();
   const [isAutoExpanded, setIsAutoExpanded] = React.useState(false);
   
@@ -75,6 +76,10 @@ export function AppSidebar() {
     }
   };
 
+  const goToProfile = () => {
+    router.push('/perfil');
+  };
+
   return (
     <Sidebar 
       className="border-r-0 bg-[#0a0a0a] text-white transition-all duration-300 ease-in-out z-50" 
@@ -83,7 +88,7 @@ export function AppSidebar() {
       onMouseLeave={handleMouseLeave}
     >
       <SidebarHeader className={cn("p-6 transition-all duration-300", isCollapsed && "p-4 items-center")}>
-        <div className="flex flex-col gap-0.5 overflow-hidden">
+        <div className="flex flex-col gap-0.5 overflow-hidden cursor-pointer" onClick={() => router.push('/home')}>
           <div className="flex items-baseline gap-1">
             <span className={cn("text-2xl font-black italic tracking-tighter text-white whitespace-nowrap", isCollapsed && "text-xl")}>
               {isCollapsed ? 'AL' : 'ALAN LUIZ'}
@@ -159,7 +164,10 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="p-4 mt-auto border-t border-white/5">
-        <div className={cn("flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors cursor-pointer group overflow-hidden", isCollapsed && "justify-center p-1")}>
+        <div 
+          onClick={goToProfile}
+          className={cn("flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors cursor-pointer group overflow-hidden", isCollapsed && "justify-center p-1")}
+        >
           <Avatar className="h-8 w-8 border border-white/10 shrink-0">
             {userAvatar && (
               <AvatarImage
