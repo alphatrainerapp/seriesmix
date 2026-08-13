@@ -1,8 +1,11 @@
+
 'use client';
 
 import { Button } from '@/components/ui/button';
 import { Plus, X, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { SelectModelDialog } from '../workouts/select-model-dialog';
+import type { Exercise, CombinationType } from '@/lib/types';
 
 const DayBadge = ({ children }: { children: React.ReactNode }) => (
   <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00bfa5]/40 text-[#00bfa5] text-[11px] font-bold bg-background hover:border-[#00bfa5] transition-colors shadow-sm dark:bg-muted/20">
@@ -43,7 +46,11 @@ const TrainingBlock = ({ title, focus, days }: TrainingBlockProps) => (
   </div>
 );
 
-export function TrainingSplit() {
+export function TrainingSplit({ 
+  onApplyModel 
+}: { 
+  onApplyModel: (data: Exercise[], types: Record<string, CombinationType>, keepVars: boolean) => void 
+}) {
   const splits = [
     { title: "TREINO A", focus: "Inferiores", days: ["Segunda"] },
     { title: "TREINO B", focus: "Puxar", days: ["Terça"] },
@@ -59,10 +66,12 @@ export function TrainingSplit() {
           DIVISÃO DE TREINAMENTO
         </h2>
         
-        <Button className="bg-[#00bfa5] hover:bg-[#00a894] text-white rounded-xl px-6 h-11 font-bold gap-2 shadow-lg shadow-[#00bfa5]/20 border-none shrink-0 transition-transform active:scale-95">
-          <Plus className="h-5 w-5" />
-          Selecionar Modelo
-        </Button>
+        <SelectModelDialog onApplySession={onApplyModel}>
+          <Button className="bg-[#00bfa5] hover:bg-[#00a894] text-white rounded-xl px-6 h-11 font-bold gap-2 shadow-lg shadow-[#00bfa5]/20 border-none shrink-0 transition-transform active:scale-95">
+            <Plus className="h-5 w-5" />
+            Selecionar Modelo
+          </Button>
+        </SelectModelDialog>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">

@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -24,7 +25,7 @@ import { MobileExerciseCard } from '@/components/workouts/mobile-exercise-card';
 import { Accordion } from '@/components/ui/accordion';
 import { CombineExercisesDialog } from '@/components/workouts/combine-exercises-dialog';
 import { SaveSessionDialog } from '@/components/workouts/save-session-dialog';
-import { UseSavedSessionDialog } from '@/components/workouts/use-saved-session-dialog';
+import { SelectModelDialog } from '@/components/workouts/select-model-dialog';
 import { ExerciseSearchDialog } from '@/components/workouts/exercise-search-dialog';
 import { MobileActionFooter } from '@/components/workouts/mobile-action-footer';
 import {
@@ -123,7 +124,7 @@ const WorkoutTabContent = memo(({
   workout: WorkoutState;
   onUpdateExercise: (ex: Exercise, tabId: string) => void;
   onApplySetsToAll: (sets: Set[], tabId: string) => void;
-  onApplySavedSession: (data: Exercise[], types: Record<string, CombinationType>, tabId: string) => void;
+  onApplySavedSession: (data: Exercise[], types: Record<string, CombinationType>, tabId: string, keepVariables: boolean) => void;
   onUpdateWorkoutData: (data: Exercise[], tabId: string) => void;
   onUpdateWorkoutDataWithCombination: (types: Record<string, CombinationType>, tabId: string) => void;
   onAddWod: (tabId: string) => void;
@@ -142,10 +143,9 @@ const WorkoutTabContent = memo(({
         const mins = parseInt(parts[0]);
         totalSeconds += (isNaN(mins) ? 15 : mins) * 60;
       } else if (ex.isCardio) {
-        totalSeconds += 20 * 60; // 20 min padrão para cardio
+        totalSeconds += 20 * 60;
       } else if (ex.sets && ex.sets.length > 0) {
         const numSets = ex.sets.length;
-        // Diferenciação de tempo de execução: Treino (60s) vs Aquecimento (45s)
         const setExecutionTime = ex.isWarmup ? 45 : 60;
         const intervalTime = parseInt(ex.sets[0]?.interval) || 60;
         totalSeconds += (numSets * setExecutionTime) + ((numSets - 1) * intervalTime);
@@ -153,7 +153,7 @@ const WorkoutTabContent = memo(({
     });
     
     if (workout.data.length > 0) {
-      totalSeconds += 300; // Margem de 5 min para setup/transição
+      totalSeconds += 300;
     }
 
     return Math.ceil(totalSeconds / 60);
@@ -291,12 +291,12 @@ const WorkoutTabContent = memo(({
           </button>
         </SaveSessionDialog>
 
-        <UseSavedSessionDialog onApplySession={(data, types) => onApplySavedSession(data, types, tabId)}>
+        <SelectModelDialog onApplySession={(data, types, keepVars) => onApplySavedSession(data, types, tabId, keepVars)}>
           <button className="flex flex-col items-center justify-center gap-2 py-4 rounded-xl border border-border bg-card hover:bg-muted/50 transition-all active:scale-95 shadow-sm">
             <RefreshCcw className="h-6 w-6 text-primary" />
             <span className="text-[10px] font-black uppercase tracking-tight text-primary">Usar Sessão Salva</span>
           </button>
-        </UseSavedSessionDialog>
+        </SelectModelDialog>
       </div>
       
       <div className="pt-4 space-y-4">
@@ -482,21 +482,34 @@ export default function Home() {
     }));
   }, []);
 
-  const handleApplySavedSession = useCallback((newData: Exercise[], newTypes: Record<string, CombinationType>, tabId: string) => {
+  const handleApplySavedSession = useCallback((newData: Exercise[], newTypes: Record<string, CombinationType>, tabId: string, keepVariables: boolean) => {
     setWorkouts((prev) => {
-      const updated = { ...prev };
-      updated[tabId] = {
-        data: Array.isArray(newData) ? JSON.parse(JSON.stringify(newData)) : [],
-        combinationTypes: newTypes || {}
+      // Use periodization rules if keepVariables is false
+      let processedData = [...newData];
+      if (!keepVariables) {
+        // If not keeping model vars, we could adapt them here. 
+        // For now, we'll just deep copy to ensure no reference issues causing locks.
+        processedData = newData.map(ex => ({
+          ...ex,
+          // Placeholder for "periodization variables" logic:
+          // Keep exercise name, but we could reset sets to a default periodization structure here
+        }));
+      }
+
+      return {
+        ...prev,
+        [tabId]: {
+          data: JSON.parse(JSON.stringify(processedData)),
+          combinationTypes: { ...newTypes }
+        }
       };
-      return updated;
     });
   }, []);
 
   const handleUpdateWorkoutData = useCallback((newData: Exercise[], tabId: string) => {
     setWorkouts((prev) => ({
       ...prev,
-      [tabId]: { ...prev[tabId], data: Array.isArray(newData) ? [...newData] : [] },
+      [tabId]: { ...prev[tabId], data: [...newData] },
     }));
   }, []);
 
@@ -614,7 +627,7 @@ export default function Home() {
         <main className="flex-1 min-w-0 w-full space-y-8">
           <div className="mobile-content-wrapper w-full space-y-8">
             <TrainingPlanHeader />
-            <TrainingSplit />
+            <TrainingSplit onApplyModel={(data, types, keepVars) => handleApplySavedSession(data, types, activeTab, keepVars)} />
           </div>
           
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
