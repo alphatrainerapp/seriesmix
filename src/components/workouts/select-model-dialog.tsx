@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -162,7 +161,7 @@ export function SelectModelDialog({ onApplySession, children }: SelectModelDialo
                </Button>
                <Button 
                 variant="outline"
-                className="flex-1 rounded-xl h-12 font-black uppercase tracking-widest text-[12px] bg-white text-black border-none"
+                className="flex-1 rounded-xl h-12 font-black uppercase tracking-widest text-[12px] bg-background text-foreground border-border"
                 onClick={() => setOpen(false)}
                >
                  Fechar
@@ -208,7 +207,7 @@ export function SelectModelDialog({ onApplySession, children }: SelectModelDialo
                   <div className="space-y-1">
                     <p className="font-black text-sm uppercase tracking-tight">Seguir variáveis da periodização</p>
                     <p className="text-[11px] text-muted-foreground leading-relaxed">
-                      Mantém o volume de treino atual do aluno, apenas substituindo os exercícios pelos do modelo.
+                      Mantém a organização de variáveis como séries, repetições, cadência, presentes na periodização.
                     </p>
                   </div>
                 </div>
