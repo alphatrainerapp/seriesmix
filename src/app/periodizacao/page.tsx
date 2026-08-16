@@ -97,7 +97,9 @@ const SessionCard = ({ session, onCopy }: { session: SessionData, onCopy?: () =>
       <div className="flex items-center gap-2">
         <div className={cn(
           "h-2 w-2 rounded-full",
-          session.tipoTreino === 'A' ? "bg-orange-500" : session.tipoTreino === 'B' ? "bg-emerald-500" : "bg-cyan-500"
+          session.tipoTreino === 'A' ? "bg-orange-500" : 
+          session.tipoTreino === 'B' ? "bg-emerald-500" : 
+          session.tipoTreino === 'C' ? "bg-cyan-500" : "bg-slate-500"
         )} />
         <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
           {session.dia} • TREINO {session.tipoTreino}
@@ -143,6 +145,7 @@ const initialPeriodizations: Periodization[] = [
 ];
 
 const DAYS_OF_WEEK = ['SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA', 'SÁBADO', 'DOMINGO'];
+const TRAINING_STRUCTURES = ['A', 'B', 'C', 'D', 'E', 'F'];
 
 export default function PeriodizacaoPage() {
   const { toast } = useToast();
@@ -157,6 +160,9 @@ export default function PeriodizacaoPage() {
   const [expandedCycles, setExpandedCycles] = React.useState<Set<number>>(new Set([0]));
   const [customizingCycles, setCustomizingCycles] = React.useState<Set<number>>(new Set());
   const [frequency, setFrequency] = React.useState('4');
+  
+  // Mapa de sequências por ciclo (Microciclo): { cicloIndex: ['A', 'B', 'C', 'A'] }
+  const [cycleSequences, setCycleSequences] = React.useState<Record<number, string[]>>({});
 
   const toggleCycle = (idx: number) => {
     const newSet = new Set(expandedCycles);
@@ -174,22 +180,40 @@ export default function PeriodizacaoPage() {
       newSet.delete(idx);
     } else {
       newSet.add(idx);
+      // Inicializar sequência se não existir
+      if (!cycleSequences[idx]) {
+        const defaultSeq = Array.from({ length: parseInt(frequency) || 4 }, (_, i) => TRAINING_STRUCTURES[i % 3]);
+        setCycleSequences(prev => ({ ...prev, [idx]: defaultSeq }));
+      }
     }
     setCustomizingCycles(newSet);
   };
 
-  // Gerar sessões dinâmicas baseadas na frequência
-  const getSessionsForWeek = (freq: number) => {
+  // Alterar letra do treino em uma posição específica
+  const cycleTrainingType = (cycleIdx: number, sessionIdx: number) => {
+    const currentSeq = [...(cycleSequences[cycleIdx] || [])];
+    if (currentSeq.length === 0) return;
+    
+    const currentType = currentSeq[sessionIdx];
+    const currentIndex = TRAINING_STRUCTURES.indexOf(currentType);
+    const nextIndex = (currentIndex + 1) % TRAINING_STRUCTURES.length;
+    currentSeq[sessionIdx] = TRAINING_STRUCTURES[nextIndex];
+    
+    setCycleSequences(prev => ({ ...prev, [cycleIdx]: currentSeq }));
+  };
+
+  // Gerar sessões dinâmicas baseadas na frequência e sequência personalizada
+  const getSessionsForWeek = (freq: number, cycleIdx: number) => {
     const sessions: SessionData[] = [];
-    const sequence = ['A', 'B', 'C', 'A', 'B', 'C', 'Full'];
+    const sequence = cycleSequences[cycleIdx] || Array.from({ length: freq }, (_, i) => TRAINING_STRUCTURES[i % 3]);
     const typeCounts: Record<string, number> = {};
 
     for (let i = 0; i < freq; i++) {
-      const type = sequence[i % sequence.length];
+      const type = sequence[i] || 'A';
       typeCounts[type] = (typeCounts[type] || 0) + 1;
       
       sessions.push({
-        id: `session-${i}`,
+        id: `session-${cycleIdx}-${i}`,
         dia: DAYS_OF_WEEK[i % 7],
         tipoTreino: type,
         ocorrencia: typeCounts[type],
@@ -203,6 +227,29 @@ export default function PeriodizacaoPage() {
     }
     return sessions;
   };
+
+  // Sincronizar tamanho da sequência com a frequência
+  React.useEffect(() => {
+    const freqNum = parseInt(frequency) || 4;
+    setCycleSequences(prev => {
+      const next = { ...prev };
+      Object.keys(next).forEach(key => {
+        const idx = parseInt(key);
+        const current = next[idx];
+        if (current.length !== freqNum) {
+          if (current.length < freqNum) {
+            // Aumentar
+            const extra = Array.from({ length: freqNum - current.length }, (_, i) => TRAINING_STRUCTURES[(current.length + i) % 3]);
+            next[idx] = [...current, ...extra];
+          } else {
+            // Diminuir
+            next[idx] = current.slice(0, freqNum);
+          }
+        }
+      });
+      return next;
+    });
+  }, [frequency]);
 
   // Gerar dados para o gráfico baseado nos inputs
   const chartData = React.useMemo(() => {
@@ -381,7 +428,7 @@ export default function PeriodizacaoPage() {
                        {Array.from({ length: parseInt(weeksPerMonth) || 1 }).map((_, i) => {
                          const isExpanded = expandedCycles.has(i);
                          const isCustomizing = customizingCycles.has(i);
-                         const sessions = getSessionsForWeek(parseInt(frequency));
+                         const sessions = getSessionsForWeek(parseInt(frequency), i);
 
                          return (
                          <div key={i} className="bg-muted/5 rounded-2xl p-4 sm:p-5 border border-border/5 space-y-6">
@@ -454,19 +501,25 @@ export default function PeriodizacaoPage() {
                                          </div>
 
                                          <div className="flex-1 space-y-2">
-                                            <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Distribuição semanal</label>
+                                            <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Distribuição semanal (clique para trocar)</label>
                                             <div className="flex items-center gap-3">
                                                <div className="flex items-center border border-border/20 rounded-xl overflow-hidden shadow-sm bg-muted/10">
                                                   {sessions.map((session, sIdx) => (
-                                                    <div key={session.id} className="flex flex-col items-center bg-card px-4 py-2 border-r border-border/10 last:border-none">
-                                                       <span className="text-[8px] font-black text-muted-foreground/40 uppercase mb-0.5">{session.dia.substring(0,3)}</span>
+                                                    <button 
+                                                      key={session.id} 
+                                                      onClick={() => cycleTrainingType(i, sIdx)}
+                                                      className="flex flex-col items-center bg-card px-4 py-2 border-r border-border/10 last:border-none hover:bg-primary/5 transition-colors group"
+                                                    >
+                                                       <span className="text-[8px] font-black text-muted-foreground/40 uppercase mb-0.5 group-hover:text-primary transition-colors">{session.dia.substring(0,3)}</span>
                                                        <span className={cn(
                                                          "text-sm font-black",
-                                                         session.tipoTreino === 'A' ? "text-orange-500" : session.tipoTreino === 'B' ? "text-emerald-500" : "text-cyan-500"
+                                                         session.tipoTreino === 'A' ? "text-orange-500" : 
+                                                         session.tipoTreino === 'B' ? "text-emerald-500" : 
+                                                         session.tipoTreino === 'C' ? "text-cyan-500" : "text-slate-500"
                                                        )}>
                                                          {session.tipoTreino}
                                                        </span>
-                                                    </div>
+                                                    </button>
                                                   ))}
                                                </div>
                                                <Button variant="ghost" className="h-11 rounded-xl gap-2 font-black text-[9px] uppercase tracking-widest hover:bg-primary/5 hover:text-primary transition-all">
