@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -14,7 +15,8 @@ import {
   Check,
   Zap,
   MoreVertical,
-  MessageCircle
+  MessageCircle,
+  ChevronUp
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -45,12 +47,35 @@ interface Periodization {
   createdAt: string;
 }
 
+interface CycleVariables {
+  series: string;
+  reps: string;
+  interval: string;
+  cadence: string;
+}
+
 // --- Dados Mockados ---
 
 const initialPeriodizations: Periodization[] = [
   { id: '1', name: 'trimestral - Hipertrofia Ondulatória', macrociclo: 3, mesociclo: 4, createdAt: '01/02/2024' },
   { id: '2', name: 'MENSAL - Hipertrofia Ondulatória', macrociclo: 1, mesociclo: 4, createdAt: '10/02/2024' },
 ];
+
+const VariableInput = ({ label, value, color, onChange }: { label: string, value: string, color: string, onChange: (val: string) => void }) => (
+  <div className="space-y-1.5 flex-1 min-w-0">
+    <label className="text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-muted-foreground/80 ml-1">
+      {label}:
+    </label>
+    <div className="bg-card rounded-xl p-2 sm:p-3 shadow-inner-sm border border-border/5">
+      <Input 
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="h-8 bg-transparent border-none text-center font-black text-sm sm:text-base focus-visible:ring-0 shadow-none p-0"
+      />
+      <div className={cn("h-1 w-full rounded-full mt-2", color)} />
+    </div>
+  </div>
+);
 
 export default function PeriodizacaoPage() {
   const { toast } = useToast();
@@ -62,13 +87,24 @@ export default function PeriodizacaoPage() {
   const [months, setMonths] = React.useState('3');
   const [weeksPerMonth, setWeeksPerMonth] = React.useState('4');
   const [activeMacro, setActiveMacro] = React.useState('1');
+  const [expandedCycles, setExpandedCycles] = React.useState<Set<number>>(new Set([0]));
+
+  const toggleCycle = (idx: number) => {
+    const newSet = new Set(expandedCycles);
+    if (newSet.has(idx)) {
+      newSet.delete(idx);
+    } else {
+      newSet.add(idx);
+    }
+    setExpandedCycles(newSet);
+  };
 
   // Gerar dados para o gráfico baseado nos inputs
   const chartData = React.useMemo(() => {
     const totalWeeks = parseInt(months) * parseInt(weeksPerMonth);
-    return Array.from({ length: totalWeeks }, (_, i) => {
-      const month = Math.floor(i / parseInt(weeksPerMonth)) + 1;
-      const week = (i % parseInt(weeksPerMonth)) + 1;
+    return Array.from({ length: totalWeeks || 1 }, (_, i) => {
+      const month = Math.floor(i / (parseInt(weeksPerMonth) || 4)) + 1;
+      const week = (i % (parseInt(weeksPerMonth) || 4)) + 1;
       return {
         name: `M${month} S${week}`,
         series: 3,
@@ -171,7 +207,7 @@ export default function PeriodizacaoPage() {
               
               {/* COLUNA ESQUERDA: CONFIGURAÇÕES */}
               <div className="lg:col-span-7 space-y-6">
-                <Card className="bg-card border-border/40 rounded-3xl p-8 shadow-sm space-y-8">
+                <Card className="bg-card border-border/40 rounded-3xl p-6 sm:p-8 shadow-sm space-y-8">
                   
                   {/* Inputs Principais */}
                   <div className="space-y-6">
@@ -182,7 +218,7 @@ export default function PeriodizacaoPage() {
                       <Input 
                         value={name} 
                         onChange={e => setName(e.target.value)}
-                        className="h-12 bg-muted/20 border-border/40 rounded-xl font-bold"
+                        className="h-12 bg-muted/10 border-border/40 rounded-xl font-bold"
                       />
                     </div>
 
@@ -195,7 +231,7 @@ export default function PeriodizacaoPage() {
                           type="number" 
                           value={months} 
                           onChange={e => setMonths(e.target.value)}
-                          className="h-12 bg-muted/20 border-border/40 rounded-xl font-bold"
+                          className="h-12 bg-muted/10 border-border/40 rounded-xl font-bold"
                         />
                       </div>
                       <div className="space-y-2">
@@ -206,7 +242,7 @@ export default function PeriodizacaoPage() {
                           type="number" 
                           value={weeksPerMonth} 
                           onChange={e => setWeeksPerMonth(e.target.value)}
-                          className="h-12 bg-muted/20 border-border/40 rounded-xl font-bold"
+                          className="h-12 bg-muted/10 border-border/40 rounded-xl font-bold"
                         />
                       </div>
                     </div>
@@ -215,13 +251,13 @@ export default function PeriodizacaoPage() {
                   {/* Abas de Macrociclo */}
                   <div className="space-y-6">
                     <div className="flex items-center justify-between border-b border-border/10">
-                      <div className="flex gap-2">
-                         {Array.from({ length: parseInt(months) || 0 }).map((_, i) => (
+                      <div className="flex gap-2 overflow-x-auto no-scrollbar max-w-[70%]">
+                         {Array.from({ length: parseInt(months) || 1 }).map((_, i) => (
                            <button 
                             key={i}
                             onClick={() => setActiveMacro((i+1).toString())}
                             className={cn(
-                              "px-4 py-3 text-[11px] font-black uppercase tracking-widest transition-all border-b-4",
+                              "px-4 py-3 text-[11px] font-black uppercase tracking-widest transition-all border-b-4 shrink-0",
                               activeMacro === (i+1).toString() ? "border-primary text-foreground" : "border-transparent text-muted-foreground/40 hover:text-foreground"
                             )}
                            >
@@ -229,31 +265,70 @@ export default function PeriodizacaoPage() {
                            </button>
                          ))}
                       </div>
-                      <div className="flex items-center gap-3">
-                         <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Repetir Macrociclos</span>
+                      <div className="flex items-center gap-3 shrink-0">
+                         <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest hidden sm:inline">Repetir Macrociclos</span>
                          <Switch defaultChecked />
                       </div>
                     </div>
 
                     {/* Ciclos Dinâmicos baseados nas semanas */}
-                    <div className="space-y-4">
-                       {Array.from({ length: parseInt(weeksPerMonth) || 0 }).map((_, i) => (
-                         <div key={i} className="space-y-1.5 group">
-                            <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">
-                              NOME DO CICLO {i + 1}: <span className="text-red-500">*</span>
-                            </label>
-                            <div className="relative">
-                               <Input 
-                                defaultValue={`Ciclo ${i + 1}`}
-                                className="h-11 bg-muted/10 border-border/30 rounded-xl font-bold text-sm focus-visible:ring-primary/20 pr-12"
-                               />
-                               <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                                  <ChevronDown className="h-4 w-4 text-muted-foreground/40" />
-                                  <div className="h-6 w-6 bg-[#00bfa5] rounded flex items-center justify-center text-white">
-                                     <Check className="h-3 w-3" />
+                    <div className="space-y-6">
+                       {Array.from({ length: parseInt(weeksPerMonth) || 1 }).map((_, i) => (
+                         <div key={i} className="bg-muted/5 rounded-2xl p-4 sm:p-5 border border-border/5 space-y-4">
+                            <div className="space-y-1.5 group">
+                                <div className="flex items-center justify-between">
+                                  <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">
+                                    NOME DO CICLO {i + 1}: <span className="text-red-500">*</span>
+                                  </label>
+                                  <button 
+                                    onClick={() => toggleCycle(i)}
+                                    className="text-muted-foreground/40 hover:text-primary transition-colors"
+                                  >
+                                    {expandedCycles.has(i) ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                                  </button>
+                                </div>
+                                <div className="relative">
+                                  <Input 
+                                    defaultValue={`Ciclo ${i + 1}`}
+                                    className="h-11 bg-muted/10 border-border/30 rounded-xl font-bold text-sm focus-visible:ring-primary/20 pr-12"
+                                  />
+                                  <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                                      <div className="h-6 w-6 bg-[#00bfa5] rounded flex items-center justify-center text-white">
+                                        <Check className="h-3 w-3" />
+                                      </div>
                                   </div>
-                               </div>
+                                </div>
                             </div>
+
+                            {/* Detalhes Expansíveis do Ciclo */}
+                            {expandedCycles.has(i) && (
+                              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 animate-in slide-in-from-top-2 duration-300">
+                                 <VariableInput 
+                                  label="SÉRIES" 
+                                  value="3" 
+                                  color="bg-orange-500" 
+                                  onChange={() => {}} 
+                                 />
+                                 <VariableInput 
+                                  label="REPETIÇÕES(MARGEM)" 
+                                  value="12-15" 
+                                  color="bg-[#8bc34a]" 
+                                  onChange={() => {}} 
+                                 />
+                                 <VariableInput 
+                                  label="INTERVALO" 
+                                  value="30" 
+                                  color="bg-[#2e7d32]" 
+                                  onChange={() => {}} 
+                                 />
+                                 <VariableInput 
+                                  label="CADÊNCIA" 
+                                  value="1" 
+                                  color="bg-[#00acc1]" 
+                                  onChange={() => {}} 
+                                 />
+                              </div>
+                            )}
                          </div>
                        ))}
                     </div>
