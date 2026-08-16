@@ -89,7 +89,15 @@ const VariableInput = ({ label, value, color, onChange }: { label: string, value
   </div>
 );
 
-const SessionCard = ({ session, onCopy }: { session: SessionData, onCopy?: () => void }) => (
+const SessionCard = ({ 
+  session, 
+  onUpdateField,
+  onCopy 
+}: { 
+  session: SessionData, 
+  onUpdateField: (field: keyof SessionData, value: string) => void,
+  onCopy?: () => void 
+}) => (
   <div className="bg-card border border-border/40 rounded-2xl p-4 shadow-sm space-y-4 hover:border-primary/30 transition-all group relative overflow-hidden">
     <div className="absolute top-0 left-0 w-1 h-full bg-border/10 group-hover:bg-primary/20" />
     
@@ -123,16 +131,23 @@ const SessionCard = ({ session, onCopy }: { session: SessionData, onCopy?: () =>
 
     <div className="grid grid-cols-2 gap-x-4 gap-y-3">
       {[
-        { label: 'Séries', val: session.series },
-        { label: 'Reps', val: session.repeticoes },
-        { label: 'Inter', val: `${session.intervalo}s` },
-        { label: 'Cadê', val: session.cadencia },
-        { label: 'Inten', val: `${session.intensidade}%` },
-        { label: 'RIR', val: session.rir },
+        { label: 'Séries', val: session.series, field: 'series' as const },
+        { label: 'Reps', val: session.repeticoes, field: 'repeticoes' as const },
+        { label: 'Inter', val: session.intervalo, field: 'intervalo' as const, suffix: 's' },
+        { label: 'Cadê', val: session.cadencia, field: 'cadencia' as const },
+        { label: 'Inten', val: session.intensidade, field: 'intensidade' as const, suffix: '%' },
+        { label: 'RIR', val: session.rir, field: 'rir' as const },
       ].map((item, idx) => (
-        <div key={idx} className="flex justify-between items-center border-b border-border/5 pb-1">
-          <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-tight">{item.label}</span>
-          <span className="text-[11px] font-black text-foreground italic">{item.val}</span>
+        <div key={idx} className="flex justify-between items-center border-b border-border/5 pb-1 gap-2">
+          <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-tight shrink-0">{item.label}</span>
+          <div className="flex items-center min-w-0">
+            <input 
+              value={item.val}
+              onChange={(e) => onUpdateField(item.field, e.target.value)}
+              className="bg-transparent border-none p-0 text-[11px] font-black text-foreground italic w-full text-right focus:outline-none focus:text-primary"
+            />
+            {item.suffix && <span className="text-[9px] font-bold text-muted-foreground ml-0.5">{item.suffix}</span>}
+          </div>
         </div>
       ))}
     </div>
@@ -161,8 +176,14 @@ export default function PeriodizacaoPage() {
   const [customizingCycles, setCustomizingCycles] = React.useState<Set<number>>(new Set());
   const [frequency, setFrequency] = React.useState('4');
   
+  // Variáveis Base (Gerais) por microciclo
+  const [baseVariables, setBaseVariables] = React.useState<Record<number, { series: string, reps: string, interval: string, cadence: string }>>({});
+  
   // Mapa de sequências por ciclo (Microciclo): { cicloIndex: ['A', 'B', 'C', 'A'] }
   const [cycleSequences, setCycleSequences] = React.useState<Record<number, string[]>>({});
+
+  // Overrides de sessões: { 'ciclo-sessao': Partial<SessionData> }
+  const [sessionOverrides, setSessionOverrides] = React.useState<Record<string, Partial<SessionData>>>({});
 
   const toggleCycle = (idx: number) => {
     const newSet = new Set(expandedCycles);
@@ -174,13 +195,22 @@ export default function PeriodizacaoPage() {
     setExpandedCycles(newSet);
   };
 
+  const updateBaseVar = (cycleIdx: number, field: string, value: string) => {
+    setBaseVariables(prev => ({
+      ...prev,
+      [cycleIdx]: {
+        ...(prev[cycleIdx] || { series: '3', reps: '12-15', interval: '30', cadence: '1' }),
+        [field]: value
+      }
+    }));
+  };
+
   const toggleCustomization = (idx: number) => {
     const newSet = new Set(customizingCycles);
     if (newSet.has(idx)) {
       newSet.delete(idx);
     } else {
       newSet.add(idx);
-      // Inicializar sequência se não existir
       if (!cycleSequences[idx]) {
         const defaultSeq = Array.from({ length: parseInt(frequency) || 4 }, (_, i) => TRAINING_STRUCTURES[i % 3]);
         setCycleSequences(prev => ({ ...prev, [idx]: defaultSeq }));
@@ -189,7 +219,6 @@ export default function PeriodizacaoPage() {
     setCustomizingCycles(newSet);
   };
 
-  // Alterar letra do treino em uma posição específica
   const cycleTrainingType = (cycleIdx: number, sessionIdx: number) => {
     const currentSeq = [...(cycleSequences[cycleIdx] || [])];
     if (currentSeq.length === 0) return;
@@ -202,33 +231,48 @@ export default function PeriodizacaoPage() {
     setCycleSequences(prev => ({ ...prev, [cycleIdx]: currentSeq }));
   };
 
-  // Gerar sessões dinâmicas baseadas na frequência e sequência personalizada
+  const updateSessionOverride = (cycleIdx: number, sessionIdx: number, field: keyof SessionData, value: string) => {
+    const key = `${cycleIdx}-${sessionIdx}`;
+    setSessionOverrides(prev => ({
+      ...prev,
+      [key]: {
+        ...(prev[key] || {}),
+        [field]: value
+      }
+    }));
+  };
+
   const getSessionsForWeek = (freq: number, cycleIdx: number) => {
     const sessions: SessionData[] = [];
     const sequence = cycleSequences[cycleIdx] || Array.from({ length: freq }, (_, i) => TRAINING_STRUCTURES[i % 3]);
     const typeCounts: Record<string, number> = {};
+    
+    const base = baseVariables[cycleIdx] || { series: '3', reps: '12-15', interval: '30', cadence: '1' };
 
     for (let i = 0; i < freq; i++) {
       const type = sequence[i] || 'A';
       typeCounts[type] = (typeCounts[type] || 0) + 1;
       
+      const key = `${cycleIdx}-${i}`;
+      const overrides = sessionOverrides[key] || {};
+      
       sessions.push({
-        id: `session-${cycleIdx}-${i}`,
+        id: key,
         dia: DAYS_OF_WEEK[i % 7],
         tipoTreino: type,
         ocorrencia: typeCounts[type],
-        series: '4',
-        repeticoes: '8-12',
-        intervalo: '60',
-        cadencia: '2-0-2',
-        intensidade: '75',
-        rir: '2'
+        // Prioriza override, se não existir usa a base da semana
+        series: overrides.series ?? base.series,
+        repeticoes: overrides.repeticoes ?? base.reps,
+        intervalo: overrides.intervalo ?? base.interval,
+        cadencia: overrides.cadencia ?? base.cadence,
+        intensidade: overrides.intensidade ?? '75',
+        rir: overrides.rir ?? '2'
       });
     }
     return sessions;
   };
 
-  // Sincronizar tamanho da sequência com a frequência
   React.useEffect(() => {
     const freqNum = parseInt(frequency) || 4;
     setCycleSequences(prev => {
@@ -236,13 +280,11 @@ export default function PeriodizacaoPage() {
       Object.keys(next).forEach(key => {
         const idx = parseInt(key);
         const current = next[idx];
-        if (current.length !== freqNum) {
+        if (current && current.length !== freqNum) {
           if (current.length < freqNum) {
-            // Aumentar
             const extra = Array.from({ length: freqNum - current.length }, (_, i) => TRAINING_STRUCTURES[(current.length + i) % 3]);
             next[idx] = [...current, ...extra];
           } else {
-            // Diminuir
             next[idx] = current.slice(0, freqNum);
           }
         }
@@ -251,19 +293,20 @@ export default function PeriodizacaoPage() {
     });
   }, [frequency]);
 
-  // Gerar dados para o gráfico baseado nos inputs
   const chartData = React.useMemo(() => {
     const totalWeeks = parseInt(months) * parseInt(weeksPerMonth);
     return Array.from({ length: totalWeeks || 1 }, (_, i) => {
       const month = Math.floor(i / (parseInt(weeksPerMonth) || 4)) + 1;
       const week = (i % (parseInt(weeksPerMonth) || 4)) + 1;
+      const base = baseVariables[i % parseInt(weeksPerMonth)] || { series: '3', reps: '12-15' };
+      
       return {
         name: `M${month} S${week}`,
-        series: 3,
-        reps: 15,
+        series: parseInt(base.series) || 3,
+        reps: parseInt(base.reps.split('-')[0]) || 12,
       };
     });
-  }, [months, weeksPerMonth]);
+  }, [months, weeksPerMonth, baseVariables]);
 
   const handleSave = () => {
     toast({
@@ -429,6 +472,7 @@ export default function PeriodizacaoPage() {
                          const isExpanded = expandedCycles.has(i);
                          const isCustomizing = customizingCycles.has(i);
                          const sessions = getSessionsForWeek(parseInt(frequency), i);
+                         const base = baseVariables[i] || { series: '3', reps: '12-15', interval: '30', cadence: '1' };
 
                          return (
                          <div key={i} className="bg-muted/5 rounded-2xl p-4 sm:p-5 border border-border/5 space-y-6">
@@ -462,10 +506,10 @@ export default function PeriodizacaoPage() {
                               <div className="space-y-8 animate-in slide-in-from-top-2 duration-300">
                                  {/* Variáveis Gerais */}
                                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                                    <VariableInput label="SÉRIES" value="3" color="bg-orange-500" onChange={() => {}} />
-                                    <VariableInput label="REPETIÇÕES (MARGEM)" value="12-15" color="bg-[#8bc34a]" onChange={() => {}} />
-                                    <VariableInput label="INTERVALO" value="30" color="bg-[#2e7d32]" onChange={() => {}} />
-                                    <VariableInput label="CADÊNCIA" value="1" color="bg-[#00acc1]" onChange={() => {}} />
+                                    <VariableInput label="SÉRIES" value={base.series} color="bg-orange-500" onChange={(v) => updateBaseVar(i, 'series', v)} />
+                                    <VariableInput label="REPETIÇÕES (MARGEM)" value={base.reps} color="bg-[#8bc34a]" onChange={(v) => updateBaseVar(i, 'reps', v)} />
+                                    <VariableInput label="INTERVALO" value={base.interval} color="bg-[#2e7d32]" onChange={(v) => updateBaseVar(i, 'interval', v)} />
+                                    <VariableInput label="CADÊNCIA" value={base.cadence} color="bg-[#00acc1]" onChange={(v) => updateBaseVar(i, 'cadence', v)} />
                                  </div>
 
                                  {/* Toggle Ondulação Diária */}
@@ -532,15 +576,19 @@ export default function PeriodizacaoPage() {
 
                                       {/* Grid de Sessões - Layout Harmônico */}
                                       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-                                         {sessions.map((session) => (
-                                           <SessionCard key={session.id} session={session} />
+                                         {sessions.map((session, sIdx) => (
+                                           <SessionCard 
+                                            key={session.id} 
+                                            session={session} 
+                                            onUpdateField={(field, value) => updateSessionOverride(i, sIdx, field, value)}
+                                           />
                                          ))}
                                       </div>
 
                                       <div className="flex items-center gap-3 bg-primary/5 p-4 rounded-xl border border-primary/10">
                                          <AlertCircle className="h-4 w-4 text-primary" />
                                          <p className="text-[10px] font-bold uppercase italic text-primary leading-tight">
-                                           As variáveis acima substituem as configurações gerais desta semana para permitir a ondulação diária.
+                                           As variáveis acima trazem a base da semana como padrão. Ao editá-las, você cria uma ondulação específica para o dia.
                                          </p>
                                       </div>
                                    </div>
