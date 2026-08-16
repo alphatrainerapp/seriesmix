@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -135,8 +134,6 @@ const SessionCard = ({
         { label: 'Reps', val: session.repeticoes, field: 'repeticoes' as const },
         { label: 'Inter', val: session.intervalo, field: 'intervalo' as const, suffix: 's' },
         { label: 'Cadê', val: session.cadencia, field: 'cadencia' as const },
-        { label: 'Inten', val: session.intensidade, field: 'intensidade' as const, suffix: '%' },
-        { label: 'RIR', val: session.rir, field: 'rir' as const },
       ].map((item, idx) => (
         <div key={idx} className="flex justify-between items-center border-b border-border/5 pb-1 gap-2">
           <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-tight shrink-0">{item.label}</span>
@@ -636,13 +633,13 @@ export default function PeriodizacaoPage() {
                           dataKey="name" 
                           axisLine={false} 
                           tickLine={false} 
-                          tick={{ fontSize: 10, fontWeight: '900', fill: 'currentColor', opacity: 0.4 }} 
+                          tick={{ fontSize: 10, fontWeights: '900', fill: 'currentColor', opacity: 0.4 }} 
                           dy={10}
                         />
                         <YAxis 
                           axisLine={false} 
                           tickLine={false} 
-                          tick={{ fontSize: 10, fontWeight: '900', fill: 'currentColor', opacity: 0.4 }} 
+                          tick={{ fontSize: 10, fontWeights: '900', fill: 'currentColor', opacity: 0.4 }} 
                         />
                         <RechartsTooltip 
                           contentStyle={{ backgroundColor: 'hsl(var(--card))', border: 'none', borderRadius: '12px', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
