@@ -19,7 +19,8 @@ import {
   ChevronUp,
   Copy,
   Dumbbell,
-  AlertCircle
+  AlertCircle,
+  RefreshCcw
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -88,8 +89,8 @@ const VariableInput = ({ label, value, color, onChange }: { label: string, value
   </div>
 );
 
-const SessionCard = ({ session }: { session: SessionData }) => (
-  <div className="bg-card border border-border/40 rounded-2xl p-4 shadow-sm space-y-4 hover:border-primary/30 transition-all group">
+const SessionCard = ({ session, onCopy }: { session: SessionData, onCopy?: () => void }) => (
+  <div className="bg-card border border-border/40 rounded-2xl p-4 shadow-sm space-y-4 hover:border-primary/30 transition-all group relative">
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-2">
         <div className={cn(
@@ -100,7 +101,9 @@ const SessionCard = ({ session }: { session: SessionData }) => (
           {session.dia} • TREINO {session.tipoTreino}
         </span>
       </div>
-      <MoreVertical className="h-4 w-4 text-muted-foreground/30" />
+      <button className="text-muted-foreground/30 hover:text-primary transition-colors" onClick={onCopy} title="Copiar variáveis do anterior">
+        <RefreshCcw className="h-3.5 w-3.5" />
+      </button>
     </div>
     
     <div className="space-y-0.5">
@@ -136,7 +139,7 @@ const SessionCard = ({ session }: { session: SessionData }) => (
 
     <button className="w-full h-9 rounded-xl border border-border bg-muted/20 hover:bg-primary/5 hover:border-primary/30 transition-all flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-foreground/70">
       <Dumbbell className="h-3.5 w-3.5" />
-      Editar exercícios (8)
+      Editar exercícios
     </button>
   </div>
 );
@@ -145,6 +148,8 @@ const initialPeriodizations: Periodization[] = [
   { id: '1', name: 'trimestral - Hipertrofia Ondulatória', macrociclo: 3, mesociclo: 4, createdAt: '01/02/2024' },
   { id: '2', name: 'MENSAL - Hipertrofia Ondulatória', macrociclo: 1, mesociclo: 4, createdAt: '10/02/2024' },
 ];
+
+const DAYS_OF_WEEK = ['SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA', 'SÁBADO', 'DOMINGO'];
 
 export default function PeriodizacaoPage() {
   const { toast } = useToast();
@@ -157,7 +162,7 @@ export default function PeriodizacaoPage() {
   const [weeksPerMonth, setWeeksPerMonth] = React.useState('4');
   const [activeMacro, setActiveMacro] = React.useState('1');
   const [expandedCycles, setExpandedCycles] = React.useState<Set<number>>(new Set([0]));
-  const [isCustomizingSessions, setIsCustomizingSessions] = React.useState(false);
+  const [customizingCycles, setCustomizingCycles] = React.useState<Set<number>>(new Set());
   const [frequency, setFrequency] = React.useState('4');
 
   const toggleCycle = (idx: number) => {
@@ -170,13 +175,41 @@ export default function PeriodizacaoPage() {
     setExpandedCycles(newSet);
   };
 
-  // Dados Mockados de Sessão
-  const sessionsData: SessionData[] = [
-    { id: '1', dia: 'SEGUNDA', tipoTreino: 'A', ocorrencia: 1, series: '4', repeticoes: '6-8', intervalo: '120', cadencia: '2-0-1', intensidade: '80', rir: '2' },
-    { id: '2', dia: 'TERÇA', tipoTreino: 'B', ocorrencia: 1, series: '3', repeticoes: '10-12', intervalo: '90', cadencia: '2-1-2', intensidade: '70', rir: '2' },
-    { id: '3', dia: 'QUINTA', tipoTreino: 'C', ocorrencia: 1, series: '3', repeticoes: '15-20', intervalo: '45', cadencia: '2-0-2', intensidade: '65', rir: '2' },
-    { id: '4', dia: 'SEXTA', tipoTreino: 'A', ocorrencia: 2, series: '3', repeticoes: '10-12', intervalo: '90', cadencia: '2-0-1', intensidade: '72', rir: '2' },
-  ];
+  const toggleCustomization = (idx: number) => {
+    const newSet = new Set(customizingCycles);
+    if (newSet.has(idx)) {
+      newSet.delete(idx);
+    } else {
+      newSet.add(idx);
+    }
+    setCustomizingCycles(newSet);
+  };
+
+  // Gerar sessões dinâmicas baseadas na frequência
+  const getSessionsForWeek = (freq: number) => {
+    const sessions: SessionData[] = [];
+    const sequence = ['A', 'B', 'C', 'A', 'B', 'C', 'Full'];
+    const typeCounts: Record<string, number> = {};
+
+    for (let i = 0; i < freq; i++) {
+      const type = sequence[i % sequence.length];
+      typeCounts[type] = (typeCounts[type] || 0) + 1;
+      
+      sessions.push({
+        id: `session-${i}`,
+        dia: DAYS_OF_WEEK[i % 7],
+        tipoTreino: type,
+        ocorrencia: typeCounts[type],
+        series: '4',
+        repeticoes: '8-12',
+        intervalo: '60',
+        cadencia: '2-0-2',
+        intensidade: '75',
+        rir: '2'
+      });
+    }
+    return sessions;
+  };
 
   // Gerar dados para o gráfico baseado nos inputs
   const chartData = React.useMemo(() => {
@@ -352,7 +385,12 @@ export default function PeriodizacaoPage() {
 
                     {/* Ciclos Dinâmicos baseados nas semanas */}
                     <div className="space-y-6">
-                       {Array.from({ length: parseInt(weeksPerMonth) || 1 }).map((_, i) => (
+                       {Array.from({ length: parseInt(weeksPerMonth) || 1 }).map((_, i) => {
+                         const isExpanded = expandedCycles.has(i);
+                         const isCustomizing = customizingCycles.has(i);
+                         const sessions = getSessionsForWeek(parseInt(frequency));
+
+                         return (
                          <div key={i} className="bg-muted/5 rounded-2xl p-4 sm:p-5 border border-border/5 space-y-6">
                             <div className="space-y-1.5 group">
                                 <div className="flex items-center justify-between">
@@ -363,7 +401,7 @@ export default function PeriodizacaoPage() {
                                     onClick={() => toggleCycle(i)}
                                     className="text-muted-foreground/40 hover:text-primary transition-colors"
                                   >
-                                    {expandedCycles.has(i) ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                                    {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                                   </button>
                                 </div>
                                 <div className="relative">
@@ -380,7 +418,7 @@ export default function PeriodizacaoPage() {
                             </div>
 
                             {/* Detalhes Expansíveis do Ciclo */}
-                            {expandedCycles.has(i) && (
+                            {isExpanded && (
                               <div className="space-y-8 animate-in slide-in-from-top-2 duration-300">
                                  {/* Variáveis Gerais */}
                                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -394,8 +432,8 @@ export default function PeriodizacaoPage() {
                                  <div className="flex items-center gap-3 pt-2">
                                     <Checkbox 
                                       id={`daily-undulation-${i}`} 
-                                      checked={isCustomizingSessions}
-                                      onCheckedChange={(checked) => setIsCustomizingSessions(checked === true)}
+                                      checked={isCustomizing}
+                                      onCheckedChange={() => toggleCustomization(i)}
                                       className="h-5 w-5 rounded-md border-primary data-[state=checked]:bg-primary"
                                     />
                                     <label htmlFor={`daily-undulation-${i}`} className="text-[11px] font-black uppercase tracking-tight text-foreground/80 flex items-center gap-2 cursor-pointer">
@@ -405,7 +443,7 @@ export default function PeriodizacaoPage() {
                                  </div>
 
                                  {/* Configuração por Sessão (Aparece se o toggle estiver ativo) */}
-                                 {isCustomizingSessions && (
+                                 {isCustomizing && (
                                    <div className="space-y-6 pt-4 animate-in fade-in slide-in-from-top-4 duration-500">
                                       <div className="flex flex-col sm:flex-row gap-6">
                                          <div className="space-y-2">
@@ -426,16 +464,21 @@ export default function PeriodizacaoPage() {
                                             <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Distribuição semanal</label>
                                             <div className="flex items-center gap-2">
                                                <div className="flex items-center border border-border/40 rounded-xl overflow-hidden shadow-sm">
-                                                  {['SEG', 'TER', 'QUI', 'SEX'].map((day, idx) => (
-                                                    <div key={day} className="flex flex-col items-center bg-card px-4 py-1.5 border-r border-border/40 last:border-none">
-                                                       <span className="text-[8px] font-black text-muted-foreground/40">{day}</span>
-                                                       <span className="text-sm font-black text-foreground">{idx === 0 || idx === 3 ? 'A' : idx === 1 ? 'B' : 'C'}</span>
+                                                  {sessions.map((session, sIdx) => (
+                                                    <div key={session.id} className="flex flex-col items-center bg-card px-4 py-1.5 border-r border-border/40 last:border-none">
+                                                       <span className="text-[8px] font-black text-muted-foreground/40">{session.dia.substring(0,3)}</span>
+                                                       <span className={cn(
+                                                         "text-sm font-black",
+                                                         session.tipoTreino === 'A' ? "text-orange-500" : session.tipoTreino === 'B' ? "text-emerald-500" : "text-cyan-500"
+                                                       )}>
+                                                         {session.tipoTreino}
+                                                       </span>
                                                     </div>
                                                   ))}
                                                </div>
                                                <Button variant="outline" className="h-11 rounded-xl gap-2 font-bold text-[10px] uppercase border-border/60 hover:bg-primary/5 hover:text-primary">
                                                   <Copy className="h-3.5 w-3.5" />
-                                                  <span className="hidden sm:inline">Copiar estrutura para próxima semana</span>
+                                                  <span className="hidden sm:inline">Copiar estrutura</span>
                                                </Button>
                                             </div>
                                          </div>
@@ -443,7 +486,7 @@ export default function PeriodizacaoPage() {
 
                                       {/* Grid de Sessões */}
                                       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-                                         {sessionsData.map((session) => (
+                                         {sessions.map((session) => (
                                            <SessionCard key={session.id} session={session} />
                                          ))}
                                       </div>
@@ -457,7 +500,7 @@ export default function PeriodizacaoPage() {
                               </div>
                             )}
                          </div>
-                       ))}
+                       )})}
                     </div>
                   </div>
 
