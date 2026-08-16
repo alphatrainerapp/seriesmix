@@ -59,15 +59,12 @@ interface Periodization {
 
 interface SessionData {
   id: string;
-  dia: string;
   tipoTreino: string;
   ocorrencia: number;
   series: string;
   repeticoes: string;
   intervalo: string;
   cadencia: string;
-  intensidade: string;
-  rir: string;
 }
 
 // --- Sub-componentes ---
@@ -109,7 +106,7 @@ const SessionCard = ({
           session.tipoTreino === 'C' ? "bg-cyan-500" : "bg-slate-500"
         )} />
         <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
-          {session.dia} • TREINO {session.tipoTreino}
+          TREINO {session.tipoTreino}
         </span>
       </div>
       <button 
@@ -156,7 +153,6 @@ const initialPeriodizations: Periodization[] = [
   { id: '2', name: 'MENSAL - Hipertrofia Ondulatória', macrociclo: 1, mesociclo: 4, createdAt: '10/02/2024' },
 ];
 
-const DAYS_OF_WEEK = ['SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA', 'SÁBADO', 'DOMINGO'];
 const TRAINING_STRUCTURES = ['A', 'B', 'C', 'D', 'E', 'F'];
 
 export default function PeriodizacaoPage() {
@@ -255,16 +251,12 @@ export default function PeriodizacaoPage() {
       
       sessions.push({
         id: key,
-        dia: DAYS_OF_WEEK[i % 7],
         tipoTreino: type,
         ocorrencia: typeCounts[type],
-        // Prioriza override, se não existir usa a base da semana
         series: overrides.series ?? base.series,
         repeticoes: overrides.repeticoes ?? base.reps,
         intervalo: overrides.intervalo ?? base.interval,
         cadencia: overrides.cadencia ?? base.cadence,
-        intensidade: overrides.intensidade ?? '75',
-        rir: overrides.rir ?? '2'
       });
     }
     return sessions;
@@ -542,16 +534,16 @@ export default function PeriodizacaoPage() {
                                          </div>
 
                                          <div className="flex-1 space-y-2">
-                                            <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Distribuição semanal (clique para trocar)</label>
+                                            <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Distribuição das sessões (clique para trocar)</label>
                                             <div className="flex items-center gap-3">
                                                <div className="flex items-center border border-border/20 rounded-xl overflow-hidden shadow-sm bg-muted/10">
                                                   {sessions.map((session, sIdx) => (
                                                     <button 
                                                       key={session.id} 
                                                       onClick={() => cycleTrainingType(i, sIdx)}
-                                                      className="flex flex-col items-center bg-card px-4 py-2 border-r border-border/10 last:border-none hover:bg-primary/5 transition-colors group"
+                                                      className="flex flex-col items-center bg-card px-6 py-2 border-r border-border/10 last:border-none hover:bg-primary/5 transition-colors group"
                                                     >
-                                                       <span className="text-[8px] font-black text-muted-foreground/40 uppercase mb-0.5 group-hover:text-primary transition-colors">{session.dia.substring(0,3)}</span>
+                                                       <span className="text-[8px] font-black text-muted-foreground/40 uppercase mb-0.5 group-hover:text-primary transition-colors">Sessão {sIdx + 1}</span>
                                                        <span className={cn(
                                                          "text-sm font-black",
                                                          session.tipoTreino === 'A' ? "text-orange-500" : 
@@ -585,7 +577,7 @@ export default function PeriodizacaoPage() {
                                       <div className="flex items-center gap-3 bg-primary/5 p-4 rounded-xl border border-primary/10">
                                          <AlertCircle className="h-4 w-4 text-primary" />
                                          <p className="text-[10px] font-bold uppercase italic text-primary leading-tight">
-                                           As variáveis acima trazem a base da semana como padrão. Ao editá-las, você cria uma ondulação específica para o dia.
+                                           As variáveis acima trazem a base da semana como padrão. Ao editá-las, você cria uma ondulação específica para a sessão.
                                          </p>
                                       </div>
                                    </div>
