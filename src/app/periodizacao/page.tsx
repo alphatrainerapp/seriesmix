@@ -6,27 +6,32 @@ import {
   Pencil, 
   Trash2, 
   ChevronDown, 
-  ChevronUp,
-  Save,
+  Save, 
   ArrowLeft,
   Calendar,
   Settings2,
-  LayoutGrid,
   Info,
-  Check
+  Check,
+  Zap,
+  MoreVertical,
+  MessageCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-} from '@/components/ui/dialog';
+import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { 
+  LineChart, 
+  Line, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip as RechartsTooltip, 
+  ResponsiveContainer,
+  Legend
+} from 'recharts';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 
@@ -35,141 +40,44 @@ import { useToast } from '@/hooks/use-toast';
 interface Periodization {
   id: string;
   name: string;
-  macrociclo: number; // Meses
-  mesociclo: number;  // Semanas por mês
+  macrociclo: number; 
+  mesociclo: number;  
   createdAt: string;
 }
 
-interface VariableWeek {
-  week: number;
-  sets: string;
-  reps: string;
-  rir: string;
-  cadence: string;
-  interval: string;
-  method?: string;
-}
-
-// --- Dados Mockados Iniciais ---
+// --- Dados Mockados ---
 
 const initialPeriodizations: Periodization[] = [
   { id: '1', name: 'trimestral - Hipertrofia Ondulatória', macrociclo: 3, mesociclo: 4, createdAt: '01/02/2024' },
   { id: '2', name: 'MENSAL - Hipertrofia Ondulatória', macrociclo: 1, mesociclo: 4, createdAt: '10/02/2024' },
-  { id: '3', name: 'trimestral unico', macrociclo: 3, mesociclo: 1, createdAt: '15/02/2024' },
-  { id: '4', name: 'Anual 14 meses', macrociclo: 14, mesociclo: 4, createdAt: '20/02/2024' },
-  { id: '5', name: 'Mensal Hipertrofia', macrociclo: 1, mesociclo: 4, createdAt: '25/02/2024' },
 ];
-
-// --- Sub-componentes ---
-
-const PeriodizationRow = ({ 
-  item, 
-  onEdit 
-}: { 
-  item: Periodization, 
-  onEdit: (p: Periodization) => void 
-}) => (
-  <div className="bg-[#1a1a1a] border border-white/5 rounded-2xl p-4 flex items-center justify-between group hover:bg-[#222] transition-all mb-3 shadow-sm">
-    <div className="flex-1">
-      <h3 className="text-[13px] font-black text-white/90 uppercase tracking-tight italic">{item.name}</h3>
-    </div>
-    
-    <div className="flex items-center gap-12 mr-8">
-      <div className="flex flex-col items-center">
-        <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1 opacity-40">Macrociclo</span>
-        <span className="text-sm font-black text-primary italic">{item.macrociclo}</span>
-      </div>
-      <div className="flex flex-col items-center">
-        <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1 opacity-40">Mesociclo</span>
-        <span className="text-sm font-black text-primary italic">{item.mesociclo}</span>
-      </div>
-    </div>
-
-    <div className="flex items-center gap-3">
-      <Button 
-        variant="ghost" 
-        size="icon" 
-        onClick={() => onEdit(item)}
-        className="h-9 w-9 bg-cyan-500/10 text-cyan-500 hover:bg-cyan-500/20 rounded-xl"
-      >
-        <Pencil className="h-4 w-4" />
-      </Button>
-      <Button 
-        variant="ghost" 
-        size="icon" 
-        className="h-9 w-9 bg-red-500/10 text-red-500 hover:bg-red-500/20 rounded-xl"
-      >
-        <Trash2 className="h-4 w-4" />
-      </Button>
-      <button className="h-9 w-9 flex items-center justify-center text-white/20 hover:text-white transition-colors">
-        <ChevronDown className="h-6 w-6" />
-      </button>
-    </div>
-  </div>
-);
 
 export default function PeriodizacaoPage() {
   const { toast } = useToast();
   const [view, setView] = React.useState<'list' | 'editor'>('list');
-  const [periodizations, setPeriodizations] = React.useState<Periodization[]>(initialPeriodizations);
-  const [activePeriodization, setActivePeriodization] = React.useState<Periodization | null>(null);
+  const [periodizations] = React.useState<Periodization[]>(initialPeriodizations);
   
-  // Estados para o formulário de novo periódico
-  const [newName, setNewName] = React.useState('');
-  const [newMacro, setNewMacro] = React.useState('3');
-  const [newMeso, setNewMeso] = React.useState('4');
-  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+  // Estados do Editor
+  const [name, setName] = React.useState('trimestral');
+  const [months, setMonths] = React.useState('3');
+  const [weeksPerMonth, setWeeksPerMonth] = React.useState('4');
+  const [activeMacro, setActiveMacro] = React.useState('1');
 
-  // Estados para o editor de semanas
-  const [weeksData, setWeeksData] = React.useState<VariableWeek[]>([]);
-
-  const handleCreateNew = () => {
-    const newItem: Periodization = {
-      id: Date.now().toString(),
-      name: newName || 'Nova Periodização',
-      macrociclo: parseInt(newMacro),
-      mesociclo: parseInt(newMeso),
-      createdAt: new Date().toLocaleDateString('pt-BR'),
-    };
-    
-    // Gerar semanas iniciais baseadas no cálculo macro * meso
-    const totalWeeks = newItem.macrociclo * newItem.mesociclo;
-    const initialWeeks: VariableWeek[] = Array.from({ length: totalWeeks }, (_, i) => ({
-      week: i + 1,
-      sets: '3',
-      reps: '10-12',
-      rir: '1-2',
-      cadence: '2.0.2.0',
-      interval: '60s'
-    }));
-
-    setWeeksData(initialWeeks);
-    setActivePeriodization(newItem);
-    setIsDialogOpen(false);
-    setView('editor');
-    
-    toast({
-      title: "Periódico Criado",
-      description: "Agora você pode configurar as variáveis de cada semana.",
+  // Gerar dados para o gráfico baseado nos inputs
+  const chartData = React.useMemo(() => {
+    const totalWeeks = parseInt(months) * parseInt(weeksPerMonth);
+    return Array.from({ length: totalWeeks }, (_, i) => {
+      const month = Math.floor(i / parseInt(weeksPerMonth)) + 1;
+      const week = (i % parseInt(weeksPerMonth)) + 1;
+      return {
+        name: `M${month} S${week}`,
+        series: 3,
+        reps: 15,
+      };
     });
-  };
+  }, [months, weeksPerMonth]);
 
-  const handleEdit = (p: Periodization) => {
-    setActivePeriodization(p);
-    // Em um app real, buscaríamos os dados das semanas do backend
-    const totalWeeks = p.macrociclo * p.mesociclo;
-    setWeeksData(Array.from({ length: totalWeeks }, (_, i) => ({
-      week: i + 1,
-      sets: '3',
-      reps: '10-12',
-      rir: '1-2',
-      cadence: '2.0.2.0',
-      interval: '60s'
-    })));
-    setView('editor');
-  };
-
-  const handleSaveEditor = () => {
+  const handleSave = () => {
     toast({
       title: "Configurações Salvas",
       description: "A periodização foi atualizada com sucesso.",
@@ -191,182 +99,279 @@ export default function PeriodizacaoPage() {
                 <p className="text-muted-foreground text-sm font-medium">Gerencie os modelos de planejamento para seus alunos.</p>
               </div>
 
-              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button className="bg-[#00bfa5] hover:bg-[#00a894] text-white rounded-xl h-11 px-8 font-black uppercase tracking-widest gap-2 shadow-lg shadow-[#00bfa5]/20 border-none transition-transform active:scale-95">
-                    <Plus className="h-5 w-5" />
-                    Novo Periódico
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-md rounded-2xl border-none shadow-2xl">
-                  <DialogHeader>
-                    <DialogTitle className="text-2xl font-black uppercase italic tracking-tighter">Criar Planejamento</DialogTitle>
-                    <p className="text-muted-foreground text-sm font-medium mt-2">Defina a estrutura temporal do seu novo modelo.</p>
-                  </DialogHeader>
-                  <div className="space-y-6 py-4">
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Nome do Planejamento</label>
-                      <Input 
-                        placeholder="Ex: Trimestral - Hipertrofia" 
-                        className="h-12 rounded-xl bg-muted/40 border-none font-bold"
-                        value={newName}
-                        onChange={e => setNewName(e.target.value)}
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Meses (Macrociclo)</label>
-                        <Input 
-                          type="number" 
-                          className="h-12 rounded-xl bg-muted/40 border-none font-bold"
-                          value={newMacro}
-                          onChange={e => setNewMacro(e.target.value)}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Semanas/Mês (Mesociclo)</label>
-                        <Input 
-                          type="number" 
-                          className="h-12 rounded-xl bg-muted/40 border-none font-bold"
-                          value={newMeso}
-                          onChange={e => setNewMeso(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button 
-                      className="w-full bg-[#00bfa5] hover:bg-[#00a894] text-white h-14 rounded-xl font-black uppercase tracking-widest"
-                      onClick={handleCreateNew}
-                    >
-                      Configurar Semanas
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+              <Button 
+                onClick={() => setView('editor')}
+                className="bg-[#00bfa5] hover:bg-[#00a894] text-white rounded-xl h-11 px-8 font-black uppercase tracking-widest gap-2 shadow-lg shadow-[#00bfa5]/20 border-none"
+              >
+                <Plus className="h-5 w-5" />
+                Novo Periódico
+              </Button>
             </div>
 
-            <div className="bg-card/50 rounded-3xl border border-border/40 p-1 shadow-sm overflow-hidden">
+            <div className="bg-card rounded-3xl border border-border/40 p-1 shadow-sm overflow-hidden">
                <div className="flex items-center px-6 py-4 border-b border-border/10 text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
                   <div className="flex-1">Nome</div>
                   <div className="w-[100px] text-center">Macrociclo</div>
                   <div className="w-[100px] text-center">Mesociclo</div>
                   <div className="w-[150px] text-right">Ações</div>
                </div>
-               <div className="p-4">
+               <div className="p-4 space-y-3">
                   {periodizations.map((item) => (
-                    <PeriodizationRow key={item.id} item={item} onEdit={handleEdit} />
+                    <div key={item.id} className="bg-muted/30 border border-border/5 rounded-2xl p-4 flex items-center justify-between group hover:bg-muted/50 transition-all shadow-sm">
+                      <div className="flex-1">
+                        <h3 className="text-[13px] font-black text-foreground uppercase tracking-tight italic">{item.name}</h3>
+                      </div>
+                      <div className="flex items-center gap-12 mr-8">
+                        <div className="flex flex-col items-center">
+                          <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1 opacity-40">Macrociclo</span>
+                          <span className="text-sm font-black text-primary italic">{item.macrociclo}</span>
+                        </div>
+                        <div className="flex flex-col items-center">
+                          <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1 opacity-40">Mesociclo</span>
+                          <span className="text-sm font-black text-primary italic">{item.mesociclo}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Button variant="ghost" size="icon" onClick={() => setView('editor')} className="h-9 w-9 bg-primary/10 text-primary rounded-xl">
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="h-9 w-9 bg-destructive/10 text-destructive rounded-xl">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                        <button className="h-9 w-9 flex items-center justify-center text-muted-foreground/40 hover:text-foreground">
+                          <ChevronDown className="h-6 w-6" />
+                        </button>
+                      </div>
+                    </div>
                   ))}
                </div>
             </div>
           </div>
         )}
 
-        {view === 'editor' && activePeriodization && (
-          <div className="space-y-8 animate-in slide-in-from-right-4 duration-500">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        {view === 'editor' && (
+          <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500">
+            <header className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-4">
-                 <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  onClick={() => setView('list')}
-                  className="h-12 w-12 rounded-2xl bg-card border border-border hover:bg-muted"
-                 >
-                   <ArrowLeft className="h-6 w-6" />
-                 </Button>
-                 <div className="space-y-1">
-                    <div className="flex items-center gap-3">
-                      <h1 className="text-3xl font-black text-foreground uppercase italic tracking-tighter">
-                        {activePeriodization.name}
-                      </h1>
-                      <Badge className="bg-primary/10 text-primary border-none uppercase text-[10px] font-black tracking-widest px-3">Ativo</Badge>
-                    </div>
-                    <div className="flex items-center gap-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">
-                       <span className="flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5" /> {activePeriodization.macrociclo} Meses</span>
-                       <span className="opacity-20">•</span>
-                       <span className="flex items-center gap-1.5"><Settings2 className="h-3.5 w-3.5" /> {activePeriodization.mesociclo} Semanas/Mês</span>
-                    </div>
-                 </div>
+                <Button variant="ghost" size="icon" onClick={() => setView('list')} className="h-10 w-10 rounded-xl hover:bg-muted">
+                  <ArrowLeft className="h-6 w-6" />
+                </Button>
+                <h1 className="text-2xl font-black text-foreground uppercase italic tracking-tighter">
+                  Controle de variáveis e periodização
+                </h1>
               </div>
+              <div className="flex items-center gap-4">
+                 <button className="h-10 w-10 rounded-xl bg-slate-800 text-white flex items-center justify-center shadow-lg">
+                    <MessageCircle className="h-5 w-5" />
+                 </button>
+              </div>
+            </header>
 
-              <Button 
-                onClick={handleSaveEditor}
-                className="bg-[#00bfa5] hover:bg-[#00a894] text-white rounded-xl h-14 px-10 font-black uppercase tracking-widest gap-2 shadow-lg shadow-[#00bfa5]/20"
-              >
-                <Save className="h-5 w-5" />
-                Salvar Periodização
-              </Button>
-            </div>
-
-            <div className="grid grid-cols-1 gap-8">
-               {/* Loop de Meses/Mesociclos */}
-               {Array.from({ length: activePeriodization.macrociclo }).map((_, mIdx) => (
-                 <Card key={mIdx} className="bg-card border-border/40 rounded-[32px] overflow-hidden shadow-xl">
-                    <div className="bg-muted/30 px-8 py-6 border-b border-border/10 flex items-center justify-between">
-                       <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-xl bg-primary text-white flex items-center justify-center font-black italic text-lg shadow-md">
-                            {mIdx + 1}
-                          </div>
-                          <div className="space-y-0.5">
-                            <h2 className="text-xl font-black uppercase italic tracking-tight">Mesociclo {mIdx + 1}</h2>
-                            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Fase de Hipertrofia</p>
-                          </div>
-                       </div>
-                       <Button variant="ghost" className="rounded-xl font-black text-[10px] uppercase tracking-widest gap-2 text-primary">
-                          <LayoutGrid className="h-4 w-4" /> Replicar Variáveis
-                       </Button>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              
+              {/* COLUNA ESQUERDA: CONFIGURAÇÕES */}
+              <div className="lg:col-span-7 space-y-6">
+                <Card className="bg-card border-border/40 rounded-3xl p-8 shadow-sm space-y-8">
+                  
+                  {/* Inputs Principais */}
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1">
+                        NOME DA PERIODIZAÇÃO: <span className="text-red-500">*</span>
+                      </label>
+                      <Input 
+                        value={name} 
+                        onChange={e => setName(e.target.value)}
+                        className="h-12 bg-muted/20 border-border/40 rounded-xl font-bold"
+                      />
                     </div>
 
-                    <div className="p-8">
-                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                          {weeksData.slice(mIdx * activePeriodization.mesociclo, (mIdx + 1) * activePeriodization.mesociclo).map((week, wIdx) => (
-                            <div key={wIdx} className="bg-muted/20 border border-border/30 rounded-3xl p-6 space-y-5 hover:border-primary/40 transition-all group">
-                               <div className="flex items-center justify-between mb-2">
-                                  <span className="text-[11px] font-black text-muted-foreground uppercase tracking-[0.2em]">Semana {week.week}</span>
-                                  <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                                     <Check className="h-3.5 w-3.5" />
-                                  </div>
-                               </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1">
+                          PERIODIZAÇÃO DE QUANTOS MESES? <span className="text-red-500">*</span>
+                        </label>
+                        <Input 
+                          type="number" 
+                          value={months} 
+                          onChange={e => setMonths(e.target.value)}
+                          className="h-12 bg-muted/20 border-border/40 rounded-xl font-bold"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1">
+                          CADA MÊS POSSUIRÁ QUANTAS SEMANAS? <span className="text-red-500">*</span>
+                        </label>
+                        <Input 
+                          type="number" 
+                          value={weeksPerMonth} 
+                          onChange={e => setWeeksPerMonth(e.target.value)}
+                          className="h-12 bg-muted/20 border-border/40 rounded-xl font-bold"
+                        />
+                      </div>
+                    </div>
+                  </div>
 
-                               <div className="space-y-4">
-                                  <div className="space-y-1.5">
-                                    <label className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest pl-1">Séries</label>
-                                    <Input defaultValue={week.sets} className="h-10 bg-background border-none rounded-xl font-black text-center text-sm shadow-inner" />
-                                  </div>
-                                  <div className="space-y-1.5">
-                                    <label className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest pl-1">Repetições</label>
-                                    <Input defaultValue={week.reps} className="h-10 bg-background border-none rounded-xl font-black text-center text-sm shadow-inner" />
-                                  </div>
-                                  <div className="space-y-1.5">
-                                    <label className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest pl-1">RIR (Falha)</label>
-                                    <Input defaultValue={week.rir} className="h-10 bg-background border-none rounded-xl font-black text-center text-sm shadow-inner" />
-                                  </div>
-                                  <div className="space-y-1.5">
-                                    <label className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest pl-1">Cadência</label>
-                                    <Input defaultValue={week.cadence} className="h-10 bg-background border-none rounded-xl font-black text-center text-sm shadow-inner" />
-                                  </div>
-                                  <div className="space-y-1.5">
-                                    <label className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest pl-1">Intervalo</label>
-                                    <Input defaultValue={week.interval} className="h-10 bg-background border-none rounded-xl font-black text-center text-sm shadow-inner" />
+                  {/* Abas de Macrociclo */}
+                  <div className="space-y-6">
+                    <div className="flex items-center justify-between border-b border-border/10">
+                      <div className="flex gap-2">
+                         {Array.from({ length: parseInt(months) || 0 }).map((_, i) => (
+                           <button 
+                            key={i}
+                            onClick={() => setActiveMacro((i+1).toString())}
+                            className={cn(
+                              "px-4 py-3 text-[11px] font-black uppercase tracking-widest transition-all border-b-4",
+                              activeMacro === (i+1).toString() ? "border-primary text-foreground" : "border-transparent text-muted-foreground/40 hover:text-foreground"
+                            )}
+                           >
+                             Macrociclo {i + 1}
+                           </button>
+                         ))}
+                      </div>
+                      <div className="flex items-center gap-3">
+                         <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Repetir Macrociclos</span>
+                         <Switch defaultChecked />
+                      </div>
+                    </div>
+
+                    {/* Ciclos Dinâmicos baseados nas semanas */}
+                    <div className="space-y-4">
+                       {Array.from({ length: parseInt(weeksPerMonth) || 0 }).map((_, i) => (
+                         <div key={i} className="space-y-1.5 group">
+                            <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">
+                              NOME DO CICLO {i + 1}: <span className="text-red-500">*</span>
+                            </label>
+                            <div className="relative">
+                               <Input 
+                                defaultValue={`Ciclo ${i + 1}`}
+                                className="h-11 bg-muted/10 border-border/30 rounded-xl font-bold text-sm focus-visible:ring-primary/20 pr-12"
+                               />
+                               <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                                  <ChevronDown className="h-4 w-4 text-muted-foreground/40" />
+                                  <div className="h-6 w-6 bg-[#00bfa5] rounded flex items-center justify-center text-white">
+                                     <Check className="h-3 w-3" />
                                   </div>
                                </div>
                             </div>
-                          ))}
-                       </div>
+                         </div>
+                       ))}
                     </div>
-                 </Card>
-               ))}
-            </div>
+                  </div>
 
-            <div className="bg-primary/5 border border-primary/10 rounded-2xl p-6 flex items-start gap-4">
-               <Info className="h-6 w-6 text-primary shrink-0" />
-               <div className="space-y-1">
-                  <p className="text-sm font-bold text-foreground">Dica de Periodização</p>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    Você pode replicar as variáveis de uma semana para todo o mesociclo clicando no botão no topo do card. 
-                    As variáveis definidas aqui serão sugeridas automaticamente ao carregar treinos para este aluno.
-                  </p>
-               </div>
+                  <div className="flex justify-center pt-6">
+                    <Button 
+                      onClick={handleSave}
+                      className="bg-[#00bfa5] hover:bg-[#00a894] text-white rounded-xl h-12 px-12 font-black uppercase tracking-widest gap-2 shadow-lg shadow-[#00bfa5]/20 border-none"
+                    >
+                      <Save className="h-4 w-4" />
+                      Salvar
+                    </Button>
+                  </div>
+                </Card>
+              </div>
+
+              {/* COLUNA DIREITA: GRÁFICOS E VISUALIZAÇÃO */}
+              <div className="lg:col-span-5 space-y-6">
+                {/* Card de Volume */}
+                <Card className="bg-card border-border/40 rounded-3xl p-8 shadow-sm">
+                  <div className="flex items-center justify-center gap-8 mb-8">
+                     <h3 className="text-lg font-black uppercase tracking-tighter italic text-center w-full">Volume</h3>
+                  </div>
+                  <div className="flex items-center justify-center gap-6 mb-6">
+                      <div className="flex items-center gap-2">
+                         <div className="h-3 w-3 rounded-full bg-orange-500" />
+                         <span className="text-[10px] font-black uppercase text-muted-foreground">Séries Semana</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                         <div className="h-3 w-3 rounded-full bg-blue-600" />
+                         <span className="text-[10px] font-black uppercase text-muted-foreground">Repetições</span>
+                      </div>
+                  </div>
+                  <div className="h-[240px] w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                        <XAxis 
+                          dataKey="name" 
+                          axisLine={false} 
+                          tickLine={false} 
+                          tick={{ fontSize: 10, fontWeight: '900', fill: 'currentColor', opacity: 0.4 }} 
+                          dy={10}
+                        />
+                        <YAxis 
+                          axisLine={false} 
+                          tickLine={false} 
+                          tick={{ fontSize: 10, fontWeight: '900', fill: 'currentColor', opacity: 0.4 }} 
+                        />
+                        <RechartsTooltip 
+                          contentStyle={{ backgroundColor: 'hsl(var(--card))', border: 'none', borderRadius: '12px', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+                        />
+                        <Line 
+                          type="monotone" 
+                          dataKey="series" 
+                          stroke="#ffa726" 
+                          strokeWidth={3} 
+                          dot={{ r: 4, fill: '#ffa726', strokeWidth: 2, stroke: '#fff' }} 
+                        />
+                        <Line 
+                          type="monotone" 
+                          dataKey="reps" 
+                          stroke="#2563eb" 
+                          strokeWidth={3} 
+                          dot={{ r: 4, fill: '#2563eb', strokeWidth: 2, stroke: '#fff' }} 
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <p className="text-[10px] font-black text-center text-muted-foreground/40 mt-4 uppercase tracking-widest">Semana</p>
+                </Card>
+
+                {/* Card de Hierarquia Periodização */}
+                <Card className="bg-card border-border/40 rounded-3xl p-8 shadow-sm">
+                  <h3 className="text-lg font-black uppercase tracking-tighter italic text-center mb-8">Periodização</h3>
+                  
+                  <div className="flex items-center justify-center gap-6 mb-10">
+                      <div className="flex items-center gap-2">
+                         <div className="h-4 w-4 rounded-full bg-orange-500" />
+                         <span className="text-[10px] font-black uppercase text-muted-foreground">Macrociclo</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                         <div className="h-4 w-4 rounded-full bg-slate-400" />
+                         <span className="text-[10px] font-black uppercase text-muted-foreground">Mesociclo</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                         <div className="h-4 w-4 rounded-full bg-slate-800" />
+                         <span className="text-[10px] font-black uppercase text-muted-foreground">Microciclo</span>
+                      </div>
+                  </div>
+
+                  <div className="space-y-12">
+                     <div className="relative flex justify-center px-4">
+                        {/* Linha do Macrociclo */}
+                        <div className="absolute top-[-10px] left-8 right-8 h-1 border-t-2 border-l-2 border-r-2 border-orange-500 rounded-t-lg" />
+                        
+                        <div className="grid grid-cols-3 gap-6 w-full">
+                           {Array.from({ length: 3 }).map((_, mIdx) => (
+                             <div key={mIdx} className="space-y-4">
+                               <div className="grid grid-cols-4 gap-1.5">
+                                  {Array.from({ length: 4 }).map((_, wIdx) => (
+                                    <div 
+                                      key={wIdx} 
+                                      className="h-10 w-full bg-slate-800 text-white flex items-center justify-center rounded-md font-black text-xs shadow-sm hover:scale-105 transition-transform cursor-default"
+                                    >
+                                      {(mIdx * 4) + wIdx + 1}
+                                    </div>
+                                  ))}
+                               </div>
+                               <p className="text-[10px] font-black text-center text-muted-foreground uppercase tracking-widest">Mês {mIdx + 1}</p>
+                             </div>
+                           ))}
+                        </div>
+                     </div>
+                  </div>
+                </Card>
+
+              </div>
             </div>
           </div>
         )}
