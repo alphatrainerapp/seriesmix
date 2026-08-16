@@ -90,7 +90,9 @@ const VariableInput = ({ label, value, color, onChange }: { label: string, value
 );
 
 const SessionCard = ({ session, onCopy }: { session: SessionData, onCopy?: () => void }) => (
-  <div className="bg-card border border-border/40 rounded-2xl p-4 shadow-sm space-y-4 hover:border-primary/30 transition-all group relative">
+  <div className="bg-card border border-border/40 rounded-2xl p-4 shadow-sm space-y-4 hover:border-primary/30 transition-all group relative overflow-hidden">
+    <div className="absolute top-0 left-0 w-1 h-full bg-border/10 group-hover:bg-primary/20" />
+    
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-2">
         <div className={cn(
@@ -101,46 +103,37 @@ const SessionCard = ({ session, onCopy }: { session: SessionData, onCopy?: () =>
           {session.dia} • TREINO {session.tipoTreino}
         </span>
       </div>
-      <button className="text-muted-foreground/30 hover:text-primary transition-colors" onClick={onCopy} title="Copiar variáveis do anterior">
-        <RefreshCcw className="h-3.5 w-3.5" />
+      <button 
+        className="text-muted-foreground/20 hover:text-primary transition-colors p-1" 
+        onClick={onCopy} 
+        title="Copiar variáveis do anterior"
+      >
+        <RefreshCcw className="h-3 w-3" />
       </button>
     </div>
     
-    <div className="space-y-0.5">
-      <p className="text-[9px] font-bold text-muted-foreground uppercase">{session.ocorrencia}ª ocorrência</p>
+    <div className="flex items-center justify-between">
+      <p className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-tighter">
+        {session.ocorrencia}ª ocorrência
+      </p>
+      <div className="h-px flex-1 bg-border/5 mx-3" />
     </div>
 
     <div className="grid grid-cols-2 gap-x-4 gap-y-3">
-      <div className="flex justify-between items-center border-b border-border/5 pb-1">
-        <span className="text-[9px] font-bold text-muted-foreground uppercase">Séries</span>
-        <span className="text-[11px] font-black">{session.series}</span>
-      </div>
-      <div className="flex justify-between items-center border-b border-border/5 pb-1">
-        <span className="text-[9px] font-bold text-muted-foreground uppercase">Reps</span>
-        <span className="text-[11px] font-black">{session.repeticoes}</span>
-      </div>
-      <div className="flex justify-between items-center border-b border-border/5 pb-1">
-        <span className="text-[9px] font-bold text-muted-foreground uppercase">Intervalo</span>
-        <span className="text-[11px] font-black">{session.intervalo}s</span>
-      </div>
-      <div className="flex justify-between items-center border-b border-border/5 pb-1">
-        <span className="text-[9px] font-bold text-muted-foreground uppercase">Cadência</span>
-        <span className="text-[11px] font-black">{session.cadencia}</span>
-      </div>
-      <div className="flex justify-between items-center border-b border-border/5 pb-1">
-        <span className="text-[9px] font-bold text-muted-foreground uppercase">Intensidade</span>
-        <span className="text-[11px] font-black">{session.intensidade}%</span>
-      </div>
-      <div className="flex justify-between items-center border-b border-border/5 pb-1">
-        <span className="text-[9px] font-bold text-muted-foreground uppercase">RIR</span>
-        <span className="text-[11px] font-black">{session.rir}</span>
-      </div>
+      {[
+        { label: 'Séries', val: session.series },
+        { label: 'Reps', val: session.repeticoes },
+        { label: 'Inter', val: `${session.intervalo}s` },
+        { label: 'Cadê', val: session.cadencia },
+        { label: 'Inten', val: `${session.intensidade}%` },
+        { label: 'RIR', val: session.rir },
+      ].map((item, idx) => (
+        <div key={idx} className="flex justify-between items-center border-b border-border/5 pb-1">
+          <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-tight">{item.label}</span>
+          <span className="text-[11px] font-black text-foreground italic">{item.val}</span>
+        </div>
+      ))}
     </div>
-
-    <button className="w-full h-9 rounded-xl border border-border bg-muted/20 hover:bg-primary/5 hover:border-primary/30 transition-all flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-foreground/70">
-      <Dumbbell className="h-3.5 w-3.5" />
-      Editar exercícios
-    </button>
   </div>
 );
 
@@ -444,8 +437,8 @@ export default function PeriodizacaoPage() {
 
                                  {/* Configuração por Sessão (Aparece se o toggle estiver ativo) */}
                                  {isCustomizing && (
-                                   <div className="space-y-6 pt-4 animate-in fade-in slide-in-from-top-4 duration-500">
-                                      <div className="flex flex-col sm:flex-row gap-6">
+                                   <div className="space-y-8 pt-4 animate-in fade-in slide-in-from-top-4 duration-500">
+                                      <div className="flex flex-col sm:flex-row gap-8">
                                          <div className="space-y-2">
                                             <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Frequência semanal</label>
                                             <Select value={frequency} onValueChange={setFrequency}>
@@ -462,11 +455,11 @@ export default function PeriodizacaoPage() {
 
                                          <div className="flex-1 space-y-2">
                                             <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Distribuição semanal</label>
-                                            <div className="flex items-center gap-2">
-                                               <div className="flex items-center border border-border/40 rounded-xl overflow-hidden shadow-sm">
+                                            <div className="flex items-center gap-3">
+                                               <div className="flex items-center border border-border/20 rounded-xl overflow-hidden shadow-sm bg-muted/10">
                                                   {sessions.map((session, sIdx) => (
-                                                    <div key={session.id} className="flex flex-col items-center bg-card px-4 py-1.5 border-r border-border/40 last:border-none">
-                                                       <span className="text-[8px] font-black text-muted-foreground/40">{session.dia.substring(0,3)}</span>
+                                                    <div key={session.id} className="flex flex-col items-center bg-card px-4 py-2 border-r border-border/10 last:border-none">
+                                                       <span className="text-[8px] font-black text-muted-foreground/40 uppercase mb-0.5">{session.dia.substring(0,3)}</span>
                                                        <span className={cn(
                                                          "text-sm font-black",
                                                          session.tipoTreino === 'A' ? "text-orange-500" : session.tipoTreino === 'B' ? "text-emerald-500" : "text-cyan-500"
@@ -476,24 +469,26 @@ export default function PeriodizacaoPage() {
                                                     </div>
                                                   ))}
                                                </div>
-                                               <Button variant="outline" className="h-11 rounded-xl gap-2 font-bold text-[10px] uppercase border-border/60 hover:bg-primary/5 hover:text-primary">
-                                                  <Copy className="h-3.5 w-3.5" />
-                                                  <span className="hidden sm:inline">Copiar estrutura</span>
+                                               <Button variant="ghost" className="h-11 rounded-xl gap-2 font-black text-[9px] uppercase tracking-widest hover:bg-primary/5 hover:text-primary transition-all">
+                                                  <Copy className="h-4 w-4" />
+                                                  Copiar estrutura
                                                </Button>
                                             </div>
                                          </div>
                                       </div>
 
-                                      {/* Grid de Sessões */}
+                                      {/* Grid de Sessões - Layout Harmônico */}
                                       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
                                          {sessions.map((session) => (
                                            <SessionCard key={session.id} session={session} />
                                          ))}
                                       </div>
 
-                                      <div className="flex items-center gap-2 text-muted-foreground/40 px-2">
-                                         <AlertCircle className="h-3.5 w-3.5" />
-                                         <p className="text-[10px] font-bold uppercase italic">As variáveis acima substituem as configurações gerais desta semana.</p>
+                                      <div className="flex items-center gap-3 bg-primary/5 p-4 rounded-xl border border-primary/10">
+                                         <AlertCircle className="h-4 w-4 text-primary" />
+                                         <p className="text-[10px] font-bold uppercase italic text-primary leading-tight">
+                                           As variáveis acima substituem as configurações gerais desta semana para permitir a ondulação diária.
+                                         </p>
                                       </div>
                                    </div>
                                  )}
