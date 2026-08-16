@@ -2,12 +2,12 @@
 
 Seu assistente pessoal de treinos com Inteligência Artificial de elite, desenvolvido com **Next.js 15**, **Genkit** e **Shadcn UI**.
 
-## 🔗 Repositório
-Suba seu projeto para o GitHub e cole o link aqui para compartilhar com o mundo!
+## 🔗 Como subir para o seu GitHub
+Siga estes passos para publicar o projeto:
 
-## 🚀 Como subir para o seu GitHub (Guia Rápido)
-1. Crie um repositório novo e vazio no [GitHub](https://github.com/new).
-2. Abra o terminal na pasta do projeto e execute:
+1.  Crie um repositório novo e vazio no [GitHub](https://github.com/new).
+2.  Abra o terminal na pasta raiz deste projeto.
+3.  Execute os seguintes comandos:
    ```bash
    git init
    git add .
@@ -19,20 +19,18 @@ Suba seu projeto para o GitHub e cole o link aqui para compartilhar com o mundo!
 
 ## 🛠 Funcionalidades de Elite
 - **🤖 IA Generativa:** Geração de planos de treino ultra-personalizados.
+- **📈 Periodização Ondulatória Diária:** Controle total de volume e carga sessão por sessão.
 - **🏃 Protocolos Especializados:** Cards dedicados para Aeróbico, HIIT e WOD com descrições detalhadas.
-- **🔥 Aquecimento & Mobilidade:** Sistema de aquecimento integrado com visual limpo (sem variáveis de cadência).
-- **📱 Interface Mobile First:** 
-  - Barra de ações fixa (Salvar/Mais Ações).
-  - Menu de ações em estilo *Bottom Sheet* para fácil manuseio.
-  - Alternância de tema (Dark/Light) integrada no cabeçalho mobile.
+- **🔥 Aquecimento & Mobilidade:** Sistema de aquecimento integrado com visual limpo.
+- **📱 Interface Mobile First:** Barra de ações fixa e menus em estilo Bottom Sheet.
 - **📂 Gestão de Biblioteca:** Salve sessões personalizadas e modelos favoritos em pastas.
-- **📊 Métricas Visuais:** Gráficos de volume de treino por grupo muscular usando Recharts.
-- **🌓 Dark Mode Premium:** Interface personalizada com paleta de cores profunda (#262626 / #333333) para máximo conforto visual.
+- **📊 Métricas Visuais:** Gráficos de volume e performance usando Recharts.
+- **🌓 Dark/Light Mode Premium:** Interface adaptável com paleta de cores sofisticada.
 
 ## 💻 Stack Tecnológica
 - **Framework:** Next.js 15 (App Router)
 - **IA:** Google Genkit + Gemini 2.5 Flash
-- **Estilo:** Tailwind CSS + Shadcn UI (Custom Premium Theme)
+- **Estilo:** Tailwind CSS + Shadcn UI (Custom Theme)
 - **Ícones:** Lucide React
 - **Gráficos:** Recharts
 
