@@ -22,7 +22,8 @@ import {
   Calendar,
   HeartPulse,
   LineChart,
-  Camera
+  Camera,
+  Utensils
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -307,10 +308,11 @@ const ActionButton = ({ icon: Icon, label }: { icon: React.ElementType, label: s
 );
 
 const StudentActionsGrid = () => (
-  <div className="grid grid-cols-4 md:grid-cols-7 gap-3 w-full max-w-6xl">
+  <div className="grid grid-cols-4 md:grid-cols-8 gap-3 w-full max-w-6xl">
     <ActionButton icon={Pencil} label="Editar" />
     <ActionButton icon={HeartPulse} label="Avaliação Física" />
     <ActionButton icon={LineChart} label="Performance" />
+    <ActionButton icon={Utensils} label="Dieta" />
     <ActionButton icon={Camera} label="Atualizações" />
     <ActionButton icon={Pause} label="Pausar Treino" />
     <ActionButton icon={Home} label="Área Do Aluno" />
