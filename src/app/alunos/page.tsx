@@ -75,7 +75,7 @@ const studentsData: StudentData[] = [
     completedCount: 3,
     totalExpected: 5,
     percent: 60,
-    workoutStatus: { type: 'weeks', week: 2 }
+    workoutStatus: { type: 'weeks', week: 3 }
   },
   {
     id: '2',
@@ -220,15 +220,33 @@ const StatusIcon = ({ status }: { status: AttendanceStatus }) => {
   }
 };
 
+const WeeklyProgress = ({ currentWeek }: { currentWeek: number }) => {
+  return (
+    <div className="flex gap-1.5 items-center">
+      {[1, 2, 3, 4].map((w) => {
+        const isCompleted = w < currentWeek;
+        const isActive = w === currentWeek;
+        return (
+          <div
+            key={w}
+            className={cn(
+              "h-8 w-8 rounded-lg flex items-center justify-center text-[12px] font-black transition-all shadow-sm",
+              isCompleted && "bg-slate-700 text-white",
+              isActive && "bg-[#00bfa5] text-white scale-110 shadow-lg shadow-[#00bfa5]/20",
+              w > currentWeek && "bg-muted/30 text-muted-foreground/20 border border-border/10"
+            )}
+          >
+            {w}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 const WorkoutStatusPill = ({ status }: { status: WorkoutStatusType }) => {
   if (status.type === 'weeks') {
-    return (
-      <div className="h-9 px-6 rounded-full border border-border/40 bg-muted/20 flex items-center justify-center shadow-sm">
-        <span className="text-[11px] font-black uppercase tracking-widest text-foreground/70 italic">
-          Semana {status.week}
-        </span>
-      </div>
-    );
+    return <WeeklyProgress currentWeek={status.week} />;
   }
 
   const configs = {
