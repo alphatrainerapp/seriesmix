@@ -38,7 +38,8 @@ type WorkoutStatusType =
   | { type: 'future', date: string } 
   | { type: 'today' } 
   | { type: 'delayed', days: number } 
-  | { type: 'update' };
+  | { type: 'update' }
+  | { type: 'weeks', week: number };
 
 interface StudentData {
   id: string;
@@ -74,7 +75,7 @@ const studentsData: StudentData[] = [
     completedCount: 3,
     totalExpected: 5,
     percent: 60,
-    workoutStatus: { type: 'future', date: '11/11' }
+    workoutStatus: { type: 'weeks', week: 2 }
   },
   {
     id: '2',
@@ -95,7 +96,7 @@ const studentsData: StudentData[] = [
     completedCount: 7,
     totalExpected: 7,
     percent: 100,
-    workoutStatus: { type: 'today' }
+    workoutStatus: { type: 'weeks', week: 4 }
   },
   {
     id: '3',
@@ -116,7 +117,7 @@ const studentsData: StudentData[] = [
     completedCount: 1,
     totalExpected: 4,
     percent: 25,
-    workoutStatus: { type: 'delayed', days: 3 }
+    workoutStatus: { type: 'weeks', week: 1 }
   },
   {
     id: '4',
@@ -179,7 +180,7 @@ const studentsData: StudentData[] = [
     completedCount: 3,
     totalExpected: 5,
     percent: 60,
-    workoutStatus: { type: 'update' }
+    workoutStatus: { type: 'today' }
   },
   {
     id: '7',
@@ -200,7 +201,7 @@ const studentsData: StudentData[] = [
     completedCount: 3,
     totalExpected: 4,
     percent: 75,
-    workoutStatus: { type: 'delayed', days: 1 }
+    workoutStatus: { type: 'delayed', days: 3 }
   },
 ];
 
@@ -220,6 +221,16 @@ const StatusIcon = ({ status }: { status: AttendanceStatus }) => {
 };
 
 const WorkoutStatusPill = ({ status }: { status: WorkoutStatusType }) => {
+  if (status.type === 'weeks') {
+    return (
+      <div className="h-9 px-6 rounded-full border border-border/40 bg-muted/20 flex items-center justify-center shadow-sm">
+        <span className="text-[11px] font-black uppercase tracking-widest text-foreground/70 italic">
+          Semana {status.week}
+        </span>
+      </div>
+    );
+  }
+
   const configs = {
     future: {
       label: `Atualizar em ${status.type === 'future' ? status.date : ''}`,
