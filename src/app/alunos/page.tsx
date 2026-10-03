@@ -23,7 +23,7 @@ import {
   HeartPulse,
   LineChart,
   Camera,
-  Utensils
+  Apple
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -312,7 +312,7 @@ const StudentActionsGrid = () => (
     <ActionButton icon={Pencil} label="Editar" />
     <ActionButton icon={HeartPulse} label="Avaliação Física" />
     <ActionButton icon={LineChart} label="Performance" />
-    <ActionButton icon={Utensils} label="Dieta" />
+    <ActionButton icon={Apple} label="Dieta" />
     <ActionButton icon={Camera} label="Atualizações" />
     <ActionButton icon={Pause} label="Pausar Treino" />
     <ActionButton icon={Home} label="Área Do Aluno" />
@@ -545,7 +545,7 @@ export default function AlunosPage() {
           <div className="flex items-center gap-3">
              <Button variant="outline" size="icon" className="h-10 w-12 rounded-xl bg-card border-border shadow-sm">
                 <Mail className="h-4 w-4 text-muted-foreground" />
-             </Button>
+             </button>
              <Button className="bg-[#00bfa5] hover:bg-[#00a894] text-white rounded-xl h-10 px-6 font-black uppercase text-[10px] tracking-widest gap-2 shadow-lg shadow-[#00bfa5]/20 border-none">
                 <Plus className="h-4 w-4" />
                 Novo Aluno
