@@ -9,7 +9,6 @@ import {
   Circle,
   Plus,
   Pencil,
-  Copy,
   Pause,
   Home,
   Archive,
@@ -21,8 +20,9 @@ import {
   AlertTriangle,
   ChevronRight,
   Calendar,
-  Zap,
-  Timer
+  HeartPulse,
+  LineChart,
+  Camera
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -298,12 +298,24 @@ const WorkoutStatusPill = ({ status }: { status: WorkoutStatusType }) => {
 };
 
 const ActionButton = ({ icon: Icon, label }: { icon: React.ElementType, label: string }) => (
-  <button className="flex flex-col items-center justify-center gap-2 p-3 bg-muted/60 hover:bg-muted/80 rounded-2xl transition-all active:scale-95 group border border-transparent hover:border-border/40">
-    <span className="text-[9px] font-black text-foreground/70 uppercase tracking-tighter text-center leading-none">
+  <button className="flex flex-col items-center justify-center gap-2 p-3 bg-muted/60 hover:bg-muted/80 rounded-2xl transition-all active:scale-95 group border border-transparent hover:border-border/40 min-h-[85px]">
+    <span className="text-[9px] font-black text-foreground/70 uppercase tracking-tighter text-center leading-tight max-w-[80px]">
       {label}
     </span>
     <Icon className="h-5 w-5 text-foreground/80 group-hover:text-primary transition-colors" />
   </button>
+);
+
+const StudentActionsGrid = () => (
+  <div className="grid grid-cols-4 md:grid-cols-7 gap-3 w-full max-w-6xl">
+    <ActionButton icon={Pencil} label="Editar" />
+    <ActionButton icon={HeartPulse} label="Avaliação Física" />
+    <ActionButton icon={LineChart} label="Performance" />
+    <ActionButton icon={Camera} label="Atualizações" />
+    <ActionButton icon={Pause} label="Pausar Treino" />
+    <ActionButton icon={Home} label="Área Do Aluno" />
+    <ActionButton icon={Archive} label="Arquivar" />
+  </div>
 );
 
 const DesktopStudentRow = ({ student }: { student: StudentData }) => {
@@ -398,13 +410,7 @@ const DesktopStudentRow = ({ student }: { student: StudentData }) => {
       {/* Painel Expansível */}
       {isExpanded && (
         <div className="bg-muted/30 p-6 flex justify-center animate-in slide-in-from-top-2 duration-300 border-t border-border/5">
-          <div className="grid grid-cols-5 gap-3 max-w-4xl w-full">
-            <ActionButton icon={Pencil} label="Editar" />
-            <ActionButton icon={Copy} label="Duplicar" />
-            <ActionButton icon={Pause} label="Pausar Plano" />
-            <ActionButton icon={Home} label="Área Do Aluno" />
-            <ActionButton icon={Archive} label="Arquivar" />
-          </div>
+          <StudentActionsGrid />
         </div>
       )}
     </div>
@@ -491,12 +497,10 @@ const MobileStudentCard = ({ student }: { student: StudentData }) => {
 
       {/* Painel de Ações Expansível */}
       {isExpanded && (
-        <div className="pt-6 border-t border-border/10 grid grid-cols-5 gap-2 animate-in slide-in-from-top-2 duration-300">
-          <ActionButton icon={Pencil} label="Editar" />
-          <ActionButton icon={Copy} label="Duplicar" />
-          <ActionButton icon={Pause} label="Pausar Plano" />
-          <ActionButton icon={Home} label="Área Do Aluno" />
-          <ActionButton icon={Archive} label="Arquivar" />
+        <div className="pt-6 border-t border-border/10 flex justify-center animate-in slide-in-from-top-2 duration-300 overflow-x-auto no-scrollbar">
+          <div className="min-w-max pb-2">
+            <StudentActionsGrid />
+          </div>
         </div>
       )}
     </div>
