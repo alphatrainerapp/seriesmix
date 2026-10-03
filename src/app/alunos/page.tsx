@@ -20,7 +20,9 @@ import {
   Clock,
   AlertTriangle,
   ChevronRight,
-  MoreHorizontal
+  Calendar,
+  Zap,
+  Timer
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -32,19 +34,24 @@ import { cn } from '@/lib/utils';
 
 type AttendanceStatus = 'completed' | 'missed' | 'today' | 'future';
 
+type WorkoutStatusType = 
+  | { type: 'future', date: string } 
+  | { type: 'today' } 
+  | { type: 'delayed', days: number } 
+  | { type: 'update' };
+
 interface StudentData {
   id: string;
   name: string;
   plan: string;
   status: 'active' | 'inactive';
   avatar: string;
-  currentWeek: number;
-  totalWeeks: number;
   observations: string;
   weeklyAttendance: { day: string; status: AttendanceStatus }[];
   completedCount: number;
   totalExpected: number;
   percent: number;
+  workoutStatus: WorkoutStatusType;
 }
 
 const studentsData: StudentData[] = [
@@ -54,8 +61,6 @@ const studentsData: StudentData[] = [
     plan: 'Mensal',
     status: 'active',
     avatar: 'https://picsum.photos/seed/anajulia/200/200',
-    currentWeek: 3,
-    totalWeeks: 4,
     observations: 'Foco em superiores e cardio 3x na semana',
     weeklyAttendance: [
       { day: 'SEG', status: 'completed' },
@@ -68,7 +73,8 @@ const studentsData: StudentData[] = [
     ],
     completedCount: 3,
     totalExpected: 5,
-    percent: 60
+    percent: 60,
+    workoutStatus: { type: 'future', date: '11/11' }
   },
   {
     id: '2',
@@ -76,8 +82,6 @@ const studentsData: StudentData[] = [
     plan: 'Anual 12+2',
     status: 'active',
     avatar: 'https://picsum.photos/seed/antonio/200/200',
-    currentWeek: 13,
-    totalWeeks: 14,
     observations: 'Joelho valgo, escoliose lombar',
     weeklyAttendance: [
       { day: 'SEG', status: 'completed' },
@@ -90,7 +94,8 @@ const studentsData: StudentData[] = [
     ],
     completedCount: 7,
     totalExpected: 7,
-    percent: 100
+    percent: 100,
+    workoutStatus: { type: 'today' }
   },
   {
     id: '3',
@@ -98,8 +103,6 @@ const studentsData: StudentData[] = [
     plan: 'free',
     status: 'active',
     avatar: 'https://picsum.photos/seed/anadelis/200/200',
-    currentWeek: 2,
-    totalWeeks: 3,
     observations: '--',
     weeklyAttendance: [
       { day: 'SEG', status: 'completed' },
@@ -112,7 +115,92 @@ const studentsData: StudentData[] = [
     ],
     completedCount: 1,
     totalExpected: 4,
-    percent: 25
+    percent: 25,
+    workoutStatus: { type: 'delayed', days: 3 }
+  },
+  {
+    id: '4',
+    name: 'Vinícius Fernandes',
+    plan: 'Semestral',
+    status: 'active',
+    avatar: 'https://picsum.photos/seed/vinicius/200/200',
+    observations: 'Recuperação pós-cirúrgica ombro',
+    weeklyAttendance: [
+      { day: 'SEG', status: 'completed' },
+      { day: 'TER', status: 'future' },
+      { day: 'QUA', status: 'future' },
+      { day: 'QUI', status: 'future' },
+      { day: 'SEX', status: 'future' },
+      { day: 'SÁB', status: 'future' },
+      { day: 'DOM', status: 'future' },
+    ],
+    completedCount: 1,
+    totalExpected: 3,
+    percent: 33,
+    workoutStatus: { type: 'update' }
+  },
+  {
+    id: '5',
+    name: 'Eduarda Borges',
+    plan: 'Anual',
+    status: 'active',
+    avatar: 'https://picsum.photos/seed/eduarda/200/200',
+    observations: 'Atleta de vôlei, foco em explosão',
+    weeklyAttendance: [
+      { day: 'SEG', status: 'completed' },
+      { day: 'TER', status: 'completed' },
+      { day: 'QUA', status: 'completed' },
+      { day: 'QUI', status: 'today' },
+      { day: 'SEX', status: 'future' },
+      { day: 'SÁB', status: 'future' },
+      { day: 'DOM', status: 'future' },
+    ],
+    completedCount: 4,
+    totalExpected: 6,
+    percent: 66,
+    workoutStatus: { type: 'future', date: '11/11' }
+  },
+  {
+    id: '6',
+    name: 'Ricardo Oliveira',
+    plan: 'Trimestral',
+    status: 'active',
+    avatar: 'https://picsum.photos/seed/ricardo/200/200',
+    observations: 'Hipertrofia máxima',
+    weeklyAttendance: [
+      { day: 'SEG', status: 'completed' },
+      { day: 'TER', status: 'completed' },
+      { day: 'QUA', status: 'missed' },
+      { day: 'QUI', status: 'today' },
+      { day: 'SEX', status: 'future' },
+      { day: 'SÁB', status: 'future' },
+      { day: 'DOM', status: 'future' },
+    ],
+    completedCount: 3,
+    totalExpected: 5,
+    percent: 60,
+    workoutStatus: { type: 'update' }
+  },
+  {
+    id: '7',
+    name: 'Suellen Nunes',
+    plan: 'Mensal',
+    status: 'active',
+    avatar: 'https://picsum.photos/seed/suellen/200/200',
+    observations: 'Foco em emagrecimento',
+    weeklyAttendance: [
+      { day: 'SEG', status: 'completed' },
+      { day: 'TER', status: 'missed' },
+      { day: 'QUA', status: 'completed' },
+      { day: 'QUI', status: 'today' },
+      { day: 'SEX', status: 'future' },
+      { day: 'SÁB', status: 'future' },
+      { day: 'DOM', status: 'future' },
+    ],
+    completedCount: 3,
+    totalExpected: 4,
+    percent: 75,
+    workoutStatus: { type: 'delayed', days: 1 }
   },
 ];
 
@@ -129,6 +217,55 @@ const StatusIcon = ({ status }: { status: AttendanceStatus }) => {
     default:
       return <Circle className="h-4.5 w-4.5 text-muted-foreground/20 stroke-[1.5]" />;
   }
+};
+
+const WorkoutStatusPill = ({ status }: { status: WorkoutStatusType }) => {
+  const configs = {
+    future: {
+      label: `Atualizar em ${status.type === 'future' ? status.date : ''}`,
+      borderColor: 'border-[#00bfa5]/40',
+      textColor: 'text-[#00bfa5]',
+      bgColor: 'bg-[#00bfa5]/5',
+      icon: Calendar
+    },
+    today: {
+      label: 'Atualizar hoje',
+      borderColor: 'border-[#ffa726]/40',
+      textColor: 'text-[#ffa726]',
+      bgColor: 'bg-[#ffa726]/5',
+      icon: Calendar
+    },
+    delayed: {
+      label: `Atrasado há ${status.type === 'delayed' ? status.days : ''} dias`,
+      borderColor: 'border-rose-500/40',
+      textColor: 'text-rose-500',
+      bgColor: 'bg-rose-500/5',
+      icon: Calendar
+    },
+    update: {
+      label: 'Atualizar treino',
+      borderColor: 'border-blue-500/40',
+      textColor: 'text-blue-500',
+      bgColor: 'bg-blue-500/5',
+      icon: Calendar
+    }
+  };
+
+  const config = configs[status.type];
+  const Icon = config.icon;
+
+  return (
+    <div className={cn(
+      "h-9 px-5 rounded-full border flex items-center gap-2.5 shadow-sm transition-all hover:scale-[1.02] cursor-pointer",
+      config.borderColor,
+      config.bgColor
+    )}>
+      <Icon className={cn("h-4 w-4", config.textColor)} />
+      <span className={cn("text-[10px] font-black uppercase tracking-widest", config.textColor)}>
+        {config.label}
+      </span>
+    </div>
+  );
 };
 
 const ActionButton = ({ icon: Icon, label }: { icon: React.ElementType, label: string }) => (
@@ -174,7 +311,7 @@ const DesktopStudentRow = ({ student }: { student: StudentData }) => {
           )}>
             {student.plan}
           </Badge>
-          <span className="text-[11px] font-bold text-muted-foreground/40">{student.currentWeek}/{student.totalWeeks}</span>
+          <span className="text-[11px] font-bold text-muted-foreground/40 italic uppercase tracking-tighter">Status Ativo</span>
         </div>
 
         {/* Situação */}
@@ -184,23 +321,10 @@ const DesktopStudentRow = ({ student }: { student: StudentData }) => {
           </Badge>
         </div>
 
-        {/* Treinos (Resumo Semanal) */}
+        {/* Treinos (Resumo de Status) */}
         <div className="w-[260px] flex flex-col gap-3 items-center">
-          <div className="flex gap-2">
-            {[1, 2, 3, 4].map(num => (
-              <div 
-                key={num}
-                className={cn(
-                  "h-8 w-8 rounded-lg flex items-center justify-center text-[11px] font-black border transition-all",
-                  num <= student.currentWeek 
-                    ? "bg-primary text-white border-transparent" 
-                    : "bg-white border-border text-muted-foreground/30 shadow-sm"
-                )}
-              >
-                {num}
-              </div>
-            ))}
-          </div>
+          <WorkoutStatusPill status={student.workoutStatus} />
+          
           <div className="flex gap-2 items-center">
             {student.weeklyAttendance.map((day, idx) => (
               <div key={idx} className="flex flex-col items-center gap-1">
@@ -212,14 +336,14 @@ const DesktopStudentRow = ({ student }: { student: StudentData }) => {
               </div>
             ))}
           </div>
-          <div className="flex items-center gap-1.5 text-[9px] font-black whitespace-nowrap mt-1">
-            <span className="text-muted-foreground uppercase">{student.completedCount}/{student.totalExpected} TREINOS REALIZADOS</span>
+          <div className="flex items-center gap-1.5 text-[9px] font-black whitespace-nowrap">
+            <span className="text-muted-foreground uppercase">{student.completedCount}/{student.totalExpected} REALIZADOS</span>
             <span className="text-muted-foreground/20">•</span>
             <span className={cn(
               "uppercase italic",
               student.percent >= 80 ? "text-[#00bfa5]" : student.percent >= 50 ? "text-[#ffa726]" : "text-red-500"
             )}>
-              {student.percent}% DE FREQUÊNCIA
+              {student.percent}% FREQ.
             </span>
           </div>
         </div>
@@ -294,23 +418,11 @@ const MobileStudentCard = ({ student }: { student: StudentData }) => {
         </button>
       </div>
 
-      {/* Meio: Progresso do Plano */}
+      {/* Meio: Status do Treino */}
       <div className="space-y-3">
-        <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] px-1">Progresso do Plano (Semanas)</p>
-        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-          {[1, 2, 3, 4].map((num) => (
-            <div 
-              key={num}
-              className={cn(
-                "h-11 min-w-[50px] flex-1 rounded-xl flex items-center justify-center text-sm font-black transition-all border",
-                student.currentWeek === num 
-                  ? "bg-[#00bfa5] border-[#00bfa5] text-white shadow-lg shadow-[#00bfa5]/20" 
-                  : "bg-muted/30 border-transparent text-muted-foreground/40"
-              )}
-            >
-              {num}
-            </div>
-          ))}
+        <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] px-1">Status de Treino</p>
+        <div className="flex justify-start">
+           <WorkoutStatusPill status={student.workoutStatus} />
         </div>
       </div>
 
@@ -335,7 +447,7 @@ const MobileStudentCard = ({ student }: { student: StudentData }) => {
           ))}
         </div>
 
-        {/* Rodapé do Card: Estatísticas fiéis à imagem */}
+        {/* Rodapé do Card: Estatísticas */}
         <div className="flex items-center gap-1.5 text-[10px] font-black px-1 mt-2">
           <span className="text-muted-foreground uppercase tracking-tight">{student.completedCount}/{student.totalExpected} TREINOS REALIZADOS</span>
           <span className="text-muted-foreground/20">•</span>
@@ -365,6 +477,10 @@ const MobileStudentCard = ({ student }: { student: StudentData }) => {
 export default function AlunosPage() {
   const [search, setSearch] = React.useState('');
 
+  const filteredStudents = React.useMemo(() => {
+    return studentsData.filter(s => s.name.toLowerCase().includes(search.toLowerCase()));
+  }, [search]);
+
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300 pb-20">
       {/* Top Header Filter Counts */}
@@ -375,7 +491,7 @@ export default function AlunosPage() {
                 <Users className="h-4 w-4" /> Todos <span className="text-muted-foreground/40">200</span>
              </button>
              <button className="flex items-center gap-2 text-[11px] font-black text-primary uppercase border-b-2 border-primary pb-1">
-                <Users className="h-4 w-4" /> Ativos <span className="text-primary/60">16</span>
+                <Users className="h-4 w-4" /> Ativos <span className="text-primary/60">{filteredStudents.length}</span>
              </button>
              <button className="flex items-center gap-2 text-[11px] font-black text-muted-foreground uppercase hover:text-primary transition-colors">
                 <UserX className="h-4 w-4" /> Inativos <span className="text-muted-foreground/40">2</span>
@@ -431,7 +547,7 @@ export default function AlunosPage() {
             
             {/* Table Body */}
             <div className="flex flex-col">
-              {studentsData.map((student) => (
+              {filteredStudents.map((student) => (
                 <DesktopStudentRow key={student.id} student={student} />
               ))}
             </div>
@@ -439,7 +555,7 @@ export default function AlunosPage() {
 
           {/* Mobile Card View */}
           <div className="lg:hidden space-y-5 mobile-content-wrapper">
-            {studentsData.map((student) => (
+            {filteredStudents.map((student) => (
               <MobileStudentCard key={student.id} student={student} />
             ))}
           </div>
@@ -447,7 +563,7 @@ export default function AlunosPage() {
           {/* Info Final */}
           <div className="mt-8 text-center">
             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em]">
-              FIM DA LISTA • {studentsData.length} ALUNOS ATIVOS
+              FIM DA LISTA • {filteredStudents.length} ALUNOS VISÍVEIS
             </p>
           </div>
         </div>
