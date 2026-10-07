@@ -139,7 +139,7 @@ const studentsData: StudentData[] = [
     completedCount: 1,
     totalExpected: 3,
     percent: 33,
-    workoutStatus: { type: 'update' }
+    workoutStatus: { type: 'weeks', week: 2 }
   },
   {
     id: '5',
@@ -181,7 +181,7 @@ const studentsData: StudentData[] = [
     completedCount: 3,
     totalExpected: 5,
     percent: 60,
-    workoutStatus: { type: 'today' }
+    workoutStatus: { type: 'weeks', week: 3 }
   },
   {
     id: '7',
@@ -202,7 +202,7 @@ const studentsData: StudentData[] = [
     completedCount: 3,
     totalExpected: 4,
     percent: 75,
-    workoutStatus: { type: 'delayed', days: 3 }
+    workoutStatus: { type: 'weeks', week: 1 }
   },
 ];
 
