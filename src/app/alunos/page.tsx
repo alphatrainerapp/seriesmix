@@ -31,6 +31,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { InviteStudentDialog } from '@/components/alunos/invite-student-dialog';
 
 // --- Tipagens e Dados Mockados ---
 
@@ -599,9 +600,11 @@ export default function AlunosPage() {
           </div>
 
           <div className="flex items-center gap-3">
-             <Button variant="outline" size="icon" className="h-10 w-12 rounded-xl bg-card border-border shadow-sm">
-                <Mail className="h-4 w-4 text-muted-foreground" />
-             </Button>
+             <InviteStudentDialog>
+               <Button variant="outline" size="icon" className="h-10 w-12 rounded-xl bg-card border-border shadow-sm">
+                  <Mail className="h-4 w-4 text-muted-foreground" />
+               </Button>
+             </InviteStudentDialog>
              <Button className="bg-[#00bfa5] hover:bg-[#00a894] text-white rounded-xl h-10 px-6 font-black uppercase text-[10px] tracking-widest gap-2 shadow-lg shadow-[#00bfa5]/20 border-none">
                 <Plus className="h-4 w-4" />
                 Novo Aluno
