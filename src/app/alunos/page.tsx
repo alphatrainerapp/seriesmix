@@ -431,83 +431,106 @@ const MobileStudentCard = ({ student }: { student: StudentData }) => {
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   return (
-    <div className="bg-card border border-border/40 rounded-[28px] p-5 md:p-7 shadow-sm transition-all hover:shadow-md group flex flex-col gap-6 relative overflow-hidden">
-      {/* Topo: Identificação */}
-      <div className="flex items-center gap-4">
-        <div className="relative">
-          <Avatar className="h-14 w-14 border-2 border-background shadow-md">
-            <AvatarImage src={student.avatar} alt={student.name} />
-            <AvatarFallback>{student.name.substring(0, 2)}</AvatarFallback>
-          </Avatar>
-          <div className={cn(
-            "absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-background",
-            student.status === 'active' ? "bg-emerald-500" : "bg-red-500"
-          )} />
+    <div className={cn(
+      "bg-card border border-border/40 rounded-[32px] p-6 shadow-sm transition-all relative overflow-hidden group",
+      student.workoutStatus.type === 'delayed' ? "border-rose-500/20" : ""
+    )}>
+      {/* Background Accent para Urgência */}
+      {student.workoutStatus.type === 'delayed' && (
+        <div className="absolute top-0 right-0 h-24 w-24 bg-rose-500/5 rounded-full -mr-12 -mt-12 blur-2xl" />
+      )}
+
+      {/* Topo: Identificação & Plan */}
+      <div className="flex items-start justify-between gap-4 mb-6">
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <Avatar className="h-14 w-14 border-2 border-background shadow-md">
+              <AvatarImage src={student.avatar} alt={student.name} />
+              <AvatarFallback className="bg-muted text-muted-foreground font-black">{student.name.substring(0, 2)}</AvatarFallback>
+            </Avatar>
+            <div className={cn(
+              "absolute bottom-0 right-0 h-4 w-4 rounded-full border-2 border-background shadow-sm",
+              student.status === 'active' ? "bg-emerald-500" : "bg-red-500"
+            )} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-bold text-[16px] text-foreground leading-tight truncate">
+              {student.name}
+            </h3>
+            <Badge variant="outline" className="mt-1.5 bg-orange-500/10 text-orange-600 border-none rounded-full px-3 h-5 text-[9px] font-black uppercase tracking-widest">
+              {student.plan}
+            </Badge>
+          </div>
         </div>
-        <div className="flex-1 min-w-0">
-          <h3 className="font-bold text-[15px] text-foreground/90 leading-tight truncate">
-            {student.name}
-          </h3>
-          <Badge variant="outline" className="mt-1 bg-orange-500/10 text-orange-600 border-none rounded-full px-3 text-[9px] font-black uppercase tracking-widest h-5">
-            {student.plan}
-          </Badge>
-        </div>
+        
         <button 
           onClick={() => setIsExpanded(!isExpanded)}
-          className="h-11 w-11 flex items-center justify-center rounded-full hover:bg-muted/50 transition-all active:scale-90"
+          className="h-12 w-12 flex items-center justify-center rounded-2xl bg-muted/40 hover:bg-muted/80 transition-all active:scale-90"
         >
-          <ChevronRight className={cn(
-            "h-7 w-7 text-muted-foreground/30 transition-transform duration-300",
-            isExpanded && "rotate-90 text-primary"
+          <ChevronDown className={cn(
+            "h-6 w-6 text-muted-foreground transition-transform duration-300",
+            isExpanded && "rotate-180 text-primary"
           )} />
         </button>
       </div>
 
-      {/* Meio: Status do Treino */}
-      <div className="space-y-3">
-        <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] px-1">Status de Treino</p>
-        <div className="flex justify-start">
-           <WorkoutStatusPill status={student.workoutStatus} />
+      {/* Grid Central: Status do Treino & Performance */}
+      <div className="bg-muted/20 rounded-2xl p-4 border border-border/10 space-y-4">
+        <div className="flex items-center justify-between">
+           <div className="space-y-1">
+             <p className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest">Status do Treino</p>
+             <div className="flex justify-start">
+               <WorkoutStatusPill status={student.workoutStatus} />
+             </div>
+           </div>
+           
+           <div className="text-right space-y-1">
+              <p className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest">Frequência</p>
+              <p className={cn(
+                "text-lg font-black italic italic leading-none",
+                student.percent >= 80 ? "text-[#00bfa5]" : student.percent >= 50 ? "text-[#ffa726]" : "text-red-500"
+              )}>
+                {student.percent}%
+              </p>
+           </div>
+        </div>
+
+        {/* Barra de Frequência Semanal */}
+        <div className="pt-2 border-t border-border/5">
+          <div className="flex justify-between items-center px-1">
+            {student.weeklyAttendance.map((day, idx) => (
+              <div key={idx} className="flex flex-col items-center gap-2">
+                <span className={cn(
+                  "text-[8px] font-black tracking-tighter",
+                  day.status === 'today' ? "text-[#ffa726]" : "text-muted-foreground/30"
+                )}>
+                  {day.day}
+                </span>
+                <div className="flex items-center justify-center h-6 w-6">
+                   {day.status === 'completed' && <CheckCircle2 className="h-5 w-5 text-[#00bfa5] fill-[#00bfa5]/5" />}
+                   {day.status === 'missed' && <XCircle className="h-5 w-5 text-red-500/60" />}
+                   {day.status === 'today' && <Circle className="h-5 w-5 text-[#ffa726] stroke-[2.5]" />}
+                   {day.status === 'future' && <Circle className="h-5 w-5 text-muted-foreground/20 stroke-[1.5]" />}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Baixo: Frequência da Semana */}
-      <div className="space-y-4 pt-2">
-        <div className="flex justify-between items-center px-1">
-          {student.weeklyAttendance.map((day, idx) => (
-            <div key={idx} className="flex flex-col items-center gap-2">
-              <span className={cn(
-                "text-[9px] font-black tracking-widest",
-                day.status === 'today' ? "text-[#ffa726]" : "text-muted-foreground/40"
-              )}>
-                {day.day}
-              </span>
-              <div className="flex items-center justify-center h-6 w-6">
-                 {day.status === 'completed' && <CheckCircle2 className="h-5 w-5 text-[#00bfa5] fill-[#00bfa5]/10" />}
-                 {day.status === 'missed' && <XCircle className="h-5 w-5 text-red-500/80" />}
-                 {day.status === 'today' && <Circle className="h-5 w-5 text-[#ffa726] stroke-[2.5]" />}
-                 {day.status === 'future' && <Circle className="h-5 w-5 text-muted-foreground/20 stroke-[1.5]" />}
-              </div>
-            </div>
-          ))}
+      {/* Footer Info */}
+      <div className="mt-4 flex items-center justify-between px-1">
+        <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-tight text-muted-foreground">
+          <span className="opacity-60">{student.completedCount} / {student.totalExpected}</span>
+          <span className="opacity-20 text-[12px]">•</span>
+          <span className="opacity-60">Treinos Concluídos</span>
         </div>
-
-        {/* Rodapé do Card: Estatísticas */}
-        <div className="flex items-center gap-1.5 text-[10px] font-black px-1 mt-2">
-          <span className="text-muted-foreground uppercase tracking-tight">{student.completedCount}/{student.totalExpected} TREINOS REALIZADOS</span>
-          <span className="text-muted-foreground/20">•</span>
-          <span className={cn(
-            "uppercase italic tracking-tight",
-            student.percent >= 80 ? "text-[#00bfa5]" : student.percent >= 50 ? "text-[#ffa726]" : "text-red-500"
-          )}>
-            {student.percent}% DE FREQUÊNCIA
-          </span>
-        </div>
+        <MessageCircle className="h-4 w-4 text-[#00bfa5] fill-[#00bfa5]/10" />
       </div>
 
       {/* Painel de Ações Expansível */}
       {isExpanded && (
-        <div className="pt-6 border-t border-border/10 flex justify-center animate-in slide-in-from-top-2 duration-300 overflow-x-auto no-scrollbar">
+        <div className="pt-6 mt-6 border-t border-border/10 flex justify-center animate-in slide-in-from-top-2 duration-300 overflow-x-auto no-scrollbar">
           <div className="min-w-max pb-2">
             <StudentActionsGrid />
           </div>
