@@ -603,7 +603,6 @@ export default function AlunosPage() {
 
           {/* Filtros de Ordenação Mobile */}
           <div className="lg:hidden flex items-center gap-3 overflow-x-auto no-scrollbar pb-2 mobile-content-wrapper">
-            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest whitespace-nowrap pl-1">Ordenar:</span>
             <button 
               onClick={() => handleSort('name')}
               className={cn(
@@ -620,7 +619,7 @@ export default function AlunosPage() {
                 sortBy === 'weeks' ? "bg-primary text-white border-primary shadow-lg shadow-primary/20" : "bg-card text-muted-foreground border-border"
               )}
             >
-              Semanas {sortBy === 'weeks' && (sortDirection === 'asc' ? '↑' : '↓')}
+              Treinos {sortBy === 'weeks' && (sortDirection === 'asc' ? '↑' : '↓')}
             </button>
             <button 
               onClick={() => handleSort('plan')}
