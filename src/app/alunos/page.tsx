@@ -320,11 +320,15 @@ const StudentActionsGrid = () => (
   </div>
 );
 
-const DesktopStudentRow = ({ student }: { student: StudentData }) => {
+const DesktopStudentRow = ({ student, index }: { student: StudentData, index: number }) => {
   const [isExpanded, setIsExpanded] = React.useState(false);
+  const isEven = index % 2 === 0;
 
   return (
-    <div className="flex flex-col border-b border-border/5 group">
+    <div className={cn(
+      "flex flex-col border-b border-border/5 group",
+      isEven ? "bg-card" : "bg-muted/10"
+    )}>
       <div className="flex items-center gap-4 py-4 px-6 hover:bg-muted/20 transition-colors">
         {/* Aluno */}
         <div className="w-[200px] flex items-center gap-4 shrink-0">
@@ -393,7 +397,7 @@ const DesktopStudentRow = ({ student }: { student: StudentData }) => {
 
         {/* Ações */}
         <div className="w-[180px] flex items-center justify-end gap-3">
-          <Button className="bg-[#00bfa5] hover:bg-[#00bfa5]/90 text-white h-9 rounded-full px-6 gap-2 font-black text-[10px] uppercase tracking-widest border-none shadow-sm shadow-[#00bfa5]/20">
+          <Button className="bg-[#00bfa5] hover:bg-[#00a894] text-white h-9 rounded-full px-6 gap-2 font-black text-[10px] uppercase tracking-widest border-none shadow-sm shadow-[#00bfa5]/20">
             <span className="hidden xl:inline">chamar</span>
             <MessageCircle className="h-4 w-4 fill-white" />
           </Button>
@@ -411,7 +415,10 @@ const DesktopStudentRow = ({ student }: { student: StudentData }) => {
 
       {/* Painel Expansível */}
       {isExpanded && (
-        <div className="bg-muted/30 p-6 flex justify-center animate-in slide-in-from-top-2 duration-300 border-t border-border/5">
+        <div className={cn(
+          "p-6 flex justify-center animate-in slide-in-from-top-2 duration-300 border-t border-border/5",
+          isEven ? "bg-muted/30" : "bg-card/20"
+        )}>
           <StudentActionsGrid />
         </div>
       )}
@@ -582,8 +589,8 @@ export default function AlunosPage() {
             
             {/* Table Body */}
             <div className="flex flex-col">
-              {filteredStudents.map((student) => (
-                <DesktopStudentRow key={student.id} student={student} />
+              {filteredStudents.map((student, index) => (
+                <DesktopStudentRow key={student.id} student={student} index={index} />
               ))}
             </div>
           </div>
