@@ -23,7 +23,8 @@ import {
   HeartPulse,
   LineChart,
   Camera,
-  Apple
+  Apple,
+  ArrowUpDown
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -518,10 +519,35 @@ const MobileStudentCard = ({ student }: { student: StudentData }) => {
 
 export default function AlunosPage() {
   const [search, setSearch] = React.useState('');
+  const [sortBy, setSortBy] = React.useState<'name' | 'weeks' | 'plan'>('name');
+  const [sortDirection, setSortDirection] = React.useState<'asc' | 'desc'>('asc');
+
+  const handleSort = (criterion: 'name' | 'weeks' | 'plan') => {
+    if (sortBy === criterion) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(criterion);
+      setSortDirection('asc');
+    }
+  };
 
   const filteredStudents = React.useMemo(() => {
-    return studentsData.filter(s => s.name.toLowerCase().includes(search.toLowerCase()));
-  }, [search]);
+    const filtered = studentsData.filter(s => s.name.toLowerCase().includes(search.toLowerCase()));
+    
+    return filtered.sort((a, b) => {
+      let comparison = 0;
+      if (sortBy === 'name') {
+        comparison = a.name.localeCompare(b.name);
+      } else if (sortBy === 'weeks') {
+        const weekA = a.workoutStatus.type === 'weeks' ? a.workoutStatus.week : 0;
+        const weekB = b.workoutStatus.type === 'weeks' ? b.workoutStatus.week : 0;
+        comparison = weekA - weekB;
+      } else if (sortBy === 'plan') {
+        comparison = a.plan.localeCompare(b.plan);
+      }
+      return sortDirection === 'asc' ? comparison : -comparison;
+    });
+  }, [search, sortBy, sortDirection]);
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300 pb-20">
@@ -575,15 +601,65 @@ export default function AlunosPage() {
             />
           </div>
 
+          {/* Filtros de Ordenação Mobile */}
+          <div className="lg:hidden flex items-center gap-3 overflow-x-auto no-scrollbar pb-2 mobile-content-wrapper">
+            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest whitespace-nowrap pl-1">Ordenar:</span>
+            <button 
+              onClick={() => handleSort('name')}
+              className={cn(
+                "px-4 py-2 rounded-full border text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all flex items-center gap-2",
+                sortBy === 'name' ? "bg-primary text-white border-primary shadow-lg shadow-primary/20" : "bg-card text-muted-foreground border-border"
+              )}
+            >
+              Aluno {sortBy === 'name' && (sortDirection === 'asc' ? '↑' : '↓')}
+            </button>
+            <button 
+              onClick={() => handleSort('weeks')}
+              className={cn(
+                "px-4 py-2 rounded-full border text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all flex items-center gap-2",
+                sortBy === 'weeks' ? "bg-primary text-white border-primary shadow-lg shadow-primary/20" : "bg-card text-muted-foreground border-border"
+              )}
+            >
+              Semanas {sortBy === 'weeks' && (sortDirection === 'asc' ? '↑' : '↓')}
+            </button>
+            <button 
+              onClick={() => handleSort('plan')}
+              className={cn(
+                "px-4 py-2 rounded-full border text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all flex items-center gap-2",
+                sortBy === 'plan' ? "bg-primary text-white border-primary shadow-lg shadow-primary/20" : "bg-card text-muted-foreground border-border"
+              )}
+            >
+              Plano {sortBy === 'plan' && (sortDirection === 'asc' ? '↑' : '↓')}
+            </button>
+          </div>
+
           {/* Desktop Table View */}
           <div className="hidden lg:block bg-card rounded-3xl border border-border/40 shadow-sm overflow-hidden">
             {/* Table Header */}
             <div className="flex items-center gap-4 bg-muted/20 py-4 px-6 border-b border-border/5">
-              <span className="w-[200px] text-[10px] font-black text-muted-foreground uppercase tracking-widest shrink-0">Aluno</span>
+              <button 
+                className="w-[200px] text-[10px] font-black text-muted-foreground uppercase tracking-widest shrink-0 text-left flex items-center gap-2 group hover:text-primary transition-colors"
+                onClick={() => handleSort('name')}
+              >
+                Aluno 
+                <ArrowUpDown className={cn("h-3 w-3 transition-opacity", sortBy === 'name' ? "opacity-100" : "opacity-20 group-hover:opacity-100")} />
+              </button>
               <span className="flex-1 text-[10px] font-black text-muted-foreground uppercase tracking-widest px-4">Observações</span>
-              <span className="w-[120px] text-center text-[10px] font-black text-muted-foreground uppercase tracking-widest">Plano</span>
+              <button 
+                className="w-[120px] text-center text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center justify-center gap-2 group hover:text-primary transition-colors"
+                onClick={() => handleSort('plan')}
+              >
+                Plano
+                <ArrowUpDown className={cn("h-3 w-3 transition-opacity", sortBy === 'plan' ? "opacity-100" : "opacity-20 group-hover:opacity-100")} />
+              </button>
               <span className="w-[100px] text-center text-[10px] font-black text-muted-foreground uppercase tracking-widest">Situação</span>
-              <span className="w-[260px] text-center text-[10px] font-black text-muted-foreground uppercase tracking-widest">Treinos</span>
+              <button 
+                className="w-[260px] text-center text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center justify-center gap-2 group hover:text-primary transition-colors"
+                onClick={() => handleSort('weeks')}
+              >
+                Treinos
+                <ArrowUpDown className={cn("h-3 w-3 transition-opacity", sortBy === 'weeks' ? "opacity-100" : "opacity-20 group-hover:opacity-100")} />
+              </button>
               <span className="w-[180px] text-right text-[10px] font-black text-muted-foreground uppercase tracking-widest">Ações</span>
             </div>
             
