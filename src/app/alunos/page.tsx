@@ -444,7 +444,7 @@ const MobileStudentCard = ({ student }: { student: StudentData }) => {
           )} />
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="font-black text-lg text-foreground leading-tight truncate uppercase italic tracking-tight">
+          <h3 className="font-bold text-[15px] text-foreground/90 leading-tight truncate">
             {student.name}
           </h3>
           <Badge variant="outline" className="mt-1 bg-orange-500/10 text-orange-600 border-none rounded-full px-3 text-[9px] font-black uppercase tracking-widest h-5">
