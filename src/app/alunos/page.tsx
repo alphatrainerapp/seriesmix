@@ -233,7 +233,7 @@ const WeeklyProgress = ({ currentWeek }: { currentWeek: number }) => {
           <div
             key={w}
             className={cn(
-              "h-8 w-8 rounded-md flex items-center justify-center text-[12px] font-black transition-all shadow-sm",
+              "h-8 w-8 rounded-lg flex items-center justify-center text-[12px] font-black transition-all shadow-sm",
               isCompleted && "bg-slate-700 text-white",
               isActive && "bg-[#00bfa5] text-white scale-110 shadow-lg shadow-[#00bfa5]/20",
               w > currentWeek && "bg-muted/30 text-muted-foreground/20 border border-border/10"
