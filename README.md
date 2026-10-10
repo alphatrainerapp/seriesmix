@@ -3,28 +3,25 @@
 Seu assistente pessoal de treinos com Inteligência Artificial de elite, desenvolvido com **Next.js 15**, **Genkit** e **Shadcn UI**.
 
 ## 🔗 Como subir para o seu GitHub
-Siga estes passos para publicar o projeto:
+Siga estes passos para publicar as novas atualizações:
 
-1.  Crie um repositório novo e vazio no [GitHub](https://github.com/new).
-2.  Abra o terminal na pasta raiz deste projeto.
-3.  Execute os seguintes comandos:
+1.  Abra o terminal na pasta raiz do projeto.
+2.  Execute os seguintes comandos:
    ```bash
-   git init
    git add .
-   git commit -m "Initial commit: WorkoutAI v1.1"
-   git branch -M main
-   git remote add origin https://github.com/SEU_USUARIO/SEU_REPOSITORIO.git
-   git push -u origin main
+   git commit -m "feat: fluxo de convite de alunos e indicadores de performance desktop"
+   git push origin main
    ```
 
 ## 🛠 Funcionalidades de Elite
 - **🤖 IA Generativa:** Geração de planos de treino ultra-personalizados.
+- **📩 Fluxo de Convite:** Sistema de convite via WhatsApp com link de cadastro e mensagem personalizada.
+- **📊 Indicadores de Performance:** Visualização clara de frequência (%) e progresso semanal (1-4) sincronizada entre Mobile e Desktop.
 - **📈 Periodização Ondulatória Diária:** Controle total de volume e carga sessão por sessão.
 - **🏃 Protocolos Especializados:** Cards dedicados para Aeróbico, HIIT e WOD com descrições detalhadas.
 - **🔥 Aquecimento & Mobilidade:** Sistema de aquecimento integrado com visual limpo.
 - **📱 Interface Mobile First:** Barra de ações fixa e menus em estilo Bottom Sheet.
 - **📂 Gestão de Biblioteca:** Salve sessões personalizadas e modelos favoritos em pastas.
-- **📊 Métricas Visuais:** Gráficos de volume e performance usando Recharts.
 - **🌓 Dark/Light Mode Premium:** Interface adaptável com paleta de cores sofisticada.
 
 ## 💻 Stack Tecnológica
